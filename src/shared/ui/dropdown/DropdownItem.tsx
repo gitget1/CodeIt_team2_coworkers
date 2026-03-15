@@ -1,24 +1,52 @@
+import { cn } from '@/shared/lib/cn';
 import { useDropdown } from './Dropdown';
 
-interface Props {
+type ItemAlign = 'left' | 'center';
+
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  onClick?: () => void;
+  closeOnClick?: boolean;
+  className?: string;
+  align?: ItemAlign;
 }
 
-export default function DropdownItem({ children, onClick }: Props) {
+const alignStyles: Record<ItemAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+};
+
+export default function DropdownItem({
+  children,
+  onClick,
+  closeOnClick = true,
+  type = 'button',
+  className,
+  align = 'center',
+  ...props
+}: Props) {
   const { setOpen } = useDropdown();
 
-  const handleClick = () => {
-    setOpen(false);
-    onClick?.();
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(e);
+
+    if (closeOnClick) {
+      setOpen(false);
+    }
   };
 
   return (
-    <div
+    <button
+      type={type}
       onClick={handleClick}
-      className="hover:bg-brand-primary w-full cursor-pointer px-[18px] py-[12px] text-center text-lg text-gray-800 hover:text-white"
+      role="menuitem"
+      className={cn(
+        'hover:bg-brand-primary w-full cursor-pointer px-[18px] py-[12px] text-lg text-gray-800 hover:text-white',
+        alignStyles[align],
+        className,
+      )}
+      {...props}
     >
       {children}
-    </div>
+    </button>
   );
 }

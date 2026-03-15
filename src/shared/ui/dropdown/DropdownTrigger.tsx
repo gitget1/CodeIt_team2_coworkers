@@ -1,15 +1,18 @@
-import { useDropdown } from './Dropdown';
+import { useDropdownTrigger } from '@/shared/hooks/useDropdownTrigger';
+import { cn } from '@/shared/lib/cn';
+import { ReactNode } from 'react';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
+  className?: string;
 }
 
-export default function DropdownTrigger({ children }: Props) {
-  const { isOpen, setOpen, triggerRef } = useDropdown();
+export default function DropdownTrigger({ children, className }: Props) {
+  const { triggerProps } = useDropdownTrigger();
 
   return (
-    <div ref={triggerRef} onClick={() => setOpen(!isOpen)} className="inline-block cursor-pointer">
+    <button {...triggerProps} className={cn('inline-block cursor-pointer', className)}>
       {children}
-    </div>
+    </button>
   );
 }

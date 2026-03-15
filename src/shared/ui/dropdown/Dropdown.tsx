@@ -1,10 +1,20 @@
-import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react';
+import useClickOutside from '@/shared/hooks/useClickOutside';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  ReactNode,
+  useId,
+  useMemo,
+} from 'react';
 
 interface DropdownContextType {
   isOpen: boolean;
-  setOpen: (value: boolean) => void;
-  triggerRef: React.RefObject<HTMLDivElement | null>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
+  menuId: string;
 }
 
 const DropdownContext = createContext<DropdownContextType | null>(null);
@@ -17,30 +27,29 @@ export const useDropdown = () => {
 
 export default function Dropdown({ children }: { children: ReactNode }) {
   const [isOpen, setOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const id = useId();
 
-  useEffect(() => {
-    if (!isOpen) return;
+  useClickOutside({
+    refs: [triggerRef, menuRef],
+    enabled: isOpen,
+    onClickOutside: () => setOpen(false),
+  });
 
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(target) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(target)
-      ) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+  const value = useMemo(
+    () => ({
+      isOpen,
+      setOpen,
+      triggerRef,
+      menuRef,
+      menuId: `dropdown-menu-${id}`,
+    }),
+    [id, isOpen],
+  );
 
   return (
-    <DropdownContext.Provider value={{ isOpen, setOpen, triggerRef, menuRef }}>
+    <DropdownContext.Provider value={value}>
       <div className="relative inline-block">{children}</div>
     </DropdownContext.Provider>
   );
