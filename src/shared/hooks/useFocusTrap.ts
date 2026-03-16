@@ -1,12 +1,6 @@
 import { RefObject, useEffect } from 'react';
 
-interface UseModalA11yProps {
-  isOpen: boolean;
-  modalRef: RefObject<HTMLElement | null>;
-  onClose: () => void;
-}
-
-export function useModalA11y({ isOpen, modalRef, onClose }: UseModalA11yProps) {
+export function useFocusTrap(isOpen: boolean, containerRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -14,18 +8,10 @@ export function useModalA11y({ isOpen, modalRef, onClose }: UseModalA11yProps) {
     const focusableSelector =
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
-
-    document.body.style.overflow = 'hidden';
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
     const timer = setTimeout(() => {
-      if (modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+      if (containerRef.current) {
+        const focusableElements =
+          containerRef.current.querySelectorAll<HTMLElement>(focusableSelector);
         if (focusableElements.length > 0) {
           focusableElements[0].focus();
         }
@@ -33,13 +19,9 @@ export function useModalA11y({ isOpen, modalRef, onClose }: UseModalA11yProps) {
     }, 10);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-
-      if (e.key === 'Tab' && modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+      if (e.key === 'Tab' && containerRef.current) {
+        const focusableElements =
+          containerRef.current.querySelectorAll<HTMLElement>(focusableSelector);
         if (focusableElements.length === 0) return;
 
         const firstElement = focusableElements[0];
@@ -63,13 +45,11 @@ export function useModalA11y({ isOpen, modalRef, onClose }: UseModalA11yProps) {
 
     return () => {
       clearTimeout(timer);
-      document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
       window.removeEventListener('keydown', handleKeyDown);
 
       if (previousFocus && typeof previousFocus.focus === 'function') {
         previousFocus.focus();
       }
     };
-  }, [isOpen, onClose, modalRef]);
+  }, [isOpen, containerRef]);
 }
