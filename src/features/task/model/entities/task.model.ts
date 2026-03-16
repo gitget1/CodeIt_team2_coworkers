@@ -1,0 +1,32 @@
+import { RecurrenceType } from '../types/recurrence.type';
+
+export interface User {
+  id: number;
+  nickname: string;
+  imageUrl?: string;
+}
+
+export interface Task {
+  id: number;
+  title: string;
+  description?: string;
+  order: number;
+  commentCount: number;
+  writer: User;
+  completedBy?: User;
+  completedAt?: string;
+  isDeleted: boolean;
+  date?: Date;
+  recurrence?: RecurrenceType;
+  recurrenceId?: number;
+}
+
+export interface TaskList {
+  id: number;
+  groupId: number;
+  title: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  tasks: Task[];
+}
