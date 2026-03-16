@@ -1,78 +1,52 @@
-import { IconArrowDown } from '@/shared/ui/icons';
-import { ToggleIconButton } from '@/shared/ui/ToggleIconButton';
-import { useState } from 'react';
+import { Button } from '@/shared/ui/Button';
+import { IconAlert } from '@/shared/ui/icons';
+import { Modal, useModal } from '@/shared/ui/modal';
 
 export default function TestPage() {
-  const [isOpen, setIsOpen] = useState(false);
+  // 상태만 관리
+  const { isOpen, open, close } = useModal();
 
   return (
-    <div className="min-h-screen space-y-12 bg-white p-10">
-      {/* --- 2. 토글 아이콘 버튼 섹션 --- */}
-      <section className="space-y-6">
-        <h2 className="border-b pb-2 text-xl font-semibold text-gray-800">Toggle Icon Button</h2>
+    <Modal isOpen={isOpen} open={open} close={close}>
+      {/* 2. Trigger는 내부에서 알아서 Context의 open을 호출합니다! (onClick 불필요) */}
+      <Modal.Trigger asChild>
+        <Button>팀 만들기</Button>
+      </Modal.Trigger>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {/* 인터랙션 테스트 */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-gray-400 uppercase">Interaction Test</h3>
-            <div className="flex items-center justify-between rounded-lg bg-gray-50 p-6">
-              <span className="font-medium text-gray-700">
-                상태:{' '}
-                <span className={isOpen ? 'text-blue-600' : 'text-gray-400'}>
-                  {isOpen ? '열림 (Expanded)' : '닫힘 (Collapsed)'}
-                </span>
-              </span>
-              <ToggleIconButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
-            </div>
-          </div>
+      {/* 3. 모달의 실제 UI는 Content 안에서 그려집니다. */}
+      <Modal.Content showCloseButton={false}>
+        <Modal.Header className="text-status-danger items-center">
+          <IconAlert />
+          <Modal.Title className="text-txt-primary pt-2 text-lg font-medium">
+            회원 탈퇴를 진행하시겠어요?
+          </Modal.Title>
+        </Modal.Header>
 
-          {/* 고정 상태 테스트 (Disabled 등) */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-gray-400 uppercase">States</h3>
-            <div className="flex items-center gap-8 rounded-lg bg-gray-50 p-6">
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-gray-400">Default</span>
-                <ToggleIconButton isOpen={false} />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-gray-400">Expanded</span>
-                <ToggleIconButton isOpen={true} />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-gray-400">Disabled</span>
-                <ToggleIconButton isOpen={false} disabled />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-gray-400">Custom Color</span>
-                <ToggleIconButton isOpen={false} className="text-brand-primary" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <Modal.Body className="flex items-center justify-center gap-2 text-center">
+          <Modal.Description className="text-md text-txt-secondary font-medium">
+            그룹장으로 있는 그룹은 자동으로 삭제되고,
+            <br /> 모든 그룹에서 나가집니다.
+          </Modal.Description>
+        </Modal.Body>
 
-        {/* 실제 활용 예시 (미리보기) */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-400 uppercase">
-            Usage Example (Accordion Style)
-          </h3>
-          <div className="overflow-hidden rounded-lg border border-gray-200">
-            <div className="flex items-center justify-between border-b border-gray-100 bg-white p-4">
-              <div className="flex items-center gap-2">
-                <IconArrowDown size={18} className="text-gray-400" />
-                <span className="font-semibold text-gray-800">팀 선택</span>
-              </div>
-              <ToggleIconButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
-            </div>
-            {isOpen && (
-              <div className="animate-in fade-in slide-in-from-top-1 space-y-2 bg-gray-50 p-4 text-sm text-gray-600">
-                <p className="cursor-pointer rounded p-2 hover:bg-white">경영관리팀</p>
-                <p className="cursor-pointer rounded p-2 hover:bg-white">프로덕트팀</p>
-                <p className="cursor-pointer rounded p-2 hover:bg-white">마케팅팀</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-    </div>
+        <Modal.Footer className="px-13">
+          <Modal.Close asChild>
+            <Button variant="outline" size="lg" isFullWidth>
+              취소
+            </Button>
+          </Modal.Close>
+          <Button
+            variant="danger"
+            size="lg"
+            isFullWidth
+            onClick={() => {
+              close();
+            }}
+          >
+            회원 탈퇴
+          </Button>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
   );
 }
