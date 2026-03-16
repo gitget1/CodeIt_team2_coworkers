@@ -1,10 +1,7 @@
+import { ICON_SIZE, IconProps } from '@/shared/constants/icon';
 import { cn } from '@/shared/lib/cn';
 
-interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
-  size?: number;
-}
-
-export function IconClose({ size = 24, className, ...props }: IconProps) {
+export function IconClose({ size = ICON_SIZE.md, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
