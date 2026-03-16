@@ -7,6 +7,7 @@ import React, {
   ReactNode,
   useId,
   useMemo,
+  useCallback,
 } from 'react';
 
 interface DropdownContextType {
@@ -31,10 +32,16 @@ export default function Dropdown({ children }: { children: ReactNode }) {
   const menuRef = useRef<HTMLDivElement>(null);
   const id = useId();
 
+  const refs = useMemo(() => [triggerRef, menuRef], []);
+
+  const handleClickOutside = useCallback(() => {
+    setOpen(false);
+  }, []);
+
   useClickOutside({
-    refs: [triggerRef, menuRef],
+    refs,
     enabled: isOpen,
-    onClickOutside: () => setOpen(false),
+    onClickOutside: handleClickOutside,
   });
 
   const value = useMemo(

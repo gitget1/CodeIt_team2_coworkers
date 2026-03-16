@@ -5,9 +5,9 @@ type MenuWidth = 'sm' | 'md' | 'lg';
 type MenuAlign = 'left' | 'right';
 
 const widthStyles: Record<MenuWidth, string> = {
-  sm: '[width-120px]',
-  md: '[width-130px]',
-  lg: '[width-140px]',
+  sm: 'w-[120px]',
+  md: 'w-[130px]',
+  lg: 'w-[140px]',
 };
 
 const alignStyles: Record<MenuAlign, string> = {
