@@ -1,4 +1,3 @@
-// 앞으로 사용할 임시 테스트 페이지
 import { IconArrowDown } from '@/shared/ui/icons';
 import { ToggleIconButton } from '@/shared/ui/ToggleIconButton';
 import { useState } from 'react';
