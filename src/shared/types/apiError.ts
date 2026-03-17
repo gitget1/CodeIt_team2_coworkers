@@ -1,4 +1,4 @@
-export interface APiError {
+export interface ApiError {
   message: string;
   status?: number;
   code?: string;
