@@ -27,7 +27,7 @@ export const toTaskList = (dto: TaskListDto): TaskList => ({
   groupId: dto.groupId,
   title: dto.name,
   order: dto.displayIndex,
-  createdAt: dto.createdAt,
-  updatedAt: dto.updatedAt,
+  createdAt: new Date(dto.createdAt),
+  updatedAt: new Date(dto.updatedAt),
   tasks: dto.tasks.map(toTask),
 });

@@ -26,7 +26,7 @@ export interface TaskList {
   groupId: number;
   title: string;
   order: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   tasks: Task[];
 }
