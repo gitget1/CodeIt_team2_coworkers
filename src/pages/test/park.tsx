@@ -1,22 +1,32 @@
-// 앞으로 사용할 임시 테스트 페이지
+import { useQuery } from '@tanstack/react-query';
+import { getTaskList } from '@/features/task/api/getTaskList';
 
-import Dropdown from '@/shared/ui/dropdown';
-const edit = () => alert('수정 클릭');
-const remove = () => alert('삭제 클릭');
+export default function TestTaskPage() {
+  const { data: taskList } = useQuery({
+    queryKey: ['taskList'],
+    queryFn: () =>
+      getTaskList({
+        teamId: 1,
+        groupId: 1,
+        taskListId: 1,
+      }),
+  });
 
-export default function TestPage() {
+  // 로딩 처리
+  if (!taskList) return <div>로딩중...</div>;
+  
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <Dropdown>
-        <Dropdown.Trigger>
-          <button className="rounded bg-blue-500 px-4 py-2 text-white">드롭다운 메뉴</button>
-        </Dropdown.Trigger>
+    <div>
+      <h1>{taskList.title}</h1>
 
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={edit}>수정</Dropdown.Item>
-          <Dropdown.Item onClick={remove}>삭제</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+      {taskList.tasks
+        .filter((task) => !task.isDeleted)
+        .map((task) => (
+          <div key={task.id}>
+            <p>{task.title}</p>
+            <p>{task.description}</p>
+          </div>
+        ))}
     </div>
   );
 }
