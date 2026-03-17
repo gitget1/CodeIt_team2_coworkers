@@ -18,7 +18,7 @@ export function ModalTrigger({
   asChild = false,
   ...props
 }: ModalTriggerProps) {
-  const { open } = useModalContext();
+  const { open, isOpen } = useModalContext();
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     onClick?.(e as React.MouseEvent<HTMLButtonElement>);
@@ -49,6 +49,7 @@ export function ModalTrigger({
       className={cn(className)}
       onClick={handleClick}
       aria-haspopup="dialog"
+      aria-expanded={isOpen}
       {...props}
     >
       {children}

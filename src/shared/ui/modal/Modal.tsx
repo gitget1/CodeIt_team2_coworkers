@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useState } from 'react';
 
 export interface ModalContextProps {
   isOpen: boolean;
@@ -16,8 +8,10 @@ export interface ModalContextProps {
   descriptionId: string;
   isTitleRendered: boolean;
   isDescriptionRendered: boolean;
-  setTitleRendered: Dispatch<SetStateAction<boolean>>;
-  setDescriptionRendered: Dispatch<SetStateAction<boolean>>;
+  registerTitle: () => void;
+  deregisterTitle: () => void;
+  registerDescription: () => void;
+  deregisterDescription: () => void;
 }
 
 const ModalContext = createContext<ModalContextProps | null>(null);
@@ -30,11 +24,11 @@ export const useModalContext = () => {
   return context;
 };
 
-export function useModalPartPresence(setRendered: Dispatch<SetStateAction<boolean>>) {
+export function useModalPartPresence(register: () => void, deregister: () => void) {
   useEffect(() => {
-    setRendered(true);
-    return () => setRendered(false);
-  }, [setRendered]);
+    register();
+    return () => deregister();
+  }, [register, deregister]);
 }
 
 interface ModalRootProps {
@@ -51,6 +45,11 @@ export function Modal({ isOpen, open, close, children }: ModalRootProps) {
   const titleId = useId();
   const descriptionId = useId();
 
+  const registerTitle = useCallback(() => setTitleRendered(true), []);
+  const deregisterTitle = useCallback(() => setTitleRendered(false), []);
+  const registerDescription = useCallback(() => setDescriptionRendered(true), []);
+  const deregisterDescription = useCallback(() => setDescriptionRendered(false), []);
+
   return (
     <ModalContext.Provider
       value={{
@@ -61,8 +60,10 @@ export function Modal({ isOpen, open, close, children }: ModalRootProps) {
         descriptionId,
         isTitleRendered,
         isDescriptionRendered,
-        setTitleRendered,
-        setDescriptionRendered,
+        registerTitle,
+        deregisterTitle,
+        registerDescription,
+        deregisterDescription,
       }}
     >
       {children}

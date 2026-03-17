@@ -2,9 +2,9 @@ import { cn } from '@/shared/lib/cn';
 import { useModalContext, useModalPartPresence } from './Modal';
 
 export function ModalDescription({ children, className, ...props }: React.ComponentProps<'p'>) {
-  const { descriptionId, setDescriptionRendered } = useModalContext();
+  const { descriptionId, registerDescription, deregisterDescription } = useModalContext();
 
-  useModalPartPresence(setDescriptionRendered);
+  useModalPartPresence(registerDescription, deregisterDescription);
 
   return (
     <p
