@@ -1,6 +1,6 @@
-import { APiError } from '@/shared/types/apiError';
+import { ApiError } from '@/shared/types/apiError';
 
-type ServerError = APiError & {
+type ServerError = ApiError & {
   code?: string;
 };
 
@@ -11,11 +11,17 @@ const TASK_ERROR_MESSAGES = {
 
 type TaskErrorCode = keyof typeof TASK_ERROR_MESSAGES;
 
-export function mapTaskError(error: ServerError) {
-  const code = error.code as TaskErrorCode | undefined;
+function isServerError(error: unknown): error is ServerError {
+  return typeof error === 'object' && error !== null && 'code' in error;
+}
 
-  if (code && TASK_ERROR_MESSAGES[code]) {
-    return { message: TASK_ERROR_MESSAGES[code] };
+export function mapTaskError(error: unknown) {
+  if (isServerError(error)) {
+    const code = error.code as TaskErrorCode | undefined;
+
+    if (code && TASK_ERROR_MESSAGES[code]) {
+      return { message: TASK_ERROR_MESSAGES[code] };
+    }
   }
 
   return {
