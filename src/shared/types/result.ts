@@ -5,9 +5,9 @@ export type Success<T> = {
   data: T;
 };
 
-export type Failure = {
+export type Failure<E = ApiError> = {
   ok: false;
-  error: ApiError;
+  error: E;
 };
 
-export type Result<T> = Success<T> | Failure;
+export type Result<T, E = ApiError> = Success<T> | Failure<E>;

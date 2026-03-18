@@ -3,6 +3,7 @@ import type { ApiError } from '../types/apiError';
 
 type ApiErrorResponse = {
   message?: string;
+  code?: string;
 };
 
 const STATUS_ERROR_MESSAGES: Record<number, string> = {
@@ -24,17 +25,13 @@ export function mapApiError(error: unknown): ApiError {
   }
 
   const { status, data } = error.response;
-  const mappedMessage = STATUS_ERROR_MESSAGES[status];
-  if (mappedMessage) {
-    return {
-      message: mappedMessage,
-      status,
-    };
-  }
-
   const serverData = data as ApiErrorResponse | undefined;
+
+  const mappedMessage = STATUS_ERROR_MESSAGES[status];
+
   return {
-    message: serverData?.message ?? '알 수 없는 오류가 발생했습니다.',
+    message: serverData?.message ?? mappedMessage ?? '알 수 없는 오류가 발생했습니다.',
     status,
+    code: serverData?.code,
   };
 }
