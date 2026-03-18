@@ -1,22 +1,18 @@
 import { useEffect } from 'react';
 
-export function useScrollLock(isLocked: boolean) {
+/**
+ * body 스크롤을 잠그거나 해제합니다.
+ * 모달/드로어 열림 시 배경 스크롤 방지에 사용합니다.
+ */
+export function useScrollLock(locked: boolean) {
   useEffect(() => {
-    if (!isLocked) return;
+    if (!locked || typeof document === 'undefined') return;
 
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
-
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
 
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
+      document.body.style.overflow = prevOverflow;
     };
-  }, [isLocked]);
+  }, [locked]);
 }
