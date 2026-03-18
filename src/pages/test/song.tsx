@@ -51,6 +51,32 @@ export default function TestPage() {
           />
         </div>
       </section>
+
+      <section className="flex flex-col gap-6">
+        <h1 className="text-2xl font-bold">InputBox (Textarea) 컴포넌트</h1>
+
+        <div>
+          <label className="text-txt-secondary mb-1 block text-sm font-medium">
+            1. 할 일 모달용 (336 x 75)
+          </label>
+          <InputBox
+            id="todo-modal"
+            className="h-18.75 w-full max-w-84"
+            defaultValue="내용이 길어질 경우 스크롤이 생깁니다."
+          />
+        </div>
+
+        <div>
+          <label className="text-txt-secondary mb-1 block text-sm font-medium">
+            2. 자유게시판 본문용 (774 / 1920 반응형)
+          </label>
+          <InputBox
+            id="board-content"
+            placeholder="내용을 입력해주세요."
+            className="h-50 w-full max-w-82.5 min-[774px]:h-60 min-[774px]:max-w-135 min-[1920px]:max-w-190"
+          />
+        </div>
+      </section>
     </div>
   );
 }
