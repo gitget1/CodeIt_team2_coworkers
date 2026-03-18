@@ -9,5 +9,9 @@ type ImageAsset = string | StaticImageData;
  * 불필요한 옵셔널 체이닝(asset.src ?? '') 없이 안전하게 추출합니다.
  */
 export function getImageSrc(asset: ImageAsset): string {
-  return typeof asset === 'string' ? asset : asset.src;
+  if (typeof asset === 'string') return asset;
+
+  // StaticImageData의 `src`는 원칙적으로 문자열이지만,
+  // 런타임 방어를 위해 명시적으로 처리합니다.
+  return typeof asset.src === 'string' ? asset.src : '';
 }
