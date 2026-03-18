@@ -143,7 +143,7 @@ export function AppSidebar({
           <SidebarNavItem
             label="자유게시판"
             href={ROUTES.FREE_BOARD}
-            isCollapsed={!expanded}
+            isExpanded={expanded}
             icon={<BoardIcon className="text-slate-300" />}
           />
           {isLoggedIn && (
@@ -182,15 +182,15 @@ export function AppSidebar({
                       key={id}
                       label={label}
                       isSelected={selectedTeamId === id}
-                      isCollapsed={!expanded}
+                      isExpanded={expanded}
                       onClick={() => onTeamSelect?.(id)}
                       icon={<TeamIcon className="text-slate-300" />}
                     />
                   ))}
                   <SidebarNavItem
                     label="팀 추가하기"
-                    isCollapsed={!expanded}
-                    onClick={() => onAddTeam?.() ?? window.alert('팀 추가하기')}
+                    isExpanded={expanded}
+                    onClick={() => onAddTeam?.()}
                     icon={<PlusIcon />}
                     className={cn(
                       expanded &&

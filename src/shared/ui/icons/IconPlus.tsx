@@ -1,7 +1,7 @@
 import { ICON_SIZE, IconProps } from '@/shared/constants/icon';
 import { cn } from '@/shared/lib/cn';
 
-export function IconClose({ size = ICON_SIZE.md, className, ...props }: IconProps) {
+export function IconPlus({ size = ICON_SIZE.md, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
@@ -13,7 +13,8 @@ export function IconClose({ size = ICON_SIZE.md, className, ...props }: IconProp
       aria-hidden
       {...props}
     >
-      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
+

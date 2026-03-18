@@ -1,23 +1,29 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { cn } from '@/shared/lib/cn';
 import { AppSidebar } from './AppSidebar';
 import { MobileHeader } from './MobileHeader';
 import type { AppSidebarProps } from './types';
 
-const MOBILE_BREAKPOINT = '(max-width: 375px)';
+/** globals.css 의 `--breakpoint-mobile`(375px)와 값 동기화 필요 */
+const MOBILE_MAX_WIDTH_PX = 375;
+const MOBILE_MEDIA = `(max-width: ${MOBILE_MAX_WIDTH_PX}px)`;
 
 function useIsMobile(): boolean {
-  return useSyncExternalStore(
-    (onStoreChange) => {
-      if (typeof window === 'undefined') return () => {};
-      const media = window.matchMedia(MOBILE_BREAKPOINT);
-      media.addEventListener('change', onStoreChange);
-      return () => media.removeEventListener('change', onStoreChange);
-    },
-    () => (typeof window !== 'undefined' ? window.matchMedia(MOBILE_BREAKPOINT).matches : false),
-    () => false,
-  );
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const media = window.matchMedia(MOBILE_MEDIA);
+    const update = () => setIsMobile(media.matches);
+
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  return isMobile;
 }
 
 export interface AppLayoutProps {
