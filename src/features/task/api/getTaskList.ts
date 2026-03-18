@@ -3,7 +3,7 @@ import { toTaskList } from '../lib/mappers/task.mapper';
 import type { TaskList } from '../model/entities/task.model';
 import type { TaskListDto } from '../model/dto/task.dto';
 import { mockTaskList } from './mockTask';
-import type { GetTaskListQueryDto } from '../model/dto/task.request.dto';
+import type { GetTaskListQuery } from '../model/dto/task.query';
 import type { TaskCommonParams } from '../model/params/task.params';
 
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
@@ -15,7 +15,7 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
 // 임시 MOCK 데이터 사용 - 토큰 발급, API 명세 확정 후 제거 예정
 export async function getTaskList(
   path: TaskCommonParams,
-  query?: GetTaskListQueryDto,
+  query?: GetTaskListQuery,
 ): Promise<TaskList> {
   if (USE_MOCK) {
     return toTaskList(mockTaskList);
@@ -25,9 +25,7 @@ export async function getTaskList(
   const { data } = await httpClient.get<TaskListDto>(
     `/${teamId}/groups/${groupId}/task-lists/${taskListId}`,
     {
-      params: {
-        query,
-      },
+      params: query,
     },
   );
 

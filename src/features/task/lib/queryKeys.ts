@@ -1,7 +1,6 @@
-type TaskListQueryKeyParams = {
-  teamId: number;
-  groupId: number;
-  taskListId: number;
+import { TaskCommonParams } from '../model/params/task.params';
+
+type TaskListQueryKeyParams = TaskCommonParams & {
   date?: string;
 };
 
