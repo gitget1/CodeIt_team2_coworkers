@@ -7,22 +7,22 @@ export interface UserDTO {
   updatedAt: string;
 }
 
-export interface SignInResponseDTO {
+export interface SignInResponse {
   accessToken: string;
   refreshToken: string;
   user: UserDTO;
 }
 
-export interface SignInRequestDTO {
+export interface SignInRequest {
   email: string;
   password: string;
 }
 
-export interface SignUpRequestDTO {
+export interface SignUpRequest {
   email: string;
   nickname: string;
   password: string;
   passwordConfirmation: string;
 }
 
-export interface SignUpResponseDTO extends UserDTO {}
+export interface SignUpResponse extends UserDTO {}
