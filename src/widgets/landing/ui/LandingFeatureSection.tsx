@@ -20,37 +20,43 @@ const formatText = (text: string) => {
 export const LandingFeatureSection = ({ feature, className }: LandingFeatureSectionProps) => {
   const isPrimary = feature.theme === 'primary';
   const isImageRight = feature.imagePosition === 'right';
-  const isTaskDetail = feature.id === 'taskDetail';
+  const isLargeIcon = feature.isLargeIcon;
+  const isBottomAttached = feature.isMobileBottomAttached;
+
+  const sectionClasses = cn(
+    'w-full overflow-hidden px-6 lg:py-0',
+    isPrimary ? 'bg-brand-primary text-white' : 'text-txt-primary bg-slate-50',
+    isBottomAttached ? 'pt-24 pb-0' : 'py-24',
+    className,
+  );
+
+  const containerClasses = cn(
+    'mx-auto flex w-full max-w-360 flex-col justify-center gap-12 lg:min-h-200 lg:items-center lg:gap-18 xl:max-w-400',
+    isImageRight ? 'lg:flex-row' : 'lg:flex-row-reverse',
+  );
+
+  const textWrapperClasses = cn(
+    'flex w-full max-w-100 shrink-0 flex-col items-start text-left md:ml-8 xl:max-w-112.5',
+    !isPrimary && 'lg:mt-40 lg:ml-15 lg:self-start',
+  );
+
+  const iconClasses = cn(
+    'relative',
+    isLargeIcon ? 'h-7 w-7 md:h-10 md:w-10 lg:h-12 lg:w-12' : 'h-7 w-7 md:h-10 md:w-10',
+  );
+
+  const imageWrapperClasses = cn(
+    'relative flex flex-1',
+    isBottomAttached
+      ? 'w-[calc(100%+1.5rem)] -mr-6 justify-end self-end lg:m-0 lg:w-full'
+      : 'w-full justify-center lg:justify-end',
+  );
 
   return (
-    <section
-      className={cn(
-        'w-full overflow-hidden px-6 py-24 lg:py-0',
-        isPrimary ? 'bg-brand-primary pt-24 pb-0 text-white' : 'text-txt-primary bg-slate-50 py-24',
-        isPrimary || isTaskDetail ? 'pt-24 pb-0' : 'py-24',
-        className,
-      )}
-    >
-      <div
-        className={cn(
-          'mx-auto flex w-full max-w-360 flex-col justify-center gap-12 lg:min-h-200 lg:items-center lg:gap-18 xl:max-w-400',
-          isImageRight ? 'lg:flex-row' : 'lg:flex-row-reverse',
-        )}
-      >
-        <div
-          className={cn(
-            'flex w-full max-w-100 shrink-0 flex-col items-start text-left md:ml-8 xl:max-w-112.5',
-            !isPrimary && 'lg:mt-40 lg:ml-15 lg:self-start',
-          )}
-        >
-          <div
-            className={cn(
-              'relative',
-              feature.id === 'kanban'
-                ? 'h-7 w-7 md:h-10 md:w-10 lg:h-12 lg:w-12'
-                : 'h-7 w-7 md:h-10 md:w-10',
-            )}
-          >
+    <section className={sectionClasses}>
+      <div className={containerClasses}>
+        <div className={textWrapperClasses}>
+          <div className={iconClasses}>
             <Image
               src={feature.icon}
               alt={`${feature.title} 아이콘`}
@@ -76,14 +82,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
           </p>
         </div>
 
-        <div
-          className={cn(
-            'relative flex w-full flex-1 justify-center lg:justify-end',
-            isPrimary
-              ? '-mr-6 w-[calc(100%+1.5rem)] justify-end self-end lg:mr-0 lg:w-full'
-              : 'w-full justify-center lg:justify-end',
-          )}
-        >
+        <div className={imageWrapperClasses}>
           <Image
             src={feature.images.mobile}
             alt={feature.title.replace('\n', ' ')}

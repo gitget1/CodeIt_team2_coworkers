@@ -15,4 +15,6 @@ export interface LandingFeature {
   };
   theme: FeatureTheme;
   imagePosition: ImagePosition;
+  isLargeIcon?: boolean;
+  isMobileBottomAttached?: boolean;
 }

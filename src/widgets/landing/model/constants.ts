@@ -26,6 +26,7 @@ export const LANDING_FEATURES: LandingFeature[] = [
     },
     theme: 'light',
     imagePosition: 'right',
+    isLargeIcon: true,
   },
   {
     id: 'task',
@@ -39,6 +40,7 @@ export const LANDING_FEATURES: LandingFeature[] = [
     },
     theme: 'primary',
     imagePosition: 'left',
+    isMobileBottomAttached: true,
   },
   {
     id: 'taskDetail',
@@ -52,5 +54,6 @@ export const LANDING_FEATURES: LandingFeature[] = [
     },
     theme: 'light',
     imagePosition: 'right',
+    isMobileBottomAttached: true,
   },
 ];
