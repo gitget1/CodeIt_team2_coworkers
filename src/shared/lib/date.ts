@@ -5,7 +5,7 @@ export function formatDate(date: Date) {
     throw new Error(`[formatDate] Invalid date object provided: ${date}`);
   }
 
-  return format(date, 'yyyy-MM-dd');
+  return format(date, 'yyyy년 MM월 dd일');
 }
 
 export function formatDateTime(date: Date) {
