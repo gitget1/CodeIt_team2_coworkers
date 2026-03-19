@@ -4,8 +4,8 @@
 @theme {
   --font-sans: 'Pretendard', ui-sans-serif, system-ui, sans-serif;
 
-  /* 반응형 브레이크포인트 (JS matchMedia와 동기화해서 사용) */
-  --breakpoint-mobile: 375px;
+  /* 반응형 브레이크포인트 (JS matchMedia와 동기화해서 사용). 모바일 전체(폰·소형 태블릿) 커버 */
+  --breakpoint-mobile: 768px;
 
   /* Font Weights */
   --font-weight-regular: 400;

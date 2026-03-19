@@ -5,12 +5,15 @@ import { AppSidebar } from './AppSidebar';
 import { MobileHeader } from './MobileHeader';
 import type { AppSidebarProps } from './types';
 
-/** globals.css 의 `--breakpoint-mobile`(375px)와 값 동기화 필요 */
-const MOBILE_MAX_WIDTH_PX = 375;
+/** globals.css 의 `--breakpoint-mobile`와 값 동기화 필요 */
+const MOBILE_MAX_WIDTH_PX = 768;
 const MOBILE_MEDIA = `(max-width: ${MOBILE_MAX_WIDTH_PX}px)`;
 
+/**
+ * 모바일 뷰포트 여부. 미확정 시 true(모바일 UI)로 두어 모바일 접속 시 데스크톱 UI가 잠깐 보이는 플래시 방지.
+ */
 function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -23,12 +26,12 @@ function useIsMobile(): boolean {
     return () => media.removeEventListener('change', update);
   }, []);
 
-  return isMobile;
+  return isMobile ?? true;
 }
 
 export interface AppLayoutProps {
   children: React.ReactNode;
-  /** 375px 초과 시 항상 보이는 사이드바에 전달할 props */
+  /** 모바일 브레이크포인트 초과 시 항상 보이는 사이드바에 전달할 props */
   sidebarProps?: Omit<AppSidebarProps, 'mobileDrawer' | 'onClose'>;
   className?: string;
 }
