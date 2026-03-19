@@ -1,9 +1,39 @@
 import { Input } from '@/shared/ui/input/Input';
 import { InputBox } from '@/shared/ui/input/InputBox';
+import { toast } from 'sonner';
 
 export default function TestPage() {
   return (
     <div className="bg-background-secondary mx-auto flex max-h-full max-w-175 flex-col gap-8 p-10">
+      <section className="flex flex-col gap-6">
+        <h1 className="text-2xl font-bold">Toast 컴포넌트 테스트</h1>
+        <div className="flex gap-4">
+          <button
+            type="button"
+            className="rounded-md bg-[#5189FA] px-4 py-2 text-white"
+            onClick={() => toast.success('변경사항이 성공적으로 저장되었습니다')}
+          >
+            성공 토스트 띄우기
+          </button>
+
+          <button
+            type="button"
+            className="rounded-md bg-[#FC4B4B] px-4 py-2 text-white"
+            onClick={() => toast.error('저장하지 않은 변경사항이 있어요')}
+          >
+            에러 토스트 띄우기
+          </button>
+
+          <button
+            type="button"
+            className="bg-point-orange rounded-md px-4 py-2 text-white"
+            onClick={() => toast.warning('권한이 없습니다 로그인이 필요합니다.')}
+          >
+            경고 토스트 띄우기
+          </button>
+        </div>
+      </section>
+
       <section className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold">Input 컴포넌트</h1>
 
