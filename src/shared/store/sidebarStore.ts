@@ -49,3 +49,4 @@ export function useSidebarStore() {
   const isExpanded = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   return { isExpanded, toggle, setExpanded };
 }
+ 
