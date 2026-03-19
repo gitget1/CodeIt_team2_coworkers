@@ -4,14 +4,22 @@ import type { Result } from '@/shared/types/result';
 import type { TaskDto } from '../model/dto/task.dto';
 import type { Task } from '../model/entities/task.model';
 import { toTask } from '../lib/mappers/task.mapper';
+import type { CreateTaskParams } from '../model/params/create.params';
+import type { TaskCommonParams } from '../model/params/task.params';
 
-export async function createTask(): Promise<Result<Task>> {
+export async function createTask(
+  path: TaskCommonParams,
+  body: CreateTaskParams,
+): Promise<Result<Task>> {
+  const { teamId, groupId, taskListId } = path;
   try {
-    const res = await httpClient.post<TaskDto>('/tasks');
+    const res = await httpClient.post<TaskDto>(
+      `/${teamId}/groups/${groupId}/task-lists/${taskListId}/tasks`,
+      body,
+    );
 
     return { ok: true, data: toTask(res.data) };
   } catch (error: unknown) {
-    
     return mapTaskErrorToFailure(error);
   }
 }

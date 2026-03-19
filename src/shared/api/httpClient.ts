@@ -5,7 +5,7 @@ import { mapApiError } from './mapApiError';
 const NEXT_PUBLIC_API_BASE_URL = `https://fe-project-cowokers.vercel.app`;
 
 const httpClient = axios.create({
-  baseURL: NEXT_PUBLIC_API_BASE_URL,
+  baseURL: '/api',
   timeout: 10000,
   withCredentials: true,
 });
