@@ -4,17 +4,15 @@ import type { Result } from '@/shared/types/result';
 import type { TaskDto } from '../model/dto/task.dto';
 import type { Task } from '../model/entities/task.model';
 import { toTask } from '../lib/mappers/task.mapper';
-import { ApiError } from '@/shared/types/apiError';
 
 export async function createTask(): Promise<Result<Task>> {
   try {
     const res = await httpClient.post<TaskDto>('/tasks');
 
     return { ok: true, data: toTask(res.data) };
-  } catch (error) {
-    const apiError = error as ApiError;
-
-    return mapTaskErrorToFailure(apiError);
+  } catch (error: unknown) {
+    
+    return mapTaskErrorToFailure(error);
   }
 }
 

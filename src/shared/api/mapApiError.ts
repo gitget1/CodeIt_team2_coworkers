@@ -6,18 +6,31 @@ type ApiErrorResponse = {
   code?: string;
 };
 
+const DEFAULT_ERROR_MESSAGE = '알 수 없는 오류가 발생했습니다.';
+
 const STATUS_ERROR_MESSAGES: Record<number, string> = {
   401: '로그인이 필요합니다.',
   403: '권한이 없습니다.',
-  404: '데이터를 찾을 수 없습니다.',
-} as const;
+};
+
+function isApiErrorResponse(data: unknown): data is ApiErrorResponse {
+  if (typeof data !== 'object' || data === null) return false;
+
+  const d = data as Record<string, unknown>;
+
+  return (
+    ('message' in d ? typeof d.message === 'string' : true) &&
+    ('code' in d ? typeof d.code === 'string' : true)
+  );
+}
 
 export function mapApiError(error: unknown): ApiError {
   if (!axios.isAxiosError(error)) {
     return {
-      message: '알 수 없는 오류가 발생했습니다.',
+      message: DEFAULT_ERROR_MESSAGE,
     };
   }
+
   if (!error.response) {
     return {
       message: '네트워크 오류가 발생했습니다.',
@@ -25,13 +38,13 @@ export function mapApiError(error: unknown): ApiError {
   }
 
   const { status, data } = error.response;
-  const serverData = data as ApiErrorResponse | undefined;
+  const responseData = isApiErrorResponse(data) ? data : undefined;
 
-  const mappedMessage = STATUS_ERROR_MESSAGES[status];
+  const message = STATUS_ERROR_MESSAGES[status] ?? responseData?.message ?? DEFAULT_ERROR_MESSAGE;
 
   return {
-    message: serverData?.message ?? mappedMessage ?? '알 수 없는 오류가 발생했습니다.',
+    message,
     status,
-    code: serverData?.code,
+    code: responseData?.code,
   };
 }

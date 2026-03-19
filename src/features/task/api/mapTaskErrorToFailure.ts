@@ -8,14 +8,35 @@ const TASK_ERROR_MESSAGES = {
 
 type TaskErrorCode = keyof typeof TASK_ERROR_MESSAGES;
 
-export function mapTaskErrorToFailure(error: ApiError): Failure<ApiError> {
-  const code = error.code as TaskErrorCode | undefined;
+function isApiError(error: unknown): error is ApiError {
+  return typeof error === 'object' && error !== null && 'message' in error;
+}
 
-  const finalError =
-    code && TASK_ERROR_MESSAGES[code] ? { ...error, message: TASK_ERROR_MESSAGES[code] } : error;
+function isTaskErrorCode(code: unknown): code is TaskErrorCode {
+  return typeof code === 'string' && code in TASK_ERROR_MESSAGES;
+}
 
+export function mapTaskErrorToFailure(error: unknown): Failure<ApiError> {
+  if (!isApiError(error)) {
+    return {
+      ok: false,
+      error: {
+        message: '알 수 없는 오류가 발생했습니다.',
+      },
+    };
+  }
+  const code = error.code;
+  if (isTaskErrorCode(code)) {
+    return {
+      ok: false,
+      error: {
+        ...error,
+        message: TASK_ERROR_MESSAGES[code],
+      },
+    };
+  }
   return {
     ok: false,
-    error: finalError,
+    error,
   };
 }
