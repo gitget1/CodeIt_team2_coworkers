@@ -1,12 +1,30 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import axios from 'axios';
 import { useState } from 'react';
+import { mapApiError } from '../api/mapApiError';
+import { toast } from 'sonner';
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        queryCache: new QueryCache({
+          onError: (error) => {
+            const mappedError = mapApiError(error);
+            if (mappedError.status !== 401) {
+              toast.error(mappedError.message);
+            }
+          },
+        }),
+        mutationCache: new MutationCache({
+          onError: (error) => {
+            const mappedError = mapApiError(error);
+            if (mappedError.status !== 401) {
+              toast.error(mappedError.message);
+            }
+          },
+        }),
         defaultOptions: {
           queries: {
             staleTime: 60 * 1000,
