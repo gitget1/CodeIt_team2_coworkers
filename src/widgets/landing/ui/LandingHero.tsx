@@ -1,17 +1,16 @@
 import { cn } from '@/shared/lib/cn';
-import { Button } from '@/shared/ui/Button';
 import Image from 'next/image';
 import LandingHeaderDesktop from '@/shared/assets/images/landing-header-desktop.png';
 import LandingHeaderTablet from '@/shared/assets/images/landing-header-tablet.png';
 import LandingHeaderMobile from '@/shared/assets/images/landing-header-mobile.png';
 import LandingHeaderIcon from '@/shared/assets/images/landing-header.png';
+import { CTAButton } from './CTAButton';
 
 interface LandingHeroProps {
-  onStart: () => void;
   className?: string;
 }
 
-export const LandingHero = ({ onStart, className }: LandingHeroProps) => {
+export const LandingHero = ({ className }: LandingHeroProps) => {
   return (
     <section className={cn('bg-background-secondary w-full overflow-hidden', className)}>
       <div className="flex w-full flex-col pt-20 lg:flex-row lg:items-center lg:justify-between lg:pt-0">
@@ -34,9 +33,7 @@ export const LandingHero = ({ onStart, className }: LandingHeroProps) => {
           </div>
 
           <div className="mb-1 shrink-0 lg:mb-0">
-            <Button variant="primary" size="lg" onClick={onStart}>
-              지금 시작하기
-            </Button>
+            <CTAButton />
           </div>
         </div>
 

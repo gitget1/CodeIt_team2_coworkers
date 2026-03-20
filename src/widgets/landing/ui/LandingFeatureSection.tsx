@@ -1,32 +1,23 @@
 import React from 'react';
-import { LandingFeature } from '../model/types';
 import { cn } from '@/shared/lib/cn';
 import Image from 'next/image';
+import { LandingFeature } from './LandingContainer';
 
 interface LandingFeatureSectionProps {
   feature: LandingFeature;
   className?: string;
 }
 
-const formatText = (text: string) => {
-  return text.split('\n').map((line, index, array) => (
-    <React.Fragment key={index}>
-      {line}
-      {index !== array.length - 1 && <br />}
-    </React.Fragment>
-  ));
-};
-
 export const LandingFeatureSection = ({ feature, className }: LandingFeatureSectionProps) => {
   const isPrimary = feature.theme === 'primary';
   const isImageRight = feature.imagePosition === 'right';
   const isLargeIcon = feature.isLargeIcon;
-  const isBottomAttached = feature.isMobileBottomAttached;
+  const isImageAlignBottom = feature.imageAlignBottom;
 
   const sectionClasses = cn(
     'w-full overflow-hidden px-6 lg:py-0',
     isPrimary ? 'bg-brand-primary text-white' : 'text-txt-primary bg-slate-50',
-    isBottomAttached ? 'pt-24 pb-0' : 'py-24',
+    isImageAlignBottom ? 'pt-24 pb-0' : 'py-24',
     className,
   );
 
@@ -47,7 +38,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
 
   const imageWrapperClasses = cn(
     'relative flex flex-1',
-    isBottomAttached
+    isImageAlignBottom
       ? 'w-[calc(100%+1.5rem)] -mr-6 justify-end self-end lg:m-0 lg:w-full'
       : 'w-full justify-center lg:justify-end',
   );
@@ -59,7 +50,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
           <div className={iconClasses}>
             <Image
               src={feature.icon}
-              alt={`${feature.title} 아이콘`}
+              alt={`${feature.titleLines[0]} 아이콘`}
               fill
               className="object-contain"
             />
@@ -70,7 +61,12 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
               isPrimary ? 'text-txt-inverse' : 'text-brand-primary',
             )}
           >
-            {formatText(feature.title)}
+            {feature.titleLines.map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index !== feature.titleLines.length - 1 && <br />}
+              </React.Fragment>
+            ))}
           </h2>
           <p
             className={cn(
@@ -78,14 +74,19 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
               isPrimary ? 'text-blue-100' : 'text-slate-400',
             )}
           >
-            {formatText(feature.description)}
+            {feature.descriptionLines.map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index !== feature.descriptionLines.length - 1 && <br />}
+              </React.Fragment>
+            ))}
           </p>
         </div>
 
         <div className={imageWrapperClasses}>
           <Image
             src={feature.images.mobile}
-            alt={feature.title.replace('\n', ' ')}
+            alt="mobile feature"
             width={1200}
             height={800}
             className="block h-auto w-full rounded-xl md:hidden"
@@ -93,7 +94,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
           />
           <Image
             src={feature.images.tablet}
-            alt={feature.title.replace('\n', ' ')}
+            alt="tablet feature"
             width={1600}
             height={1200}
             className="hidden h-auto w-full rounded-xl md:block lg:hidden"
@@ -101,7 +102,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
           />
           <Image
             src={feature.images.desktop}
-            alt={feature.title.replace('\n', ' ')}
+            alt="desktop feature"
             width={1000}
             height={800}
             className="hidden h-auto w-full lg:block"
