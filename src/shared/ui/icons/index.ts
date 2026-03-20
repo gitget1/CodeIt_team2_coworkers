@@ -11,3 +11,5 @@ export * from './IconHamburger';
 export * from './IconLogo';
 export * from './IconPlus';
 export * from './IconTeam';
+export * from './IconUser';
+export * from './IconPencil';
