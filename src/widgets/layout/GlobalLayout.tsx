@@ -9,12 +9,12 @@ interface GlobalLayoutProps {
 export function GlobalLayout({ children }: GlobalLayoutProps) {
   const { data: user, isLoading } = useCurrentUser();
 
-  const isLoggedIn = !!user;
+  const isLoggedIn = isLoading ? undefined : !!user;
 
   return (
     <AppLayout
       sidebarProps={{
-        isLoggedIn,
+        isLoggedIn: isLoggedIn ?? false,
         selectedTeamId: null,
         onTeamSelect: (id) => console.log('팀 선택:', id),
         onAddTeam: () => console.log('팀 추가 클릭'),

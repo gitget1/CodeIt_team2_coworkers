@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <QueryProvider>
-      <HydrationBoundary state={pageProps.dehydratedState}>
+      <HydrationBoundary state={pageProps?.dehydratedState}>
         {getLayout(<Component {...pageProps} />)}
         <Toaster />
       </HydrationBoundary>
