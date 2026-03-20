@@ -14,6 +14,7 @@ export const toTask = (dto: TaskDto): Task => ({
   order: dto.displayIndex,
   commentCount: dto.commentCount,
   writer: toUser(dto.writer),
+  isCompleted: Boolean(dto.doneAt),
   completedBy: dto.doneBy?.user ? toUser(dto.doneBy.user) : undefined,
   completedAt: dto.doneAt ?? undefined,
   isDeleted: Boolean(dto.deletedAt),

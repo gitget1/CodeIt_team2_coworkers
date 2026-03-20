@@ -13,6 +13,7 @@ export interface Task {
   order: number;
   commentCount: number;
   writer: User;
+  isCompleted: boolean;
   completedBy?: User;
   completedAt?: string;
   isDeleted: boolean;

@@ -7,6 +7,7 @@ type Props = TaskCommonParams & {
 };
 
 export default function TaskList({ teamId, groupId, taskListId, date }: Props) {
+  const params = { teamId, groupId, taskListId };
   const { data, isLoading, isError } = useTaskListQuery({ teamId, groupId, taskListId }, { date });
   if (isLoading) return <div>로딩중...</div>;
 
@@ -19,7 +20,7 @@ export default function TaskList({ teamId, groupId, taskListId, date }: Props) {
   return (
     <ul className="flex w-full max-w-[734px] flex-col gap-2">
       {data.tasks.map((task) => (
-        <TaskItem key={task.id} task={task} />
+        <TaskItem key={task.id} task={task} params={params} />
       ))}
     </ul>
   );
