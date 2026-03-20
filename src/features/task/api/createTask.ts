@@ -4,7 +4,7 @@ import type { Result } from '@/shared/types/result';
 import type { TaskDto } from '../model/dto/task.dto';
 import type { Task } from '../model/entities/task.model';
 import { toTask } from '../lib/mappers/task.mapper';
-import type { CreateTaskParams } from '../model/params/create.params';
+import type { CreateTaskParams } from '../model/params/task.create.params';
 import type { TaskCommonParams } from '../model/params/task.params';
 
 export async function createTask(
@@ -15,7 +15,10 @@ export async function createTask(
   try {
     const res = await httpClient.post<TaskDto>(
       `/${teamId}/groups/${groupId}/task-lists/${taskListId}/tasks`,
-      body,
+      {
+        ...body,
+        startDate: body.startDate?.toISOString(),
+      },
     );
 
     return { ok: true, data: toTask(res.data) };

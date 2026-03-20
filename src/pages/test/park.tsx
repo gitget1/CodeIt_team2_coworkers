@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTaskList } from '@/features/task/api/getTaskList';
-import { useCreateTaskMutation } from '@/features/task/hooks/useCreateTaskMutaion';
+import { useCreateTaskMutation } from '@/features/task/hooks/useCreateTaskMutation';
 
 export default function TestTaskPage() {
   const { mutateAsync, isPending } = useCreateTaskMutation({
