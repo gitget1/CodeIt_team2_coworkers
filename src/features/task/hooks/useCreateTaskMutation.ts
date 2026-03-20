@@ -4,13 +4,14 @@ import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
 import { CreateTaskParams } from '../model/params/task.create.params';
 import { createRecurring } from '../api/createRecurring';
+import { RecurrenceType } from '../model/types/recurrence.type';
 
 type UseCreateTaskMutationParams = TaskCommonParams & {
   date?: string;
 };
 
 type CreateTaskFormValues = CreateTaskParams & {
-  frequencyType: 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
+  frequencyType: RecurrenceType;
   monthDay?: number;
 };
 
