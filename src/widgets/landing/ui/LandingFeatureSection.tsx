@@ -10,12 +10,11 @@ interface LandingFeatureSectionProps {
 
 export const LandingFeatureSection = ({ feature, className }: LandingFeatureSectionProps) => {
   const isPrimary = feature.theme === 'primary';
-  const isImageRight = feature.imagePosition === 'right';
   const isLargeIcon = feature.isLargeIcon;
   const isImageAlignBottom = feature.imageAlignBottom;
 
   const sectionClasses = cn(
-    'w-full overflow-hidden px-6 lg:py-0',
+    'group w-full overflow-hidden px-6 lg:py-0',
     isPrimary ? 'bg-brand-primary text-white' : 'text-txt-primary bg-slate-50',
     isImageAlignBottom ? 'pt-24 pb-0' : 'py-24',
     className,
@@ -23,7 +22,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
 
   const containerClasses = cn(
     'mx-auto flex w-full max-w-360 flex-col justify-center gap-12 lg:min-h-200 lg:items-center lg:gap-18 xl:max-w-400',
-    isImageRight ? 'lg:flex-row' : 'lg:flex-row-reverse',
+    'group-even:lg:flex-row lg:flex-row-reverse',
   );
 
   const textWrapperClasses = cn(
@@ -39,7 +38,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
   const imageWrapperClasses = cn(
     'relative flex flex-1',
     isImageAlignBottom
-      ? 'w-[calc(100%+1.5rem)] -mr-6 justify-end self-end lg:m-0 lg:w-full'
+      ? 'w-[calc(100%_+_1.5rem)] -mr-6 justify-end self-end lg:m-0 lg:w-full'
       : 'w-full justify-center lg:justify-end',
   );
 

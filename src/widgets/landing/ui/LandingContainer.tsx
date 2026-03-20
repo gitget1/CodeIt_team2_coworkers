@@ -16,7 +16,6 @@ import { LandingFeatureSection } from './LandingFeatureSection';
 import { LandingCTA } from './LandingCTA';
 
 export type FeatureTheme = 'light' | 'primary';
-export type ImagePosition = 'left' | 'right';
 
 export interface LandingFeature {
   id: string;
@@ -29,7 +28,6 @@ export interface LandingFeature {
     mobile: StaticImageData | string;
   };
   theme: FeatureTheme;
-  imagePosition: ImagePosition;
   isLargeIcon?: boolean;
   imageAlignBottom?: boolean;
 }
@@ -49,7 +47,6 @@ export const LANDING_FEATURES: LandingFeature[] = [
       mobile: Feature1Mobile,
     },
     theme: 'light',
-    imagePosition: 'right',
     isLargeIcon: true,
   },
   {
@@ -63,7 +60,6 @@ export const LANDING_FEATURES: LandingFeature[] = [
       mobile: Feature2Mobile,
     },
     theme: 'primary',
-    imagePosition: 'left',
     imageAlignBottom: true,
   },
   {
@@ -80,7 +76,6 @@ export const LANDING_FEATURES: LandingFeature[] = [
       mobile: Feature3Mobile,
     },
     theme: 'light',
-    imagePosition: 'right',
     imageAlignBottom: true,
   },
 ];
