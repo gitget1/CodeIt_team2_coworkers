@@ -2,5 +2,8 @@ export interface User {
   id: number;
   email: string;
   name: string;
-  profileImage: string | null;
+  profileImage: string | undefined;
+  teamId: string;
+  createdAt: string;
+  updatedAt: string;
 }
