@@ -10,7 +10,10 @@ type UseCreateTaskMutationParams = TaskCommonParams & {
   date?: string;
 };
 
-type CreateTaskFormValues = CreateTaskParams & {
+type CreateTaskFormValues = {
+  name: string;
+  description?: string;
+  startDate?: Date;
   frequencyType: RecurrenceType;
   monthDay?: number;
 };
@@ -50,3 +53,6 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
     },
   });
 }
+
+// TODO:
+// 추후 리팩토링이 필요함 body.startDate!, 확장성 고려로 로직 분리
