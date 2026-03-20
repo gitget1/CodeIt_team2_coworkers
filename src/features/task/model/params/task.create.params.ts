@@ -1,4 +1,4 @@
-export type FrequencyType = 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
+import { RecurrenceType } from '../types/recurrence.type';
 
 export interface CreateTaskParams {
   name: string;
@@ -10,6 +10,6 @@ export interface CreateRecurringParams {
   name: string;
   description?: string;
   startDate: Date;
-  frequencyType: FrequencyType;
+  frequencyType: RecurrenceType;
   monthDay?: number;
 }
