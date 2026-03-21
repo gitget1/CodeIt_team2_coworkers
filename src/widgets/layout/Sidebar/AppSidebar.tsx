@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   Sidebar,
   SidebarHeader,
@@ -12,8 +13,9 @@ import { ROUTES } from '@/shared/constants/routes';
 import { DEFAULT_TEAM_ITEMS } from './constants';
 import type { AppSidebarProps } from './types';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
-import logoSm from '@/shared/assets/images/logo-sm.png';
+import logoLg from '@/shared/assets/images/logo-lg.png';
 import userIcon from '@/shared/assets/icons/user.svg';
+import { MemberChip, Profile } from '@/shared/ui/profile';
 
 const defaultProfileImgSrc = getImageSrc(userIcon);
 const defaultProfileBgClass = 'rounded-xl bg-[#E2E8F0]';
@@ -65,17 +67,17 @@ function DefaultFooter({
 
   return (
     <SidebarFooter>
-      <div className="flex items-center gap-3">
-        <span className={cn('flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden', defaultProfileBgClass)}>
-          <img src={defaultProfileImgSrc} alt="프로필" className="h-full w-full object-contain" />
-        </span>
-        {isExpanded && (
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-txt-primary truncate">안해나</p>
-            <p className="text-xs text-txt-default truncate">경영관리팀</p>
-          </div>
-        )}
-      </div>
+      {isExpanded ? (
+        <MemberChip
+          imageSrc={defaultProfileImgSrc}
+          name="안해나"
+          teamName="경영관리팀"
+          size="lg"
+          avatarClassName="bg-background-tertiary"
+        />
+      ) : (
+        <Profile size="lg" imageSrc={defaultProfileImgSrc} ariaLabel="프로필" className="bg-background-tertiary" />
+      )}
     </SidebarFooter>
   );
 }
@@ -123,12 +125,12 @@ export function AppSidebar({
             toggleButton={isExpanded ? <FoldLeftIcon className="text-slate-300" /> : undefined}
             logo={
               isExpanded ? (
-                <img
-                  src={logoSm.src}
+                <Image
+                  src={logoLg}
                   alt="COWORKERS"
                   width={180}
                   height={32}
-                  className="h-8 w-[180px] shrink-0 object-contain object-left"
+                  className="h-8 w-auto shrink-0 object-contain object-left"
                 />
               ) : (
                 <span className="flex items-center justify-center text-brand-primary">

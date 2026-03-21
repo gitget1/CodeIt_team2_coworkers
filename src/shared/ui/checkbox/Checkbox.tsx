@@ -1,12 +1,7 @@
 import { useId, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
-import { checkboxCheckedSrc, checkboxEmptySrc } from './checkboxAssets';
+import { CheckboxIcon, CHECKBOX_ICON_SIZE_PX } from './CheckboxIcon';
 import { CheckboxProps } from './Checkbox.types';
-
-const ICON_SIZE_PX = {
-  sm: 12,
-  lg: 16,
-} as const;
 
 export function Checkbox({
   checked,
@@ -32,8 +27,7 @@ export function Checkbox({
     onChange?.(nextChecked, e);
   };
 
-  const outerSrc = resolvedChecked ? checkboxCheckedSrc : checkboxEmptySrc;
-  const iconSizePx = ICON_SIZE_PX[size];
+  const iconSizePx = CHECKBOX_ICON_SIZE_PX[size];
 
   return (
     <label
@@ -61,7 +55,7 @@ export function Checkbox({
         aria-hidden
         style={{ width: iconSizePx, height: iconSizePx }}
       >
-        <img src={outerSrc} alt="" width={iconSizePx} height={iconSizePx} className="block" />
+        <CheckboxIcon checked={resolvedChecked} size={size} />
       </span>
 
       {label != null && <span className="text-sm text-txt-primary">{label}</span>}
