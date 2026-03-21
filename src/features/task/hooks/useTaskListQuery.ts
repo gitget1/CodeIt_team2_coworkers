@@ -5,14 +5,15 @@ import type { TaskCommonParams } from '../model/params/task.params';
 import { GetTaskListQuery } from '../model/dto/task.query';
 
 export function useTaskListQuery(path: TaskCommonParams, query?: GetTaskListQuery) {
-  const { teamId, groupId, taskListId } = path;
+  const { groupId, taskListId } = path;
 
   return useQuery({
     queryKey: TASK_QUERY_KEYS.list({
-      ...path,
+      groupId: path.groupId,
+      taskListId: path.taskListId,
       date: query?.date,
     }),
     queryFn: () => getTaskList(path, query),
-    enabled: Boolean(teamId && groupId && taskListId),
+    enabled: Boolean(groupId && taskListId),
   });
 }

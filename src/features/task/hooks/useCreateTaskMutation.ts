@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createTask } from '../api/createTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
-import { CreateTaskParams } from '../model/params/task.create.params';
 import { createRecurring } from '../api/createRecurring';
 import { RecurrenceType } from '../model/types/recurrence.type';
 
@@ -24,7 +23,6 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
   return useMutation({
     mutationFn: (body: CreateTaskFormValues) => {
       const path = {
-        teamId: params.teamId,
         groupId: params.groupId,
         taskListId: params.taskListId,
       };
@@ -34,6 +32,7 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
           name: body.name,
           description: body.description,
           startDate: body.startDate,
+          frequencyType: body.frequencyType,
         });
       }
 
@@ -48,7 +47,7 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: TASK_QUERY_KEYS.list(params),
+        queryKey: TASK_QUERY_KEYS.lists(params.groupId),
       });
     },
   });

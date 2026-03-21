@@ -1,14 +1,15 @@
 import { useTaskListQuery } from '../hooks/useTaskListQuery';
 import { TaskCommonParams } from '../model/params/task.params';
+import TaskCreateButton from './create-task/TaskCreateButton';
 import TaskItem from './TaskItem';
 
 type Props = TaskCommonParams & {
   date?: string;
 };
 
-export default function TaskList({ teamId, groupId, taskListId, date }: Props) {
-  const params = { teamId, groupId, taskListId };
-  const { data, isLoading, isError } = useTaskListQuery({ teamId, groupId, taskListId }, { date });
+export default function TaskList({ groupId, taskListId, date }: Props) {
+  const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date });
+  const params = { groupId, taskListId };
   if (isLoading) return <div>로딩중...</div>;
 
   if (isError) return <div>에러 발생</div>;
@@ -19,6 +20,7 @@ export default function TaskList({ teamId, groupId, taskListId, date }: Props) {
 
   return (
     <ul className="flex w-full max-w-[734px] flex-col gap-2">
+      <TaskCreateButton params={params} />
       {data.tasks.map((task) => (
         <TaskItem key={task.id} task={task} params={params} />
       ))}

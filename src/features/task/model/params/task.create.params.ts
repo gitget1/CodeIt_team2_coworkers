@@ -4,6 +4,7 @@ export interface CreateTaskParams {
   name: string;
   description?: string;
   startDate?: Date;
+  frequencyType: RecurrenceType;
 }
 
 export interface CreateRecurringParams {
