@@ -15,8 +15,8 @@ export const toUser = (dto: UserDto): User => ({
   name: dto.nickname ?? '익명의 사용자',
   profileImage: dto.image ?? undefined,
   teamId: dto.teamId,
-  createdAt: dto.createdAt,
-  updatedAt: dto.updatedAt,
+  createdAt: new Date(dto.createdAt),
+  updatedAt: new Date(dto.updatedAt),
 });
 
 // 그룹
@@ -25,8 +25,8 @@ export const toMembershipGroup = (dto: MembershipGroupDto): MembershipGroup => (
   teamId: dto.teamId,
   name: dto.name,
   imageUrl: dto.image ?? undefined,
-  createdAt: dto.createdAt,
-  updatedAt: dto.updatedAt,
+  createdAt: new Date(dto.createdAt),
+  updatedAt: new Date(dto.updatedAt),
 });
 
 // 멤버

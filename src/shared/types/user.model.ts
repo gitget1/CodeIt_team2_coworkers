@@ -4,6 +4,6 @@ export interface User {
   name: string;
   profileImage: string | undefined;
   teamId: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

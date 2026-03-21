@@ -6,8 +6,8 @@ export interface MembershipGroup {
   teamId: string;
   name: string;
   imageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Membership {
