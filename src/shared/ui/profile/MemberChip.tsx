@@ -5,7 +5,7 @@ import type { ImageAsset, ProfileSize } from './Profile.types';
 type Props = {
   imageSrc?: ImageAsset;
   name: string;
-  description?: string;
+  email?: string;
   size?: ProfileSize;
   className?: string;
   avatarClassName?: string;
@@ -14,18 +14,18 @@ type Props = {
 export function MemberChip({
   imageSrc,
   name,
-  description,
+  email,
   size = 'lg',
   className,
   avatarClassName,
 }: Props) {
   return (
     <div className={cn('flex items-center gap-3', className)}>
-      <Profile size={size} imageSrc={imageSrc} alt={`${name} 프로필`} className={avatarClassName} />
+      <Profile size={size} imageSrc={imageSrc} decorative className={avatarClassName} />
       <div className="min-w-0">
         <p className="text-sm font-medium text-txt-primary truncate">{name}</p>
-        {description && (
-          <p className="text-xs text-txt-default truncate">{description}</p>
+        {email && (
+          <p className="text-xs text-txt-default truncate">{email}</p>
         )}
       </div>
     </div>

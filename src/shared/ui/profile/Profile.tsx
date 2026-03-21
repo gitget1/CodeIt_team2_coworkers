@@ -9,6 +9,7 @@ export function Profile({
   size = 'md',
   imageSrc,
   alt = '프로필 이미지',
+  decorative = false,
   ariaLabel,
   title,
   className,
@@ -20,6 +21,7 @@ export function Profile({
   const borderRadiusPx = PROFILE_BORDER_RADIUS_PX[size];
   const [imgError, setImgError] = useState(false);
   const shouldShowImage = imageSrc != null && !imgError;
+  const imgAlt = decorative ? '' : alt;
 
   return (
     <div
@@ -30,13 +32,14 @@ export function Profile({
         className,
       )}
       style={{ width: sizePx, height: sizePx, borderRadius: borderRadiusPx }}
-      aria-label={ariaLabel}
-      title={title}
+      aria-hidden={decorative ? true : undefined}
+      aria-label={decorative ? undefined : ariaLabel}
+      title={decorative ? undefined : title}
     >
       {shouldShowImage ? (
         <img
           src={getImageSrc(imageSrc)}
-          alt={alt}
+          alt={imgAlt}
           className={cn('h-full w-full object-cover', imageClassName)}
           onError={() => setImgError(true)}
         />

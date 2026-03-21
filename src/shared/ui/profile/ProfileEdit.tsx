@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { IconPencil, IconUser } from '@/shared/ui/icons';
+import { IconButton } from '@/shared/ui/IconButton';
 import { useImagePicker } from '@/shared/hooks/useImagePicker';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
 import { cn } from '@/shared/lib/cn';
@@ -101,7 +102,7 @@ export function ProfileEdit({
           width: config.w,
           height: config.h,
           borderRadius: config.borderRadius,
-          border: `${config.borderWidth}px solid #E2E8F0`,
+          border: `${config.borderWidth}px solid var(--color-background-tertiary)`,
         }}
         aria-label={ariaLabel}
         role="img"
@@ -118,19 +119,16 @@ export function ProfileEdit({
         )}
       </div>
 
-      <button
+      <IconButton
         type="button"
+        variant="surface"
         disabled={disabled}
         aria-label={ariaLabel ? `${ariaLabel} 이미지 수정` : '프로필 이미지 수정'}
-        className={cn(
-          'absolute flex items-center justify-center rounded-full bg-white shadow-sm',
-          !disabled && 'cursor-pointer hover:bg-gray-100',
-          disabled && 'cursor-not-allowed opacity-60',
-        )}
+        className="absolute"
         style={{
           width: config.pencilBtn,
           height: config.pencilBtn,
-          border: `${config.borderWidth}px solid #E2E8F0`,
+          borderWidth: config.borderWidth,
           right: config.pencilOffset,
           bottom: config.pencilOffset,
         }}
@@ -139,8 +137,8 @@ export function ProfileEdit({
           inputRef.current?.click();
         }}
       >
-        <IconPencil size={config.pencilIcon} className="text-[#64748B]" />
-      </button>
+        <IconPencil size={config.pencilIcon} className="text-icon-primary" />
+      </IconButton>
 
       <input
         ref={inputRef}

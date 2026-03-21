@@ -16,6 +16,11 @@ export interface ProfileProps {
   imageSrc?: ImageAsset;
   /** 이미지 접근성을 위한 대체 텍스트 */
   alt?: string;
+  /**
+   * 인접 텍스트에 이름 등이 이미 있을 때 true로 두면 아바타를 장식용으로 처리합니다.
+   * (스크린 리더에서 이미지/아이콘과 텍스트가 중복으로 읽히지 않도록 합니다.)
+   */
+  decorative?: boolean;
   /** 컨테이너 스타일 커스터마이징 */
   className?: string;
   /** 테두리 스타일 커스터마이징 */
