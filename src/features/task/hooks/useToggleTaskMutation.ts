@@ -11,7 +11,7 @@ export function useToggleTaskMutation(params: TaskCommonParams) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: TASK_QUERY_KEYS.list(params),
+        queryKey: TASK_QUERY_KEYS.lists(params.groupId),
       });
     },
   });

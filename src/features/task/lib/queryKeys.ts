@@ -6,11 +6,11 @@ type TaskListQueryKeyParams = TaskCommonParams & {
 
 export const TASK_QUERY_KEYS = {
   all: ['tasks'] as const,
-  lists: (teamId: number, groupId: number) =>
-    [...TASK_QUERY_KEYS.all, teamId, groupId, 'list'] as const,
+  lists: (groupId: number) =>
+    [...TASK_QUERY_KEYS.all, groupId, 'list'] as const,
   list: (params: TaskListQueryKeyParams) =>
     [
-      ...TASK_QUERY_KEYS.lists(params.teamId, params.groupId),
+      ...TASK_QUERY_KEYS.lists(params.groupId),
       params.taskListId,
       params.date,
     ] as const,

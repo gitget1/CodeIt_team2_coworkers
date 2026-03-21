@@ -29,15 +29,13 @@ function MetaItem({ icon, children, className }: MetaItemProps) {
 export default function TaskItem({ task, params }: Props & { params: TaskCommonParams }) {
   const { mutate } = useToggleTaskMutation(params);
 
-  const handleToggle = () => {
+  const handleToggle = (checked: boolean) => {
     mutate({
       teamId: params.teamId,
       groupId: params.groupId,
       taskListId: params.taskListId,
       taskId: task.id,
-      name: task.title,
-      description: task.description,
-      done: !task.isCompleted,
+      done: checked,
     });
   };
   return (

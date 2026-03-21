@@ -29,7 +29,7 @@ export default function TestTaskPage() {
           </div>
         ))}
       <div>
-        <TaskList teamId={1} groupId={1} taskListId={1} date="2026-03-19" />
+        <TaskList teamId={1} groupId={1} taskListId={1} />
       </div>
     </div>
   );
