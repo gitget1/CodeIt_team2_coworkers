@@ -12,7 +12,7 @@ export async function createRecurring(
 ): Promise<Result<Task>> {
   const { groupId, taskListId } = path;
   try {
-    const res = await clientFetcher.post(`/groups${groupId}/task-lists/${taskListId}/recurring`, {
+    const res = await clientFetcher.post(`/groups/${groupId}/task-lists/${taskListId}/recurring`, {
       ...body,
       startDate: body.startDate.toISOString(),
     });
