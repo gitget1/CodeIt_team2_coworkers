@@ -28,6 +28,7 @@ function MetaItem({ icon, children, className }: MetaItemProps) {
 
 export default function TaskItem({ task, params }: Props & { params: TaskCommonParams }) {
   const { mutate } = useToggleTaskMutation(params);
+  const checkboxId = `task-${task.id}`;
 
   const handleToggle = (checked: boolean) => {
     mutate({
@@ -42,12 +43,13 @@ export default function TaskItem({ task, params }: Props & { params: TaskCommonP
     <li className="border-background-tertiary flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer">
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
-          <Checkbox size="lg" checked={task.isCompleted} onChange={handleToggle} />
-          <p
-            className={`text-sm transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
+          <Checkbox id={checkboxId} size="lg" checked={task.isCompleted} onChange={handleToggle} />
+          <label
+            htmlFor={checkboxId}
+            className={`text-sm cursor-pointer transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
           >
             {task.title}
-          </p>
+          </label>
           <MetaItem icon={<IconComment />}>{task.commentCount}</MetaItem>
         </div>
 
