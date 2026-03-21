@@ -18,7 +18,8 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
           },
         }),
         mutationCache: new MutationCache({
-          onError: (error) => {
+          onError: (error, _variables, _context, mutation) => {
+            if (mutation.meta?.disableGlobalError) return;
             const mappedError = mapApiError(error);
             if (mappedError.status !== 401) {
               toast.error(mappedError.message);

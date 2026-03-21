@@ -9,6 +9,9 @@ export const useSignIn = () => {
 
   return useMutation<User, Error, SignInRequest>({
     mutationFn: authService.signIn,
+    meta: {
+      disableGlobalError: true,
+    },
     onSuccess: (user) => {
       queryClient.setQueryData(authKeys.me(), user);
     },
