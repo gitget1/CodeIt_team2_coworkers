@@ -17,7 +17,7 @@ export default function TestPage() {
         selectedTeamId,
         onTeamSelect: setSelectedTeamId,
         onAddTeam: () => alert('팀 추가하기'),
-        isLoggedIn: true,
+        isLoggedIn: false,
       }}
     >
       <div className="p-6 space-y-10">
