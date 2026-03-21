@@ -16,6 +16,8 @@ export function useStartNavigation() {
     const firstGroupId = user.memberships?.[0]?.groupId;
 
     if (firstGroupId) {
+      router.push(`/${firstGroupId}`);
+    } else {
       router.push('/boards');
     }
   };
