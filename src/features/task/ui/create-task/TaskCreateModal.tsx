@@ -5,6 +5,7 @@ import { Modal } from '@/shared/ui/modal';
 import { Input } from '@/shared/ui/input/Input';
 import { FormField } from '@/shared/ui/formfield';
 import { Button } from '@/shared/ui/Button';
+import DateField from '../../dateTimeField/dateField';
 
 type Props = {
   isOpen: boolean;
@@ -45,10 +46,16 @@ export default function TaskCreateModal({ isOpen, onClose, params }: Props) {
 
   return (
     <Modal isOpen={isOpen} open={() => {}} close={onClose}>
-      <Modal.Content>
-        <div>
-          <Modal.Title>할 일 만들기</Modal.Title>
-          <Modal.Description>ㅇㅇ</Modal.Description>
+      <Modal.Content size="md" className="overflow-y-auto px-6 py-8 sm:px-8 sm:py-10">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <Modal.Title className="text-txt-primary text-lg">할 일 만들기</Modal.Title>
+            <Modal.Description className="text-md text-txt-default">
+              할 일은 실제로 행동 가능한 작업 중심으로
+              <br />
+              작성해주시면 좋습니다.
+            </Modal.Description>
+          </div>
 
           <FormField>
             <FormField.Label>할 일 제목</FormField.Label>
@@ -63,13 +70,15 @@ export default function TaskCreateModal({ isOpen, onClose, params }: Props) {
           </FormField>
 
           <FormField>
-            <FormField.Label>날짜</FormField.Label>
-            <FormField.Control>
-              <Input />
-            </FormField.Control>
-            <FormField.Control>
-              <Input />
-            </FormField.Control>
+            <FormField.Label>시작 날짜 및 시간</FormField.Label>
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <DateField />
+              </div>
+              <div className="flex-1">
+                <Input />
+              </div>
+            </div>
           </FormField>
 
           <select value={recurrence} onChange={(e) => setRecurrence(e.target.value as any)}>
