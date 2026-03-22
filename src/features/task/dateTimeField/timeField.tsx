@@ -2,20 +2,24 @@ import { useState } from 'react';
 import TimeInput from './timeInput';
 import TimePicker from './timePicker';
 
-export default function TimeField() {
-  const [time, setTime] = useState<string>();
+type Props = {
+  value?: string;
+  onChange: (time: string | undefined) => void;
+};
+
+export default function TimeField({ value, onChange }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="relative">
-      <TimeInput value={time} onClick={() => setOpen(!open)} />
+      <TimeInput value={value} onClick={() => setOpen(!open)} />
 
       {open && (
         <div className="absolute left-0 z-50 mt-2 w-max">
           <TimePicker
-            value={time}
+            value={value}
             onChange={(t) => {
-              setTime(t);
+              onChange(t);
               setOpen(false);
             }}
           />
