@@ -2,19 +2,23 @@ import { useState } from 'react';
 import DateInput from './dateInput';
 import CalendarPopover from './calendarPopover';
 
-export default function DateField() {
-  const [date, setDate] = useState<Date | undefined>();
+type Props = {
+  value?: Date;
+  onChange: (date: Date | undefined) => void;
+};
+
+export default function DateField({ value, onChange }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="relative">
-      <DateInput value={date} onClick={() => setOpen(!open)} />
+      <DateInput value={value} onClick={() => setOpen(!open)} />
       {open && (
         <div className="absolute left-0 z-50 mt-2 w-max">
           <CalendarPopover
-            selected={date}
+            selected={value}
             onSelect={(d) => {
-              setDate(d);
+              onChange(d);
               setOpen(false);
             }}
           />
