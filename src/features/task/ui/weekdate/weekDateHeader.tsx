@@ -2,24 +2,31 @@ import { Button } from '@/shared/ui/Button';
 import { IconArrowLeft } from '@/shared/ui/icons/IconArrowLeft';
 import { IconArrowRight } from '@/shared/ui/icons/IconArrowRight';
 import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
+<<<<<<< HEAD
 import Calendar from '../../dateTimeField/calendarPopover';
 import { useRef } from 'react';
 import useClickOutside from '@/shared/hooks/useClickOutside';
+=======
+>>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
 
 type Props = {
   value: Date;
   onPrev: () => void;
   onNext: () => void;
+<<<<<<< HEAD
   onOpenCalendar: () => void;
   isOpen: boolean;
   onSelectDate: (date: Date) => void;
   onCloseCalendar: () => void;
+=======
+>>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
 };
 
 function formatMonth(date: Date) {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
 }
 
+<<<<<<< HEAD
 export default function WeekDateHeader({
   value,
   onNext,
@@ -87,6 +94,25 @@ export default function WeekDateHeader({
             )}
           </div>
         </div>
+=======
+export default function WeekDateHeader({ value, onNext, onPrev }: Props) {
+  return (
+    <div className="flex items-center gap-2">
+      <h2 className="text-txt-primary text-lg font-semibold">{formatMonth(value)}</h2>
+
+      <div className="flex items-center gap-2">
+        <Button className="rounded-full border border-gray-300 bg-primary w-4 h-4 p-0" variant="ghost" onClick={onPrev}>
+          <IconArrowLeft size={12} />
+        </Button>
+
+        <Button className="rounded-full border border-gray-300 bg-primary w-4 h-4 p-0" variant="ghost" onClick={onNext}>
+          <IconArrowRight size={12} />
+        </Button>
+
+        <Button className="rounded-full border border-gray-300 bg-secondary w-[24px] h-[24px] p-0" variant="ghost">
+          <IconCalendar />
+        </Button>
+>>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
       </div>
     </div>
   );
