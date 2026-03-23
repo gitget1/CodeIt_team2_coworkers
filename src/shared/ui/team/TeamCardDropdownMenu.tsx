@@ -2,14 +2,14 @@ import { useDropdown } from '@/shared/ui/dropdown/Dropdown';
 import { cn } from '@/shared/lib/cn';
 import { createPortal } from 'react-dom';
 import { useTeamCardDropdownPosition } from './useTeamCardDropdownPosition';
+import type { DropdownMenuAlign } from '@/shared/ui/dropdown';
 
 type Props = {
   children: React.ReactNode;
   className?: string;
-  align?: 'left' | 'right';
+  align?: DropdownMenuAlign;
 };
 
-/** TeamCard용 포털 메뉴. overflow 부모에서 생기는 스크롤을 방지합니다. */
 export function TeamCardDropdownMenu({ children, className, align = 'left' }: Props) {
   const { isOpen, menuRef, menuId, triggerRef } = useDropdown();
   const { mounted } = useTeamCardDropdownPosition(isOpen, triggerRef, menuRef, align);

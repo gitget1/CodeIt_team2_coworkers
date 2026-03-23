@@ -2,6 +2,7 @@ import DropdownComponent from './Dropdown';
 import DropdownItem from './DropdownItem';
 import DropdownMenu from './DropdownMenu';
 import DropdownTrigger from './DropdownTrigger';
+export type { DropdownMenuAlign } from './DropdownMenu';
 
 type DropdownType = typeof DropdownComponent & {
   Trigger: typeof DropdownTrigger;

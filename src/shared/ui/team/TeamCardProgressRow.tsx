@@ -4,6 +4,7 @@ import { StripedProgressBar } from '@/shared/ui/progress/StripedProgressBar';
 import { ICON_SIZE } from '@/shared/constants/icon';
 import { TeamCardDropdownMenu } from './TeamCardDropdownMenu';
 import { TEAM_CARD_DROPDOWN_PANEL_CLASS, TEAM_CARD_MENU_ITEM_CLASS } from './teamCard.constants';
+import { getSafeProgressPercent } from './teamCard.guards';
 
 export type TeamCardProgressRowProps = {
   teamName: string;
@@ -18,12 +19,14 @@ export function TeamCardProgressRow({
   onEditTeam,
   onDeleteTeam,
 }: TeamCardProgressRowProps) {
+  const safeProgressPercent = getSafeProgressPercent(progressPercent);
+
   return (
     <div className="mt-5 flex min-w-0 items-center gap-3">
       <StripedProgressBar
-        value={progressPercent}
+        value={safeProgressPercent}
         className="min-w-0 flex-1"
-        aria-label={`${teamName} 오늘 진행률`}
+        progressLabel={`${teamName} 오늘 진행률`}
       />
       <Dropdown>
         <Dropdown.Trigger

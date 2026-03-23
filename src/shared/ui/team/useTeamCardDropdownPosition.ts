@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import type { DropdownMenuAlign } from '@/shared/ui/dropdown';
 
 const GAP_PX = 4;
-
-export type TeamCardMenuAlign = 'left' | 'right';
 
 export function useTeamCardDropdownPosition(
   isOpen: boolean,
   triggerRef: React.RefObject<HTMLButtonElement | null>,
   menuRef: React.RefObject<HTMLDivElement | null>,
-  align: TeamCardMenuAlign = 'left',
+  align: DropdownMenuAlign = 'left',
 ) {
   const [mounted, setMounted] = useState(false);
 

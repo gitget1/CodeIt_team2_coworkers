@@ -1,4 +1,5 @@
 import { cn } from '@/shared/lib/cn';
+import { getSafeProgressPercent } from './teamCard.guards';
 
 export type TeamCardStatsSectionProps = {
   progressPercent: number;
@@ -13,12 +14,14 @@ export function TeamCardStatsSection({
   completedTaskCount,
   statsClassName,
 }: TeamCardStatsSectionProps) {
+  const safeProgressPercent = getSafeProgressPercent(progressPercent);
+
   return (
     <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="shrink-0">
         <p className="text-md text-txt-default">오늘의 진행 상황</p>
         <p className="mt-1 text-3xl font-bold leading-none text-brand-primary tabular-nums">
-          {Math.round(progressPercent)}%
+          {safeProgressPercent}%
         </p>
       </div>
 

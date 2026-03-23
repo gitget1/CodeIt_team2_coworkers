@@ -2,6 +2,7 @@ import { cn } from '@/shared/lib/cn';
 import { useDropdown } from './Dropdown';
 
 type MenuAlign = 'left' | 'right';
+export type DropdownMenuAlign = MenuAlign;
 
 const alignStyles: Record<MenuAlign, string> = {
   left: 'left-0',
