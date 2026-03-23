@@ -4,11 +4,12 @@ import { cn } from '@/shared/lib/cn';
 type Props = {
   value?: string;
   onChange?: (time: string) => void;
+  interval?: number;
 };
 
 // TODO:
 // 자동 스크롤 적용 예정 (사용자가 이미 선택한 시간이 있다면 해당 시간으로 자동 스크롤)
-export default function TimePicker({ value, onChange }: Props) {
+export default function TimePicker({ value, onChange, interval = 30 }: Props) {
   const [period, setPeriod] = useState<'AM' | 'PM'>(() => {
     if (!value) return 'AM';
     const hour = parseInt(value.split(':')[0]);
@@ -16,12 +17,16 @@ export default function TimePicker({ value, onChange }: Props) {
   });
 
   const times = useMemo(() => {
-    return Array.from({ length: 24 * 2 }, (_, i) => {
-      const hour = Math.floor(i / 2);
-      const minute = i % 2 === 0 ? '00' : '30';
-      return `${String(hour).padStart(2, '0')}:${minute}`;
+    const TOTAL_MINUTES_IN_DAY = 24 * 60;
+    const count = Math.floor(TOTAL_MINUTES_IN_DAY / interval);
+
+    return Array.from({ length: count }, (_, i) => {
+      const totalMinutes = i * interval;
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     });
-  }, []);
+  }, [interval]);
 
   const filteredTimes = useMemo(() => {
     return times.filter((t) => {
