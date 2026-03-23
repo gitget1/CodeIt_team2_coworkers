@@ -1,10 +1,13 @@
-// WeekCalendar.tsx
 import { useState } from 'react';
 import WeekDateHeader from './weekDateHeader';
 import WeekDateSelector from './weekDateSelector';
 
-export default function WeekCalendar() {
-  const [date, setDate] = useState(new Date());
+type Props = {
+  initialDate: Date;
+};
+
+export default function WeekCalendar({ initialDate }: Props) {
+  const [date, setDate] = useState(new Date(initialDate));
 
   const handlePrevWeek = () => {
     const prev = new Date(date);
@@ -20,16 +23,9 @@ export default function WeekCalendar() {
 
   return (
     <div className="flex flex-col gap-4">
-      <WeekDateHeader
-        value={date}
-        onPrev={handlePrevWeek}
-        onNext={handleNextWeek}
-      />
+      <WeekDateHeader value={date} onPrev={handlePrevWeek} onNext={handleNextWeek} />
 
-      <WeekDateSelector
-        value={date}
-        onChange={setDate}
-      />
+      <WeekDateSelector value={date} onChange={setDate} />
     </div>
   );
 }
