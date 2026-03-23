@@ -18,13 +18,11 @@ const OPTIONS: { label: string; value: RecurrenceType }[] = [
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
+function getLabel(value: RecurrenceType) {
+  return OPTIONS.find((opt) => opt.value === value)?.label ?? '';
+}
+
 export default function RecurrenceField({ value, onChange, selectedDays, onChangeDays }: Props) {
-  const labelMap = {
-    ONCE: '한 번',
-    DAILY: '매 일',
-    WEEKLY: '주 반복',
-    MONTHLY: '월 반복',
-  };
   return (
     <div className="flex flex-col gap-4">
       <Dropdown>
@@ -32,7 +30,7 @@ export default function RecurrenceField({ value, onChange, selectedDays, onChang
           showChevron
           className="h-[48px] w-[160px] justify-between rounded-xl border bg-gray-100 px-4"
         >
-          <span>{labelMap[value]}</span>
+          <span>{getLabel(value)}</span>
         </Dropdown.Trigger>
         <Dropdown.Menu>
           {OPTIONS.map((opt) => (
