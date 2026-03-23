@@ -13,3 +13,4 @@ export * from './IconPlus';
 export * from './IconTeam';
 export * from './IconUser';
 export * from './IconPencil';
+export * from './IconGear';
