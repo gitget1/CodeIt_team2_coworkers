@@ -21,7 +21,7 @@ const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 export default function RecurrenceField({ value, onChange, selectedDays, onChangeDays }: Props) {
   const labelMap = {
     ONCE: '한 번',
-    DAILY: '매일',
+    DAILY: '매 일',
     WEEKLY: '주 반복',
     MONTHLY: '월 반복',
   };
