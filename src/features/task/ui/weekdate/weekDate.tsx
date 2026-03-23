@@ -1,12 +1,7 @@
-<<<<<<< HEAD
-=======
-// WeekCalendar.tsx
->>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
 import { useState } from 'react';
 import WeekDateHeader from './weekDateHeader';
 import WeekDateSelector from './weekDateSelector';
 
-<<<<<<< HEAD
 type Props = {
   initialDate: Date;
 };
@@ -14,10 +9,6 @@ type Props = {
 export default function WeekCalendar({ initialDate }: Props) {
   const [date, setDate] = useState(new Date(initialDate));
   const [isOpen, setIsOpen] = useState(false);
-=======
-export default function WeekCalendar() {
-  const [date, setDate] = useState(new Date());
->>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
 
   const handlePrevWeek = () => {
     const prev = new Date(date);
@@ -37,7 +28,6 @@ export default function WeekCalendar() {
         value={date}
         onPrev={handlePrevWeek}
         onNext={handleNextWeek}
-<<<<<<< HEAD
         isOpen={isOpen}
         onOpenCalendar={() => setIsOpen((prev) => !prev)}
         onSelectDate={(d) => {
@@ -50,14 +40,3 @@ export default function WeekCalendar() {
     </div>
   );
 }
-=======
-      />
-
-      <WeekDateSelector
-        value={date}
-        onChange={setDate}
-      />
-    </div>
-  );
-}
->>>>>>> 983a5f2 ([COW-62] FEAT - 리스트 페이지 주차별 날짜 UI)
