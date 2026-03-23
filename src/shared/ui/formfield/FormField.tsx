@@ -30,7 +30,7 @@ export function FormField({
 
   return (
     <FormFieldContext.Provider value={{ id, isInvalid }}>
-      <div className={cn('flex w-full flex-col gap-2', className)} {...props}>
+      <div className={cn('flex w-full flex-col gap-2 md:gap-3', className)} {...props}>
         {children}
       </div>
     </FormFieldContext.Provider>

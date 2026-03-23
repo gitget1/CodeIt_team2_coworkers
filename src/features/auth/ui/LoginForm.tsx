@@ -4,13 +4,14 @@ import { Input } from '@/shared/ui/input/Input';
 import { AUTH_VALIDATION_RULES } from '../constants/validation';
 import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
+import { ResetPasswordModal } from './ResetPasswordModal';
 
 export function LoginForm() {
-  const { register, handleSubmit, onSubmit, errors, isSubmitting } = useAuthForm();
+  const { register, onSubmit, errors, isSubmitting } = useAuthForm();
 
   return (
-    <div className="w-full rounded-2xl bg-white px-10 py-12 shadow-sm">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+    <div className="w-full rounded-2xl bg-white px-5 py-12 shadow-sm md:px-10">
+      <form onSubmit={onSubmit} className="flex flex-col gap-6">
         <FormField isInvalid={!!errors.email}>
           <FormField.Label>이메일</FormField.Label>
           <FormField.Control>
@@ -18,7 +19,7 @@ export function LoginForm() {
               type="email"
               placeholder="이메일을 입력해주세요."
               {...register('email', AUTH_VALIDATION_RULES.email)}
-              className="placeholder:text-txt-default placeholder:text-lg placeholder:font-normal"
+              className="placeholder:text-txt-default plcaholder:text-md placeholder:font-normal md:placeholder:text-lg"
             />
           </FormField.Control>
           <FormField.Message>{errors.email?.message}</FormField.Message>
@@ -32,19 +33,14 @@ export function LoginForm() {
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
                 {...register('password', AUTH_VALIDATION_RULES.password)}
-                className="placeholder:text-txt-default placeholder:text-lg placeholder:font-normal"
+                className="placeholder:text-txt-default plcaholder:text-md placeholder:font-normal md:placeholder:text-lg"
               />
             </FormField.Control>
             <FormField.Message>{errors.password?.message}</FormField.Message>
           </FormField>
 
           <div className="mt-1 flex justify-end">
-            <button
-              type="button"
-              className="text-brand-primary hover:text-interaction-hover cursor-pointer text-lg font-medium underline"
-            >
-              비밀번호를 잊으셨나요?
-            </button>
+            <ResetPasswordModal />
           </div>
         </div>
 
@@ -53,7 +49,7 @@ export function LoginForm() {
         </Button>
       </form>
 
-      <div className="text-txt-primary mt-5 mb-0 text-center text-lg font-medium">
+      <div className="text-txt-primary text-md mt-5 mb-0 text-center font-medium md:text-lg">
         아직 계정이 없으신가요?
         <Link
           href="/signup"
@@ -65,7 +61,7 @@ export function LoginForm() {
 
       <div className="mt-8 mb-6 flex items-center justify-center gap-6">
         <div className="h-px flex-1 bg-gray-200"></div>
-        <span className="text-txt-default text-lg font-normal">간편 로그인하기</span>
+        <span className="text-txt-default text-md font-normal md:text-lg">간편 로그인하기</span>
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 

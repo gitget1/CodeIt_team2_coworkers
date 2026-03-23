@@ -18,7 +18,7 @@ export function useAuthForm() {
 
   const { mutate: signIn, isPending } = useSignIn();
 
-  const onSubmit = (data: SignInRequest) => {
+  const submitHandler = (data: SignInRequest) => {
     signIn(data, {
       onSuccess: (user) => {
         toast.success(`${user.name}님 환영합니다!`);
@@ -32,5 +32,5 @@ export function useAuthForm() {
     });
   };
 
-  return { register, handleSubmit, onSubmit, errors, isSubmitting: isPending };
+  return { register, onSubmit: handleSubmit(submitHandler), errors, isSubmitting: isPending };
 }

@@ -10,7 +10,7 @@ export function FormFieldLabel({ className, children, ...props }: FormFieldLabel
     <label
       htmlFor={id}
       className={cn(
-        'text-txt-primary flex items-center justify-between text-sm font-medium md:text-lg',
+        'text-txt-primary text-md flex items-center justify-between font-medium md:text-lg',
         className,
       )}
       {...props}
