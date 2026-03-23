@@ -19,7 +19,7 @@ export function LoginForm() {
               type="email"
               placeholder="이메일을 입력해주세요."
               {...register('email', AUTH_VALIDATION_RULES.email)}
-              className="placeholder:text-txt-default plcaholder:text-md placeholder:font-normal md:placeholder:text-lg"
+              className="placeholder:text-txt-default placeholder:text-md placeholder:font-normal md:placeholder:text-lg"
             />
           </FormField.Control>
           <FormField.Message>{errors.email?.message}</FormField.Message>
@@ -33,7 +33,7 @@ export function LoginForm() {
                 type="password"
                 placeholder="비밀번호를 입력해주세요."
                 {...register('password', AUTH_VALIDATION_RULES.password)}
-                className="placeholder:text-txt-default plcaholder:text-md placeholder:font-normal md:placeholder:text-lg"
+                className="placeholder:text-txt-default placeholder:text-md placeholder:font-normal md:placeholder:text-lg"
               />
             </FormField.Control>
             <FormField.Message>{errors.password?.message}</FormField.Message>
