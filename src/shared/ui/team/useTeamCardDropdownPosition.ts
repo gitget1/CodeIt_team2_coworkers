@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 
 const GAP_PX = 4;
@@ -9,27 +7,35 @@ export type TeamCardMenuAlign = 'left' | 'right';
 export function useTeamCardDropdownPosition(
   isOpen: boolean,
   triggerRef: React.RefObject<HTMLButtonElement | null>,
+  menuRef: React.RefObject<HTMLDivElement | null>,
   align: TeamCardMenuAlign = 'left',
 ) {
   const [mounted, setMounted] = useState(false);
-  const [style, setStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => setMounted(true), []);
 
   const updatePosition = useCallback(() => {
-    const el = triggerRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const base: React.CSSProperties = { position: 'fixed', top: r.bottom + GAP_PX };
+    const triggerEl = triggerRef.current;
+    const menuEl = menuRef.current;
+    if (!triggerEl || !menuEl) return;
 
+    const r = triggerEl.getBoundingClientRect();
+
+    menuEl.style.position = 'fixed';
+    menuEl.style.top = `${r.bottom + GAP_PX}px`;
     if (align === 'right') {
-      setStyle({ ...base, right: window.innerWidth - r.right, left: 'auto' });
+      menuEl.style.right = `${window.innerWidth - r.right}px`;
+      menuEl.style.left = 'auto';
     } else {
-      setStyle({ ...base, left: r.left, right: 'auto' });
+      menuEl.style.left = `${r.left}px`;
+      menuEl.style.right = 'auto';
     }
-  }, [align, triggerRef]);
+  }, [align, menuRef, triggerRef]);
 
-  useLayoutEffect(() => {
+  // SSR에서는 useLayoutEffect 경고가 날 수 있어서, window 존재 시에만 layout 효과를 사용합니다.
+  const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+  useIsoLayoutEffect(() => {
     if (!isOpen) return;
 
     updatePosition();
@@ -41,5 +47,5 @@ export function useTeamCardDropdownPosition(
     };
   }, [isOpen, updatePosition]);
 
-  return { mounted, style };
+  return { mounted };
 }
