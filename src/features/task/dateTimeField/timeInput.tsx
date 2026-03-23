@@ -4,14 +4,15 @@ import { cn } from '@/shared/lib/cn';
 type Props = {
   value?: string;
   onClick: () => void;
+  className?: string;
 };
 
-export default function TimeInput({ value, onClick }: Props) {
+export default function TimeInput({ value, onClick, className }: Props) {
   return (
     <Button
       onClick={onClick}
       variant="secondary"
-      className={cn('w-full justify-start text-left', !value && 'text-gray-400')}
+      className={cn('w-full justify-start text-left', !value && 'text-gray-400', className)}
     >
       {value ? formatTime(value) : '시간'}
     </Button>

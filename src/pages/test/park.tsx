@@ -7,8 +7,11 @@ export default function TestTaskPage() {
   return (
     <>
       <div className="flex justify-center py-10">
-        <TaskList groupId={1} taskListId={1} />
         <WeekCalendar initialDate={new Date()} />
+      </div>
+
+      <div className="flex justify-center py-10">
+        <TaskList groupId={1} taskListId={1} />
       </div>
     </>
   );

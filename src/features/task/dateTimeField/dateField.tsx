@@ -1,25 +1,24 @@
-import { useState } from 'react';
 import DateInput from './dateInput';
 import CalendarPopover from './calendarPopover';
 
 type Props = {
   value?: Date;
   onChange: (date: Date | undefined) => void;
+  className?: string;
+  open: boolean;
+  onToggle: () => void;
 };
 
-export default function DateField({ value, onChange }: Props) {
-  const [open, setOpen] = useState(false);
-
+export default function DateField({ value, onChange, className, open, onToggle }: Props) {
   return (
     <div className="relative">
-      <DateInput value={value} onClick={() => setOpen(!open)} />
+      <DateInput value={value} onClick={onToggle} className={className} />
       {open && (
-        <div className="absolute left-0 z-50 mt-2 w-max">
+        <div className="mt-2 w-full">
           <CalendarPopover
             selected={value}
             onSelect={(d) => {
               onChange(d);
-              setOpen(false);
             }}
           />
         </div>

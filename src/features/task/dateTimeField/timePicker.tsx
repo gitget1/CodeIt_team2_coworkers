@@ -36,7 +36,7 @@ export default function TimePicker({ value, onChange, interval = 30 }: Props) {
   }, [times, period]);
 
   return (
-    <div className="flex gap-4 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md">
+    <div className="flex w-full min-w-[260px] gap-3 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md sm:-translate-x-1/2">
       <div className="flex flex-col gap-2">
         <button
           onClick={() => setPeriod('AM')}
