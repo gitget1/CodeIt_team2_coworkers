@@ -8,6 +8,7 @@ type Props = {
 
 export default function WeekCalendar({ initialDate }: Props) {
   const [date, setDate] = useState(new Date(initialDate));
+  const [isOpen, setIsOpen] = useState(false);
 
   const handlePrevWeek = () => {
     const prev = new Date(date);
@@ -23,8 +24,18 @@ export default function WeekCalendar({ initialDate }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <WeekDateHeader value={date} onPrev={handlePrevWeek} onNext={handleNextWeek} />
-
+      <WeekDateHeader
+        value={date}
+        onPrev={handlePrevWeek}
+        onNext={handleNextWeek}
+        isOpen={isOpen}
+        onOpenCalendar={() => setIsOpen((prev) => !prev)}
+        onSelectDate={(d) => {
+          setDate(d);
+          setIsOpen(false);
+        }}
+        onCloseCalendar={() => setIsOpen(false)}
+      />
       <WeekDateSelector value={date} onChange={setDate} />
     </div>
   );
