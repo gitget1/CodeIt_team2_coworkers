@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 import { AppLayout } from './Sidebar';
-import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser';
+import { useUserQuery } from '@/features/user/hooks/useUserQuery';
 
 interface GlobalLayoutProps {
   children: ReactNode;
 }
 
 export function GlobalLayout({ children }: GlobalLayoutProps) {
-  const { data: user, isLoading } = useCurrentUser();
+  const { data: user, isLoading } = useUserQuery();
 
   const isLoggedIn = isLoading ? undefined : !!user;
 

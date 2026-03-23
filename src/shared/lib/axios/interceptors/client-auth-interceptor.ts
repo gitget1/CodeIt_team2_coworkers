@@ -39,7 +39,8 @@ async function handleAuthFailure() {
 
   if (typeof window !== 'undefined') {
     if (!isAuthPage(window.location.pathname)) {
-      window.location.href = '/login';
+      const currentPath = window.location.pathname + window.location.search;
+      window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
     }
   }
 }

@@ -4,6 +4,8 @@ import type { GetUserResponse } from '../model/dto/user.dto';
 import type { UserProfile } from '../model/entities/user.model';
 
 export async function getUser(): Promise<UserProfile> {
-  const { data } = await clientFetcher.get<GetUserResponse>(`/user`);
+  const { data } = await clientFetcher.get<GetUserResponse>(`/user`, {
+    skipAuthFailureRedirect: true,
+  });
   return toUserProfile(data);
 }
