@@ -65,6 +65,7 @@ function DefaultFooter({
     );
   }
 
+  // TODO: 인증/프로필 API 연동 후 하드코딩 제거 — 실제 사용자 이름·팀명·프로필 이미지·ariaLabel을 props 또는 전역 상태로 주입
   return (
     <SidebarFooter>
       {isExpanded ? (
