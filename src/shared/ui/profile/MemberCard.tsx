@@ -11,6 +11,7 @@ export function MemberCard({
   title = '멤버',
   className,
   maxVisibleCount = 5,
+  isMemberRowInteractive,
   onInvite,
 }: MemberCardProps) {
   const [selectedMember, setSelectedMember] = useState<MemberCardItem | null>(null);
@@ -43,6 +44,7 @@ export function MemberCard({
       }),
     [members],
   );
+  const rowInteractive = isMemberRowInteractive ?? isMobileOrTablet;
 
   return (
     <>
@@ -67,6 +69,7 @@ export function MemberCard({
         <MemberCardMembersSection
           members={sortedMembers}
           maxVisibleCount={maxVisibleCount}
+          isInteractive={rowInteractive}
           onMemberClick={handleMemberClick}
           onMoreClick={handleMoreClick}
         />

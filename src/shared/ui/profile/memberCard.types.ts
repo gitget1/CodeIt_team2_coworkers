@@ -15,6 +15,8 @@ export type MemberCardProps = {
   title?: string;
   className?: string;
   maxVisibleCount?: number;
+  /** 기본값: 모바일/태블릿에서만 멤버 행 클릭 가능 */
+  isMemberRowInteractive?: boolean;
   onInvite?: () => void;
 };
 

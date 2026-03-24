@@ -5,6 +5,7 @@ import type { MemberCardItem } from './memberCard.types';
 type Props = {
   members: MemberCardItem[];
   maxVisibleCount: number;
+  isInteractive: boolean;
   onMemberClick: (member: MemberCardItem) => void;
   onMoreClick: () => void;
   className?: string;
@@ -13,6 +14,7 @@ type Props = {
 export function MemberCardMembersSection({
   members,
   maxVisibleCount,
+  isInteractive,
   onMemberClick,
   onMoreClick,
   className,
@@ -28,31 +30,50 @@ export function MemberCardMembersSection({
       )}
     >
       {visibleMembers.map((member) => (
-        <button
-          key={member.id}
-          type="button"
-          onClick={() => onMemberClick(member)}
-          className="flex min-h-8 w-full shrink-0 items-center justify-between gap-2 rounded-lg py-0 text-left max-lg:transition-colors max-lg:hover:bg-background-secondary"
-        >
-          <MemberChip
-            name={member.name}
-            email={member.email}
-            imageSrc={member.imageSrc}
-            isAdmin={member.isAdmin}
-            size="md"
-            className="min-w-0 flex-1"
-          />
-          <span className="shrink-0 text-icon-primary" aria-hidden="true">
-            ⋮
-          </span>
-        </button>
+        isInteractive ? (
+          <button
+            key={member.id}
+            type="button"
+            onClick={() => onMemberClick(member)}
+            className="flex min-h-8 w-full shrink-0 items-center justify-between gap-2 rounded-lg py-0 text-left transition-colors hover:bg-background-secondary"
+          >
+            <MemberChip
+              name={member.name}
+              email={member.email}
+              imageSrc={member.imageSrc}
+              isAdmin={member.isAdmin}
+              size="md"
+              className="min-w-0 flex-1"
+            />
+            <span className="shrink-0 text-icon-primary" aria-hidden="true">
+              ⋮
+            </span>
+          </button>
+        ) : (
+          <div
+            key={member.id}
+            className="flex min-h-8 w-full shrink-0 items-center justify-between gap-2 rounded-lg py-0 text-left cursor-default"
+          >
+            <MemberChip
+              name={member.name}
+              email={member.email}
+              imageSrc={member.imageSrc}
+              isAdmin={member.isAdmin}
+              size="md"
+              className="min-w-0 flex-1"
+            />
+            <span className="shrink-0 text-icon-primary" aria-hidden="true">
+              ⋮
+            </span>
+          </div>
+        )
       ))}
 
       {hasMore && (
         <button
           type="button"
           onClick={onMoreClick}
-          className="shrink-0 text-sm font-medium text-brand-primary hover:underline"
+          className="shrink-0 self-start rounded-lg border border-background-tertiary bg-background-secondary px-3 py-1.5 text-sm font-medium text-brand-primary transition-colors hover:bg-background-tertiary"
         >
           더보기 ({members.length - maxVisibleCount})
         </button>
