@@ -21,7 +21,7 @@ export function useSendResetEmailForm(closeModal: () => void) {
     closeModal();
   };
 
-  const onSubmit = async (data: SendResetEmailFormValue) => {
+  const onSubmit = (data: SendResetEmailFormValue) => {
     const redirectUrl = `${window.location.origin}/reset-password`;
 
     sendEmail(
