@@ -1,4 +1,5 @@
 import { cn } from '@/shared/lib/cn';
+import { IconKebab } from '@/shared/ui/icons';
 import { MemberChip } from './MemberChip';
 import type { MemberCardItem } from './memberCard.types';
 
@@ -35,6 +36,7 @@ export function MemberCardMembersSection({
             key={member.id}
             type="button"
             onClick={() => onMemberClick(member)}
+            aria-label={`${member.name} 멤버 상세 보기`}
             className="flex min-h-8 w-full shrink-0 items-center justify-between gap-2 rounded-lg py-0 text-left transition-colors hover:bg-background-secondary"
           >
             <MemberChip
@@ -45,9 +47,7 @@ export function MemberCardMembersSection({
               size="md"
               className="min-w-0 flex-1"
             />
-            <span className="shrink-0 text-icon-primary" aria-hidden="true">
-              ⋮
-            </span>
+            <IconKebab size={20} className="shrink-0 text-icon-primary" aria-hidden="true" />
           </button>
         ) : (
           <div
@@ -62,9 +62,7 @@ export function MemberCardMembersSection({
               size="md"
               className="min-w-0 flex-1"
             />
-            <span className="shrink-0 text-icon-primary" aria-hidden="true">
-              ⋮
-            </span>
+            <IconKebab size={20} className="shrink-0 text-icon-primary" aria-hidden="true" />
           </div>
         )
       ))}
