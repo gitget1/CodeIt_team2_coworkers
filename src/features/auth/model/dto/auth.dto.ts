@@ -3,6 +3,7 @@ export interface UserDTO {
   email: string;
   nickname: string;
   image: string | null;
+  teamId: string;
   createdAt: string;
   updatedAt: string;
 }
