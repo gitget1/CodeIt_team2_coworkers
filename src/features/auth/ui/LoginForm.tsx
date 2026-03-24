@@ -4,7 +4,7 @@ import { Input } from '@/shared/ui/input/Input';
 import { AUTH_VALIDATION_RULES } from '../constants/validation';
 import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
-import { ResetPasswordModal } from './ResetPasswordModal';
+import { SendResetEmailModal } from './SendResetEmailModal';
 
 export function LoginForm() {
   const { register, onSubmit, errors, isSubmitting } = useAuthForm();
@@ -40,7 +40,7 @@ export function LoginForm() {
           </FormField>
 
           <div className="mt-1 flex justify-end">
-            <ResetPasswordModal />
+            <SendResetEmailModal />
           </div>
         </div>
 

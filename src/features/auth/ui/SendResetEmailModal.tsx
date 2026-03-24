@@ -2,13 +2,13 @@ import { useModal } from '@/shared/hooks/useModal';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/input/Input';
 import { Modal } from '@/shared/ui/modal';
-import { useResetPasswordForm } from '../hooks/useResetPasswordForm';
 import { FormField } from '@/shared/ui/formfield';
 import { AUTH_VALIDATION_RULES } from '../constants/validation';
+import { useSendResetEmailForm } from '../hooks/useSendResetEmailForm';
 
-export function ResetPasswordModal() {
+export function SendResetEmailModal() {
   const { isOpen, open, close } = useModal();
-  const { register, onSubmit, errors, isSubmitting, handleClose } = useResetPasswordForm(close);
+  const { register, onSubmit, errors, isSubmitting, handleClose } = useSendResetEmailForm(close);
 
   return (
     <Modal isOpen={isOpen} open={open} close={handleClose}>
@@ -21,7 +21,13 @@ export function ResetPasswordModal() {
         </button>
       </Modal.Trigger>
       <Modal.Content showCloseButton={false} size="sm" className="px-3">
-        <form onSubmit={onSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onSubmit(e);
+          }}
+        >
           <Modal.Header>
             <Modal.Title>비밀번호 재설정</Modal.Title>
             <Modal.Description className="text-md text-slate-400">
