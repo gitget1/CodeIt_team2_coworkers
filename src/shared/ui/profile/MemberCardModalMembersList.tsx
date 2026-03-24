@@ -7,7 +7,7 @@ type Props = {
 
 export function MemberCardModalMembersList({ members }: Props) {
   return (
-    <div className="space-y-2">
+    <div className="min-w-0 space-y-6">
       {members.map((member) => (
         <MemberChip
           key={member.id}

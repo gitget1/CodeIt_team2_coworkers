@@ -21,40 +21,43 @@ export function MemberCardMembersSection({
   const hasMore = members.length > maxVisibleCount;
 
   return (
-    <>
-      <div className={cn('mt-4 space-y-1 pr-1', className)}>
-        {visibleMembers.map((member) => (
-          <button
-            key={member.id}
-            type="button"
-            onClick={() => onMemberClick(member)}
-            className="w-full rounded-xl px-2 py-2 text-left max-lg:transition-colors max-lg:hover:bg-background-secondary"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <MemberChip
-                name={member.name}
-                email={member.email}
-                imageSrc={member.imageSrc}
-                isAdmin={member.isAdmin}
-              />
-              <span className="text-icon-primary" aria-hidden="true">
-                ⋮
-              </span>
-            </div>
-          </button>
-        ))}
-      </div>
+    <div
+      className={cn(
+        'flex flex-col gap-6 overflow-x-hidden',
+        className,
+      )}
+    >
+      {visibleMembers.map((member) => (
+        <button
+          key={member.id}
+          type="button"
+          onClick={() => onMemberClick(member)}
+          className="flex min-h-8 w-full shrink-0 items-center justify-between gap-2 rounded-lg py-0 text-left max-lg:transition-colors max-lg:hover:bg-background-secondary"
+        >
+          <MemberChip
+            name={member.name}
+            email={member.email}
+            imageSrc={member.imageSrc}
+            isAdmin={member.isAdmin}
+            size="md"
+            className="min-w-0 flex-1"
+          />
+          <span className="shrink-0 text-icon-primary" aria-hidden="true">
+            ⋮
+          </span>
+        </button>
+      ))}
 
       {hasMore && (
         <button
           type="button"
           onClick={onMoreClick}
-          className="mt-4 text-sm font-medium text-brand-primary hover:underline"
+          className="shrink-0 text-sm font-medium text-brand-primary hover:underline"
         >
           더보기 ({members.length - maxVisibleCount})
         </button>
       )}
-    </>
+    </div>
   );
 }
 

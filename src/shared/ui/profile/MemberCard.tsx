@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { MemberCardMembersSection } from './MemberCardMembersSection';
 import { useIsMobileOrTablet } from './useIsMobileOrTablet';
@@ -34,28 +34,38 @@ export function MemberCard({
     open();
   }, [open]);
 
+  const sortedMembers = useMemo(
+    () =>
+      [...members].sort((a, b) => {
+        const aAdmin = a.isAdmin ? 1 : 0;
+        const bAdmin = b.isAdmin ? 1 : 0;
+        return bAdmin - aAdmin;
+      }),
+    [members],
+  );
+
   return (
     <>
       <section
         className={cn(
-          'rounded-[20px] border border-background-tertiary bg-background-primary p-5',
+          'flex w-[240px] flex-col gap-6 overflow-hidden rounded-xl border border-background-tertiary bg-background-primary px-5 pt-6 pb-4',
           className,
         )}
       >
-        <header className="flex items-center justify-between">
-          <h3 className="text-xl font-bold text-txt-primary">
+        <header className="flex shrink-0 items-center justify-between gap-2">
+          <h3 className="min-w-0 truncate text-base font-bold text-txt-primary">
             {title} <span className="text-txt-default">({members.length}명)</span>
           </h3>
           <button
             type="button"
             onClick={onInvite}
-            className="text-lg font-semibold text-brand-primary hover:underline"
+            className="shrink-0 text-sm font-semibold text-brand-primary hover:underline"
           >
             초대하기 +
           </button>
         </header>
         <MemberCardMembersSection
-          members={members}
+          members={sortedMembers}
           maxVisibleCount={maxVisibleCount}
           onMemberClick={handleMemberClick}
           onMoreClick={handleMoreClick}
@@ -68,7 +78,7 @@ export function MemberCard({
         close={close}
         modalMode={modalMode}
         selectedMember={selectedMember}
-        members={members}
+        members={sortedMembers}
       />
     </>
   );
