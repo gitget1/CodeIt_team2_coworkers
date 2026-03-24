@@ -1,0 +1,75 @@
+import { useState } from 'react';
+import { Article } from '../model/entities/article.model';
+import { IconHeartEmpty } from '@/shared/ui/icons/IconHeartEmpty';
+import { IconBest } from '@/shared/ui/icons/IconBest';
+interface Props {
+  article: Article;
+  variant?: 'default' | 'best';
+}
+
+export function ArticleCard({ article, variant }: Props) {
+  const [isError, setIsError] = useState(false);
+
+  const isBest = variant === 'best';
+
+  return (
+    <article
+      className={
+        isBest
+          ? 'h-51.25 w-85 rounded-xl border border-slate-200 bg-white px-5 py-6'
+          : 'h-39 rounded-xl border border-slate-200 px-6 py-5'
+      }
+    >
+      {isBest && (
+        <div className="flex h-7.5 w-18 items-center justify-center gap-1 rounded-full bg-slate-100 text-blue-500">
+          <IconBest />
+          <span className="text-sm font-bold">인기</span>
+        </div>
+      )}
+
+      <div className={isBest ? 'mt-4 flex' : 'flex justify-between'}>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-lg font-bold">{article.title}</h3>
+
+          <p
+            className={
+              isBest
+                ? 'line-clamp-2 pt-2 text-sm text-slate-500'
+                : 'line-clamp-2 pt-3 text-sm text-slate-500'
+            }
+          >
+            {article.content}
+          </p>
+        </div>
+        {article.image && (
+          <div className="h-22 w-22 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+            {!isError ? (
+              <img
+                src={article.image}
+                alt={article.title}
+                className="h-full w-full object-cover"
+                onError={() => setIsError(true)}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                이미지 오류
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      <footer className="flex justify-between pt-4">
+        <div className="flex gap-2 text-sm font-medium">
+          <span>{article.writer.nickname}</span>
+          <span>|</span>
+          <time className="text-gray-400"> {article.createdAt.toLocaleDateString()}</time>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <IconHeartEmpty size={16} />
+          <span className="text-sm text-gray-400">{article.likeCount}</span>
+        </div>
+      </footer>
+    </article>
+  );
+}
