@@ -43,19 +43,6 @@ export interface PatchUserRequest {
   image?: string;
 }
 
-// [POST] /{teamId}/user/send-reset-password-email
-export interface SendResetPasswordEmailRequest {
-  email: string;
-  redirectUrl: string;
-}
-
-// [PATCH] /{teamId}/user/reset-password
-export interface ResetPasswordRequest {
-  passwordConfirmation: string;
-  password: string;
-  token: string;
-}
-
 // [PATCH] /{teamId}/user/password
 export interface UpdatePasswordRequest {
   passwordConfirmation: string;
