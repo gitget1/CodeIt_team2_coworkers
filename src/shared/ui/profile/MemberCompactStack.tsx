@@ -5,6 +5,7 @@ import type { MemberCardItem } from './memberCard.types';
 import { MemberCardModal } from './MemberCardModal';
 import type { MemberCompactStackProps } from './memberCompactStack.types';
 import {
+  MEMBER_COMPACT_STACK_MAX_VISIBLE_AVATARS,
   MEMBER_COMPACT_STACK_SHELL,
   MEMBER_COMPACT_STACK_SHELL_SIZE,
 } from './memberCompactStack.constants';
@@ -20,7 +21,7 @@ function sortMembersAdminsFirst(list: MemberCardItem[]) {
 
 export function MemberCompactStack({
   members,
-  maxVisibleAvatars = 3,
+  maxVisibleAvatars = MEMBER_COMPACT_STACK_MAX_VISIBLE_AVATARS,
   className,
   interactive = true,
   onOpen,
@@ -29,7 +30,11 @@ export function MemberCompactStack({
 
   const sortedMembers = useMemo(() => sortMembersAdminsFirst(members), [members]);
   const totalCount = members.length;
-  const visible = sortedMembers.slice(0, maxVisibleAvatars);
+  const clampedMaxVisibleAvatars = Math.max(
+    1,
+    Math.min(maxVisibleAvatars, MEMBER_COMPACT_STACK_MAX_VISIBLE_AVATARS),
+  );
+  const visible = sortedMembers.slice(0, clampedMaxVisibleAvatars);
 
   const handleOpen = useCallback(() => {
     onOpen?.();
@@ -40,7 +45,12 @@ export function MemberCompactStack({
     <div className="flex min-w-0 flex-1 items-center">
       <div className="flex items-center">
         {visible.map((m, i) => (
-          <MemberCompactStackFace key={m.id} imageSrc={m.imageSrc} zIndex={i + 1} overlap={i > 0} />
+          <MemberCompactStackFace
+            key={m.id}
+            imageSrc={m.imageSrc}
+            zIndex={visible.length - i}
+            overlap={i > 0}
+          />
         ))}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconUser } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/cn';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
@@ -13,6 +13,10 @@ type Props = {
 
 export function MemberCompactStackFace({ imageSrc, zIndex, overlap }: Props) {
   const [imgOk, setImgOk] = useState(imageSrc != null);
+
+  useEffect(() => {
+    setImgOk(imageSrc != null);
+  }, [imageSrc]);
 
   return (
     <div
