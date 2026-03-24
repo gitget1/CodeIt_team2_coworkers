@@ -45,7 +45,7 @@ export function useSignUpForm() {
   const submitHandler = (data: SignUpRequest) => {
     signUp(data, {
       onSuccess: (user) => {
-        toast.success(`${user.id}님 환영합니다!`);
+        toast.success(`${user.name}님 환영합니다!`);
         router.push('/');
       },
       onError: (error: unknown) => {
