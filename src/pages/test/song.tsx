@@ -1,98 +1,139 @@
 import { useState } from 'react';
-import { useCreateGroupMutation, useGroupQuery } from '@/features/group';
+import { useUpdateGroupMutation } from '@/features/group/hooks/useUpdateGroupMutation';
+import { useDeleteGroupMutation } from '@/features/group/hooks/useDeleteGroupMutation';
+import { useRemoveGroupMemberMutation } from '@/features/group/hooks/useRemoveMemberMutation';
+import { useInvitationTokenQuery } from '@/features/group/hooks/useInvitationTokenQuery';
+import { useGroupTasksQuery } from '@/features/group/hooks/useGroupTasksQuery';
 
-export default function GroupFlowTestPage() {
-  const [createdId, setCreatedId] = useState<number>(0);
+export default function GroupTestPage() {
+  const TEST_GROUP_ID = 3946;
 
-  // 그룹 생성 훅
-  // isPending  요청이 진행중 인지 로딩중인지
-  const { mutate: createGroup, isPending: isCreating } = useCreateGroupMutation();
+  const { mutate: updateGroup } = useUpdateGroupMutation();
+  const { mutate: deleteGroup } = useDeleteGroupMutation();
+  const { mutate: removeMember } = useRemoveGroupMemberMutation();
 
-  const { data: groupDetail, isLoading: isFetching } = useGroupQuery(createdId);
+  const { data: tasks, isLoading: isTasksLoading } = useGroupTasksQuery(TEST_GROUP_ID);
+  const { data: token, refetch: fetchToken } = useInvitationTokenQuery(TEST_GROUP_ID, false);
 
-  const startTest = () => {
-    createGroup(
-      { body: { name: `테스트 그룹 ${Date.now()}` } },
-      {
-        onSuccess: (newGroup) => {
-          setCreatedId(newGroup.id);
-          alert(`테스트 완료 생성된 그룹 ID: ${newGroup.id}`);
-        },
-        onError: (err) => {
-          console.error('테스트 실패:', err);
-          alert('에러 발생 콘솔창을 확인해주세요.');
-        },
-      },
-    );
+  const [newName, setNewName] = useState('');
+  const [targetUserId, setTargetUserId] = useState('');
+
+  const buttonStyle = {
+    padding: '8px 16px',
+    backgroundColor: '#3b82f6',
+    color: '#ffffff',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    marginLeft: '8px',
   };
 
-  const loading = isCreating || isFetching;
+  const dangerButtonStyle = {
+    ...buttonStyle,
+  };
+
+  const inputStyle = {
+    padding: '8px',
+    border: '1px solid #ccc',
+  };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '10px' }}>그룹 기능 통합 테스트</h1>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+      <h1>그룹 테스트 페이지</h1>
+      <p>
+        현재 그룹 ID: <strong>{TEST_GROUP_ID}</strong>
+      </p>
+      <hr style={{ marginBottom: '20px' }} />
 
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <section style={{ marginBottom: '20px' }}>
+        <h3>그룹 이름 변경</h3>
+        <input
+          style={inputStyle}
+          type="text"
+          placeholder="바꿀 이름 입력"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+        />
         <button
-          onClick={startTest}
-          disabled={loading}
-          style={{
-            padding: '12px 24px',
-            fontSize: '16px',
-            color: 'white',
-            backgroundColor: loading ? '#ccc' : '#0070f3',
-            border: 'none',
-            borderRadius: '8px',
-            margin: '40px 0',
-            cursor: loading ? 'not-allowed' : 'pointer',
-          }}
+          style={buttonStyle}
+          onClick={() => updateGroup({ groupId: TEST_GROUP_ID, body: { name: newName } })}
         >
-          {loading ? '처리 중...' : '그룹 생성하고 바로 조회하기'}
+          수정 API
         </button>
-      </div>
+      </section>
 
-      {createdId !== 0 && (
-        <div
-          style={{
-            background: '#f8f9fa',
-            padding: '24px',
-            borderRadius: '12px',
-            border: '1px solid #e9ecef',
+      <section style={{ marginBottom: '20px' }}>
+        <h3>멤버 강퇴</h3>
+        <input
+          style={inputStyle}
+          type="number"
+          placeholder="강퇴할 유저 ID"
+          value={targetUserId}
+          onChange={(e) => setTargetUserId(e.target.value)}
+        />
+        <button
+          style={dangerButtonStyle}
+          onClick={() =>
+            removeMember({ groupId: TEST_GROUP_ID, memberUserId: Number(targetUserId) })
+          }
+        >
+          강퇴 API
+        </button>
+      </section>
+
+      <section style={{ marginBottom: '20px' }}>
+        <h3>초대 토큰 생성</h3>
+        <button style={buttonStyle} onClick={() => fetchToken()}>
+          토큰 받아오기
+        </button>
+        {token && (
+          <div style={{ marginTop: '10px' }}>
+            <strong>발급된 토큰:</strong>
+            <p
+              style={{
+                color: '#2563eb',
+                wordBreak: 'break-all',
+                backgroundColor: '#f1f5f9',
+                padding: '12px',
+                borderRadius: '6px',
+              }}
+            >
+              {token}
+            </p>
+          </div>
+        )}
+      </section>
+
+      <section style={{ marginBottom: '20px' }}>
+        <h3>그룹 완전 삭제</h3>
+        <button
+          style={dangerButtonStyle}
+          onClick={() => {
+            if (window.confirm('진짜 삭제!!!??')) {
+              deleteGroup({ groupId: TEST_GROUP_ID }, { onSuccess: () => alert('삭제 성공') });
+            }
           }}
         >
-          <h3 style={{ marginTop: 0 }}>!!!! 결과 확인 !!!!</h3>
-          <div style={{ marginBottom: '8px' }}>
-            <strong>생성된 ID: </strong> {createdId}
-          </div>
+          삭제 API
+        </button>
+      </section>
 
-          {groupDetail && (
-            <>
-              <div style={{ marginBottom: '8px' }}>
-                <strong>서버에서 가져온 이름:</strong> {groupDetail.name}
-              </div>
-              <div style={{ marginBottom: '16px' }}>
-                <strong>생성 시각:</strong> {groupDetail.createdAt.toLocaleString()}
-              </div>
-
-              <div style={{ cursor: 'pointer' }}>
-                <div style={{ color: '#0070f3', fontWeight: '500' }}>상세 JSON 데이터 보기</div>
-                <pre
-                  style={{
-                    marginTop: '12px',
-                    padding: '15px',
-                    background: '#222',
-                    color: '#fff',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                  }}
-                >
-                  {JSON.stringify(groupDetail, null, 2)}
-                </pre>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+      <section style={{ marginBottom: '20px' }}>
+        <h3>5. 이 그룹의 할 일 목록</h3>
+        {isTasksLoading ? (
+          <p>로딩 중...</p>
+        ) : (
+          <ul style={{ backgroundColor: '#f9fafb', padding: '20px', borderRadius: '8px' }}>
+            {tasks?.length === 0 ? <li>등록된 할 일이 없습니다.</li> : null}
+            {tasks?.map((task) => (
+              <li key={task.id} style={{ marginBottom: '8px' }}>
+                {task.title || '이름 없음'} {task.isCompleted ? 'v' : 'x'}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
