@@ -1,12 +1,14 @@
-export function getStartDateTime(date?: Date, time?: string) {
-  if (!date) return new Date();
+import { set } from 'date-fns';
 
-  if (!time) return date;
+type Time = string;
 
-  const [h, m] = time.split(':').map(Number);
+export function combineDateTime(date: Date, time: Time): Date {
+  const [hours, minutes] = time.split(':').map(Number);
 
-  const result = new Date(date);
-  result.setHours(h, m, 0, 0);
-
-  return result;
+  return set(date, {
+    hours,
+    minutes,
+    seconds: 0,
+    milliseconds: 0,
+  });
 }

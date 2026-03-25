@@ -2,7 +2,7 @@ import { Button } from '@/shared/ui/Button';
 import { IconArrowLeft } from '@/shared/ui/icons/IconArrowLeft';
 import { IconArrowRight } from '@/shared/ui/icons/IconArrowRight';
 import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
-import Calendar from '../../dateTimeField/calendarPopover';
+import Calendar from '../../dateTimeField/datePopover';
 import { useRef } from 'react';
 import useClickOutside from '@/shared/hooks/useClickOutside';
 

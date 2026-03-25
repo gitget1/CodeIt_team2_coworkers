@@ -9,7 +9,7 @@ interface CalendarProps {
   onSelect?: SelectSingleEventHandler;
 }
 
-export default function Calendar({ selected, onSelect }: CalendarProps) {
+export default function DatePopover({ selected, onSelect }: CalendarProps) {
   const defaultClassNames = getDefaultClassNames();
 
   return (

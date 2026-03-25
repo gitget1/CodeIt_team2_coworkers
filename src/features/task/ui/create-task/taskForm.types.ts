@@ -1,16 +1,19 @@
-import { TaskCommonParams } from '../../model/params/task.params';
+type Time = string;
 
 export type TaskFormValues = {
   title: string;
   description: string;
-  date?: Date;
-  time?: string;
+  date?: Date | undefined;
+  time?: Time | undefined;
   recurrence: 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
   selectedDays: number[];
 };
 
-export type TaskCreateModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  params: TaskCommonParams;
+export const INITIAL_TASK_FORM_VALUES: TaskFormValues = {
+  title: '',
+  description: '',
+  date: undefined,
+  time: undefined,
+  recurrence: 'ONCE',
+  selectedDays: [],
 };

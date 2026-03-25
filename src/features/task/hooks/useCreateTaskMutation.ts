@@ -27,6 +27,10 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
         taskListId: params.taskListId,
       };
 
+      if (!body.startDate) {
+        throw new Error('startDate is required');
+      }
+
       if (body.frequencyType === 'ONCE') {
         return createTask(path, {
           name: body.name,

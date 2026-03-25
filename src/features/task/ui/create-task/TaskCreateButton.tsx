@@ -18,7 +18,7 @@ export default function TaskCreateButton({ params }: Props) {
         할 일 생성
       </button>
 
-      <TaskCreateModal isOpen={isOpen} onClose={() => setIsOpen(false)} params={params} />
+      <TaskCreateModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }

@@ -9,7 +9,7 @@ type Props = {
 
 // TODO:
 // 자동 스크롤 적용 예정 (사용자가 이미 선택한 시간이 있다면 해당 시간으로 자동 스크롤)
-export default function TimePicker({ value, onChange, interval = 30 }: Props) {
+export default function TimePopover({ value, onChange, interval = 30 }: Props) {
   const [period, setPeriod] = useState<'AM' | 'PM'>(() => {
     if (!value) return 'AM';
     const hour = parseInt(value.split(':')[0]);
@@ -36,7 +36,7 @@ export default function TimePicker({ value, onChange, interval = 30 }: Props) {
   }, [times, period]);
 
   return (
-    <div className="flex w-full min-w-[260px] gap-3 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md sm:-translate-x-1/2">
+    <div className="flex w-full min-w-[260px] gap-3 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md ">
       <div className="flex flex-col gap-2">
         <button
           onClick={() => setPeriod('AM')}

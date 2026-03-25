@@ -1,18 +1,51 @@
 import { Input } from '@/shared/ui/input/Input';
 import { FormField } from '@/shared/ui/formfield';
 import { Button } from '@/shared/ui/Button';
-import DateField from '../../dateTimeField/dateField';
 import RecurrenceField from '../../components/recurrenceField';
-import TimeField from '../../dateTimeField/timeField';
-import { useTaskForm } from './useTaskForm';
+import { Controller, useForm } from 'react-hook-form';
+import { INITIAL_TASK_FORM_VALUES, TaskFormValues } from './taskForm.types';
+import { CreateRecurringParams, CreateTaskParams } from '../../model/params/task.create.params';
+import DateTimeField from '../../dateTimeField/dateTimeFiled';
+import { toCreateTaskPayload } from '../../lib/createTaskPayload';
+import { Toaster } from '@/shared/ui/toast/Toaster';
+import { combineDateTime } from './taskForm.utils';
 
 type Props = {
-  form: ReturnType<typeof useTaskForm>;
-  onSubmit: () => void;
+  mutate: (
+    data: CreateTaskParams | CreateRecurringParams,
+    options?: { onSuccess?: () => void },
+  ) => void;
   isPending: boolean;
+  onSuccess: () => void;
 };
 
-export default function TaskForm({ form, onSubmit, isPending }: Props) {
+export default function TaskForm({ mutate, isPending, onSuccess }: Props) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<TaskFormValues>({ mode: 'onChange', defaultValues: INITIAL_TASK_FORM_VALUES });
+
+  const onSubmit = (data: TaskFormValues) => {
+    if (!data.date || !data.time) return;
+    try {
+      const payload = toCreateTaskPayload(data);
+
+      console.log('🔥 recurrence:', data.recurrence);
+      console.log('🔥 payload:', payload);
+
+      mutate(payload, {
+        onSuccess: () => {
+          reset();
+          onSuccess();
+        },
+      });
+    } catch (e) {}
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
@@ -28,62 +61,56 @@ export default function TaskForm({ form, onSubmit, isPending }: Props) {
         <FormField.Label>할 일 제목</FormField.Label>
         <FormField.Control>
           <Input
-            value={form.title}
-            onChange={(e) => form.setTitle(e.target.value)}
-            placeholder="할 일 제목을 입력해주세요."
+            {...register('title', {
+              required: '제목을 입력해주세요.',
+            })}
           />
         </FormField.Control>
-        <FormField.Message>테스트</FormField.Message>
+        <FormField.Message>{errors.title?.message}</FormField.Message>
       </FormField>
 
       <FormField>
         <FormField.Label>시작 날짜 및 시간</FormField.Label>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <div className="w-full sm:w-[204px]">
-            <DateField
-              className="text-txt-default !font-regular border-background-tertiary rounded-xl text-lg"
-              value={form.date}
-              onChange={(d) => {
-                form.setDate(d);
-                form.setOpenField(null);
-              }}
-              open={form.openField === 'date'}
-              onToggle={() => form.setOpenField((prev) => (prev === 'date' ? null : 'date'))}
+        <Controller
+          control={control}
+          name="date"
+          render={({ field }) => (
+            <DateTimeField
+              date={field.value}
+              time={watch('time')}
+              onChangeDate={(d) => setValue('date', d)}
+              onChangeTime={(t) => setValue('time', t)}
             />
-          </div>
-          <div className="w-full sm:w-[124px]">
-            <TimeField
-              className="text-txt-default !font-regular border-background-tertiary rounded-xl text-lg"
-              value={form.time}
-              onChange={(t) => {
-                form.setTime(t);
-                form.setOpenField(null);
-              }}
-              open={form.openField === 'time'}
-              onToggle={() => form.setOpenField((prev) => (prev === 'time' ? null : 'time'))}
-            />
-          </div>
-        </div>
+          )}
+        />
+        <FormField.Message>
+          {(errors.date || errors.time) && '날짜와 시간을 모두 입력해주세요.'}
+        </FormField.Message>
       </FormField>
 
       <FormField>
         <FormField.Label>반복 설정</FormField.Label>
         <RecurrenceField
-          value={form.recurrence}
-          onChange={form.setRecurrence}
-          selectedDays={form.selectedDays}
-          onChangeDays={form.setSelectedDays}
+          value={watch('recurrence')}
+          onChange={(v) => {
+            setValue('recurrence', v);
+            if (v !== 'WEEKLY') {
+              setValue('selectedDays', []);
+            }
+          }}
+          selectedDays={watch('selectedDays') ?? []}
+          onChangeDays={(days) => setValue('selectedDays', days)}
         />
       </FormField>
 
       <FormField>
         <FormField.Label>할 일 메모</FormField.Label>
         <FormField.Control>
-          <Input value={form.description} onChange={(e) => form.setDescription(e.target.value)} />
+          <Input {...register('description')} />
         </FormField.Control>
       </FormField>
 
-      <Button onClick={onSubmit} disabled={isPending}>
+      <Button onClick={handleSubmit(onSubmit)} disabled={!isValid}>
         만들기
       </Button>
     </div>

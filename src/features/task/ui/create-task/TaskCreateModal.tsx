@@ -1,34 +1,24 @@
-import { useEffect } from 'react';
 import { Modal } from '@/shared/ui/modal';
 import { useCreateTaskMutation } from '../../hooks/useCreateTaskMutation';
-import { useTaskForm } from './useTaskForm';
 import TaskForm from './TaskForm';
-import { TaskCreateModalProps } from './taskForm.types';
+import { useTaksParams } from '../../lib/useTaskParams';
 
-export default function TaskCreateModal({ isOpen, onClose, params }: TaskCreateModalProps) {
+type TaskCreateModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+export default function TaskCreateModal({ isOpen, onClose }: TaskCreateModalProps) {
+  const params = useTaksParams();
+  if (!params) return null;
   const { mutate, isPending } = useCreateTaskMutation(params);
-  const form = useTaskForm();
-
-  const handleSubmit = () => {
-    if (!form.title.trim()) return;
-
-    mutate(form.createPayload(), {
-      onSuccess: () => {
-        form.resetForm();
-        onClose();
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (!isOpen) return;
-    form.resetForm();
-  }, [isOpen]);
 
   return (
     <Modal isOpen={isOpen} open={() => {}} close={onClose}>
-      <Modal.Content size="md" className="overflow-visible px-6 py-8 sm:px-8 sm:py-10">
-        <TaskForm form={form} onSubmit={handleSubmit} isPending={isPending} />
+      <Modal.Content size="md" className="sm:px-5 sm:py-8">
+        <div className="flex-1 overflow-y-auto">
+          <TaskForm mutate={mutate} isPending={isPending} onSuccess={onClose} />
+        </div>
       </Modal.Content>
     </Modal>
   );

@@ -13,4 +13,5 @@ export interface CreateRecurringParams {
   startDate: Date;
   frequencyType: RecurrenceType;
   monthDay?: number;
+  weekDays?: number[];
 }
