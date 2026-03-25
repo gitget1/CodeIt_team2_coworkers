@@ -1,17 +1,25 @@
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import logoLg from '@/shared/assets/images/logo-lg.png';
 import { ResetPasswordForm } from '@/features/auth/ui/ResetPasswordForm';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
 
-export default function ResetPasswordPage() {
-  const router = useRouter();
-  const { token } = router.query;
+interface ResetPasswordPageProps {
+  token: string | null;
+}
 
-  if (!router.isReady) return null;
+export const getServerSideProps: GetServerSideProps<ResetPasswordPageProps> = async (context) => {
+  const { token } = context.query;
+  const validToken = Array.isArray(token) ? token[0] : token || null;
 
-  const validToken = Array.isArray(token) ? token[0] : token;
+  return {
+    props: {
+      token: validToken,
+    },
+  };
+};
 
+export default function ResetPasswordPage({ token }: ResetPasswordPageProps) {
   return (
     <main className="bg-background-secondary flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-120">
@@ -19,8 +27,8 @@ export default function ResetPasswordPage() {
           <Image src={logoLg} alt="Coworkers Logo" className="object-contain" priority />
         </header>
 
-        {validToken ? (
-          <ResetPasswordForm token={validToken} />
+        {token ? (
+          <ResetPasswordForm token={token} />
         ) : (
           <div className="rounded-2xl bg-white px-5 py-12 text-center shadow-sm md:px-10">
             <h1 className="text-status-danger mb-4 text-xl font-bold">유효하지 않은 링크입니다</h1>
