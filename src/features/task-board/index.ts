@@ -5,6 +5,6 @@ export type {
   TaskBoardTask,
   TaskBoardTaskGroup,
 } from './model/taskBoard.types';
-export { TASK_BOARD_COLUMN_STATUS_LABEL } from './model/taskBoard.constants';
+export { TASK_BOARD_COLUMN_STATUS_LABEL } from './ui/taskBoardColumnLabels';
 export { MOCK_TASK_BOARD } from './lib/mockData';
 

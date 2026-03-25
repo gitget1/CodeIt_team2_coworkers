@@ -4,7 +4,7 @@ export const MOCK_TASK_BOARD: TaskBoard = {
   columns: [
     {
       id: 'todo',
-      status: 'todo',
+      status: 'TODO',
       taskGroups: [
         {
           id: 'card-todo-1',
@@ -27,7 +27,7 @@ export const MOCK_TASK_BOARD: TaskBoard = {
     },
     {
       id: 'in-progress',
-      status: 'in_progress',
+      status: 'IN_PROGRESS',
       taskGroups: [
         {
           id: 'card-progress-1',
@@ -51,7 +51,7 @@ export const MOCK_TASK_BOARD: TaskBoard = {
     },
     {
       id: 'done',
-      status: 'done',
+      status: 'DONE',
       taskGroups: [
         {
           id: 'card-done-1',

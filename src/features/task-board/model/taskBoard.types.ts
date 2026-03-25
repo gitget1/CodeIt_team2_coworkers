@@ -1,5 +1,5 @@
 
-export type TaskBoardColumnStatus = 'todo' | 'in_progress' | 'done';
+export type TaskBoardColumnStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
 export type TaskBoard = {
   columns: TaskBoardColumn[];
