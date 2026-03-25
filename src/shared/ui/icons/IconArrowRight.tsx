@@ -1,7 +1,7 @@
 import { ICON_SIZE, IconProps } from '@/shared/constants/icon';
 import { cn } from '@/shared/lib/cn';
 
-export function IconArrowRight({ size = ICON_SIZE.sm, className, ...props }: IconProps) {
+export function IconArrowRight({ size = ICON_SIZE.md, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
@@ -15,9 +15,9 @@ export function IconArrowRight({ size = ICON_SIZE.sm, className, ...props }: Ico
       <path
         d="M9 18L15 12L9 6"
         stroke="#64748B"
-        strokeWidth="2.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        stroke-width="2.25"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </svg>
   );

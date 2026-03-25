@@ -1,7 +1,7 @@
 import { ICON_SIZE, IconProps } from '@/shared/constants/icon';
 import { cn } from '@/shared/lib/cn';
 
-export function IconArrowLeft({ size = ICON_SIZE.sm, className, ...props }: IconProps) {
+export function IconArrowLeft({ size = ICON_SIZE.md, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
@@ -12,14 +12,16 @@ export function IconArrowLeft({ size = ICON_SIZE.sm, className, ...props }: Icon
       className={cn('shrink-0', className)}
       {...props}
     >
-      <path
-        id="Vector"
-        d="M15 6L9 12L15 18"
-        stroke="#64748B"
-        strokeWidth="2.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <g id="type=left, size=large">
+        <path
+          id="Vector"
+          d="M15 6L9 12L15 18"
+          stroke="#64748B"
+          stroke-width="2.25"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
     </svg>
   );
 }

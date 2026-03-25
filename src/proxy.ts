@@ -16,7 +16,8 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith('/test/kim') ||
     pathname.startsWith('/test/park') ||
     pathname.startsWith('/test/song') ||
-    pathname.startsWith('/test/yeom');
+    pathname.startsWith('/test/yeom') ||
+    pathname.startsWith('/boards')
 
   const hasToken = !!(accessToken || refreshToken);
 
