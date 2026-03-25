@@ -1,36 +1,26 @@
-/* 보드 */
+
+export type TaskBoardColumnStatus = 'todo' | 'in_progress' | 'done';
+
 export type TaskBoard = {
   columns: TaskBoardColumn[];
 };
-/* 컬럼 */
+
+
 export type TaskBoardColumn = {
   id: string;
-  title: TaskBoardColumnTitle;
-  cards: TaskBoardCard[];
+  status: TaskBoardColumnStatus;
+  taskGroups: TaskBoardTaskGroup[];
 };
 
-export type TaskBoardColumnTitle = '할 일' | '진행중' | '완료';
 
-/* 카드 */
-export type TaskBoardCard = {
+export type TaskBoardTaskGroup = {
+  id: string;
+  name: string;
+  tasks: TaskBoardTask[];
+};
+
+export type TaskBoardTask = {
   id: string;
   title: string;
-  tasks: TaskBoardTaskItem[];
-  collapsed: boolean;
+  completed: boolean;
 };
-
-/* 할일  */
-export type TaskBoardTaskItem = {
-  id: string;
-  label: string;
-  checked: boolean;
-};
-
-
-
-
-
-
-
-
-
