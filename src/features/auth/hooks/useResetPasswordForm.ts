@@ -21,8 +21,7 @@ export function useResetPasswordForm(token: string) {
     resetPassword(
       {
         token,
-        password: data.password,
-        passwordConfirmation: data.passwordConfirmation,
+        ...data,
       },
       {
         onSuccess: () => {
