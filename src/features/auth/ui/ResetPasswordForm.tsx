@@ -39,7 +39,7 @@ export function ResetPasswordForm({ token }: ResetPasswordProps) {
           <FormField.Control>
             <Input
               type="password"
-              placeholder="비밀번호를 다시 한 번 입력해주세요."
+              placeholder="새 비밀번호를 다시 한 번 입력해주세요."
               {...register('passwordConfirmation', {
                 required: '비밀번호 확인을 입력해주세요.',
                 validate: validatePasswordMatch,
