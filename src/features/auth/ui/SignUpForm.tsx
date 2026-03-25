@@ -9,6 +9,14 @@ import Link from 'next/link';
 export function SignUpForm() {
   const { register, onSubmit, errors, isSubmitting } = useSignUpForm();
 
+  const handleOauthLogin = () => {
+    console.log('연결 예정');
+    /**
+     * TODO
+     * Oauth api 연결
+     */
+  };
+
   return (
     <div className="w-full rounded-2xl bg-white px-5 py-12 shadow-sm md:px-10">
       <h1 className="text-txt-primary mb-10 text-center text-xl font-bold md:text-2xl">회원가입</h1>
@@ -93,7 +101,7 @@ export function SignUpForm() {
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <KakaoAuthButton />
+      <KakaoAuthButton onClick={handleOauthLogin} />
     </div>
   );
 }

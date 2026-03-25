@@ -1,7 +1,7 @@
 import { IconKakao } from '@/shared/ui/icons';
 
 interface KakaoAuthButtonProps {
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export function KakaoAuthButton({ onClick }: KakaoAuthButtonProps) {

@@ -10,6 +10,14 @@ import { KakaoAuthButton } from './KakaoAuthButton';
 export function LoginForm() {
   const { register, onSubmit, errors, isSubmitting } = useAuthForm();
 
+  const handleOauthLogin = () => {
+    console.log('연결 예정');
+    /**
+     * TODO
+     * Oauth api 연결
+     */
+  };
+
   return (
     <div className="w-full rounded-2xl bg-white px-5 py-12 shadow-sm md:px-10">
       <form onSubmit={onSubmit} className="flex flex-col gap-6">
@@ -66,7 +74,7 @@ export function LoginForm() {
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <KakaoAuthButton />
+      <KakaoAuthButton onClick={handleOauthLogin} />
     </div>
   );
 }
