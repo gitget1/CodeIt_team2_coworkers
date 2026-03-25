@@ -4,6 +4,7 @@ import Dropdown from '@/shared/ui/dropdown';
 import { Profile, ProfileEdit } from '@/shared/ui/profile';
 import sampleProfileImg from '@/shared/assets/images/logo-sm.png';
 import { Checkbox } from '@/shared/ui/checkbox';
+import { TaskBoardView } from '@/features/task-board';
 
 export default function TestPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>('team-1');
@@ -41,6 +42,11 @@ export default function TestPage() {
             </SidebarDropdownMenu>
           </Dropdown>
         </div>
+
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold text-txt-primary">TaskBoardView (+로 카드 추가)</h2>
+          <TaskBoardView />
+        </section>
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-txt-primary">Profile (이미지 유무)</h2>

@@ -15,5 +15,7 @@ export * from './IconUser';
 export * from './IconPencil';
 export * from './IconGear';
 export * from './IconKebab';
+export * from './IconDone';
+export * from './IconProgress';
 export * from './IconSecession';
 export * from './IconKakao';
