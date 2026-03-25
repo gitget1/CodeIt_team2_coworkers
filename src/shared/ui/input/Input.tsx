@@ -78,8 +78,7 @@ export const Input = ({
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 표시'}
             className={cn(
               'text-icon-primary hover:text-interaction-pressed transition-colors focus:outline-none',
-              'flex w-9.5 items-center justify-end',
-              'via-background-primary to-background-primary bg-linear-to-r from-transparent via-45%',
+              'flex w-9.5 items-center justify-end bg-transparent',
             )}
           >
             {showPassword ? <IconEyeOpen size={24} /> : <IconEyeClose size={24} />}

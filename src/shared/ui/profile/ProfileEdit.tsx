@@ -6,7 +6,7 @@ import { getImageSrc } from '@/shared/lib/getImageSrc';
 import { cn } from '@/shared/lib/cn';
 import type { ImageAsset } from './Profile.types';
 
-export type ProfileEditSize = 'large' | 'x-large';
+export type ProfileEditSize = 'large' | 'x-large' | 'account-pc' | 'account-mobile';
 
 const SIZE_CONFIG = {
   large: {
@@ -25,6 +25,26 @@ const SIZE_CONFIG = {
     borderWidth: 2.22,
     pencilBtn: 32,
     pencilIcon: 20,
+    pencilOffset: -4,
+  },
+
+  'account-pc': {
+    w: 100,
+    h: 100,
+    borderRadius: 28,
+    borderWidth: 2,
+    pencilBtn: 28,
+    pencilIcon: 16,
+    pencilOffset: -2,
+  },
+
+  'account-mobile': {
+    w: 64,
+    h: 64,
+    borderRadius: 18,
+    borderWidth: 2,
+    pencilBtn: 24,
+    pencilIcon: 14,
     pencilOffset: -4,
   },
 } as const;
