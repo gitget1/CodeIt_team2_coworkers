@@ -6,7 +6,10 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isApiProxy = pathname.startsWith('/api/v1');
-  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup');
+  const isAuthPage =
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/signup') ||
+    pathname.startsWith('/reset-password');
   const isPublicPage =
     pathname === '/' ||
     pathname.startsWith('/test/lee') ||

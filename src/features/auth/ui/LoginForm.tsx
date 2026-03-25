@@ -1,7 +1,7 @@
 import { FormField } from '@/shared/ui/formfield';
 import { useAuthForm } from '../hooks/useAuthForm';
 import { Input } from '@/shared/ui/input/Input';
-import { AUTH_VALIDATION_RULES } from '../constants/validation';
+import { AUTH_VALIDATION_RULES } from '../utils/validation';
 import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
 import { SendResetEmailModal } from './SendResetEmailModal';

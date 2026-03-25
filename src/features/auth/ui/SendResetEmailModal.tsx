@@ -3,7 +3,7 @@ import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/input/Input';
 import { Modal } from '@/shared/ui/modal';
 import { FormField } from '@/shared/ui/formfield';
-import { AUTH_VALIDATION_RULES } from '../constants/validation';
+import { AUTH_VALIDATION_RULES } from '../utils/validation';
 import { useSendResetEmailForm } from '../hooks/useSendResetEmailForm';
 
 export function SendResetEmailModal() {

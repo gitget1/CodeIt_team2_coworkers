@@ -1,11 +1,11 @@
 import { FormField } from '@/shared/ui/formfield';
 import { useSignUpForm } from '../hooks/useSignUpForm';
 import { Input } from '@/shared/ui/input/Input';
-import { AUTH_VALIDATION_RULES } from '../constants/validation';
+import { AUTH_VALIDATION_RULES, validatePasswordMatch } from '../utils/validation';
 import { Button } from '@/shared/ui/Button';
 
 export function SignUpForm() {
-  const { register, onSubmit, errors, isSubmitting, validatePasswordMatch } = useSignUpForm();
+  const { register, onSubmit, errors, isSubmitting } = useSignUpForm();
 
   return (
     <div className="w-full rounded-2xl bg-white px-5 py-12 shadow-sm md:px-10">
@@ -44,7 +44,10 @@ export function SignUpForm() {
             <Input
               type="password"
               placeholder="비밀번호를 입력해주세요."
-              {...register('password', AUTH_VALIDATION_RULES.password)}
+              {...register('password', {
+                ...AUTH_VALIDATION_RULES.password,
+                deps: ['passwordConfirmation'],
+              })}
               className="placeholder:text-txt-default placeholder:text-md placeholder:font-normal md:placeholder:text-lg"
             />
           </FormField.Control>

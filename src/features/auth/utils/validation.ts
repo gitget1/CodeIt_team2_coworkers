@@ -24,3 +24,7 @@ export const AUTH_VALIDATION_RULES = {
     validate: (value: string) => value.length <= 20 || '이름은 최대 20자까지 가능합니다.',
   },
 } as const;
+
+export const validatePasswordMatch = (value: string, formValues: { password?: string }) => {
+  return value === formValues.password || '비밀번호가 일치하지 않습니다.';
+};

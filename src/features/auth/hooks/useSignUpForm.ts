@@ -2,9 +2,8 @@ import { useRouter } from 'next/router';
 import { SignUpRequest } from '../model/dto/auth.dto';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import axios from 'axios';
 import { useSignUp } from './useSignUp';
-import { useCallback, useEffect } from 'react';
+import axios from 'axios';
 
 const SIGNUP_FIELDS: Array<keyof SignUpRequest> = [
   'email',
@@ -19,28 +18,11 @@ export function useSignUpForm() {
   const {
     register,
     handleSubmit,
-    watch,
-    trigger,
     setError,
     formState: { errors },
   } = useForm<SignUpRequest>({ mode: 'onSubmit' });
 
   const { mutate: signUp, isPending } = useSignUp();
-
-  const currentPassword = watch('password');
-
-  useEffect(() => {
-    if (errors.passwordConfirmation) {
-      trigger('passwordConfirmation');
-    }
-  }, [currentPassword]);
-
-  const validatePasswordMatch = useCallback(
-    (value: string) => {
-      return value === currentPassword || '비밀번호가 일치하지 않습니다.';
-    },
-    [currentPassword],
-  );
 
   const submitHandler = (data: SignUpRequest) => {
     signUp(data, {
@@ -73,6 +55,5 @@ export function useSignUpForm() {
     onSubmit: handleSubmit(submitHandler),
     errors,
     isSubmitting: isPending,
-    validatePasswordMatch,
   };
 }
