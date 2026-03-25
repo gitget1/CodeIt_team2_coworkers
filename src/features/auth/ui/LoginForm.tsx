@@ -5,6 +5,7 @@ import { AUTH_VALIDATION_RULES } from '../utils/validation';
 import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
 import { SendResetEmailModal } from './SendResetEmailModal';
+import { KakaoAuthButton } from './KakaoAuthButton';
 
 export function LoginForm() {
   const { register, onSubmit, errors, isSubmitting } = useAuthForm();
@@ -65,12 +66,7 @@ export function LoginForm() {
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <button
-        type="button"
-        className="text-background-inverse flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] text-lg font-semibold transition-colors hover:bg-[#FDD800]"
-      >
-        카카오로 시작하기
-      </button>
+      <KakaoAuthButton />
     </div>
   );
 }

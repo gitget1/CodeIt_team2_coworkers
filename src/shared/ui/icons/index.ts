@@ -13,9 +13,7 @@ export * from './IconPlus';
 export * from './IconTeam';
 export * from './IconUser';
 export * from './IconPencil';
-<<<<<<< HEAD
-=======
 export * from './IconGear';
 export * from './IconKebab';
 export * from './IconSecession';
->>>>>>> e36d391144a164bd09171a8c564aa421afa3b6f4
+export * from './IconKakao';

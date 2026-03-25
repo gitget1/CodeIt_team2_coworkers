@@ -3,6 +3,8 @@ import { useSignUpForm } from '../hooks/useSignUpForm';
 import { Input } from '@/shared/ui/input/Input';
 import { AUTH_VALIDATION_RULES, validatePasswordMatch } from '../utils/validation';
 import { Button } from '@/shared/ui/Button';
+import { KakaoAuthButton } from './KakaoAuthButton';
+import Link from 'next/link';
 
 export function SignUpForm() {
   const { register, onSubmit, errors, isSubmitting } = useSignUpForm();
@@ -75,18 +77,23 @@ export function SignUpForm() {
         </Button>
       </form>
 
+      <div className="text-txt-primary text-md mt-5 mb-0 text-center font-medium md:text-lg">
+        이미 회원이신가요?
+        <Link
+          href="/login"
+          className="text-brand-primary hover:text-interaction-hover ml-3 font-medium underline"
+        >
+          로그인하기
+        </Link>
+      </div>
+
       <div className="mt-8 mb-6 flex items-center justify-center gap-6">
         <div className="h-px flex-1 bg-gray-200"></div>
         <span className="text-txt-default text-md font-normal md:text-lg">간편 회원가입하기</span>
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <button
-        type="button"
-        className="text-background-inverse flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] text-lg font-semibold transition-colors hover:bg-[#FDD800]"
-      >
-        카카오로 시작하기
-      </button>
+      <KakaoAuthButton />
     </div>
   );
 }
