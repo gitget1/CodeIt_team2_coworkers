@@ -2,14 +2,14 @@ import { IconPlus } from '@/shared/ui/icons';
 
 export type TaskColumnStatusHeaderProps = {
   label: string;
-  onAdd?: () => void;
+  onAddTask?: () => void;
 };
 
 /**
  * 컬럼 헤더(상태 라벨 + `+` 버튼) — 정적 UI 기준 컴포넌트
  */
-export function TaskColumnStatusHeader({ label, onAdd }: TaskColumnStatusHeaderProps) {
-  const isInteractive = typeof onAdd === 'function';
+export function TaskColumnStatusHeader({ label, onAddTask }: TaskColumnStatusHeaderProps) {
+  const isDisabled = !!onAddTask;
 
   return (
     <div
@@ -28,8 +28,8 @@ export function TaskColumnStatusHeader({ label, onAdd }: TaskColumnStatusHeaderP
 
       <button
         type="button"
-        onClick={onAdd}
-        disabled={!isInteractive}
+        onClick={onAddTask}
+        disabled={!isDisabled}
         aria-label="카드 추가"
         className="
           w-[24px] h-[24px]

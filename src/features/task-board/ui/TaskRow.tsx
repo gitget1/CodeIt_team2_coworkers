@@ -8,7 +8,7 @@ export type TaskRowProps = {
 };
 
 export function TaskRow({ task, onToggle }: TaskRowProps) {
-  const isInteractive = typeof onToggle === 'function';
+  const isDisabled =  !!onToggle;
 
   return (
     <div className="flex items-center gap-2">
@@ -16,7 +16,7 @@ export function TaskRow({ task, onToggle }: TaskRowProps) {
         size="sm"
         checked={task.completed}
         onChange={(checked) => onToggle?.(checked)}
-        disabled={!isInteractive}
+        disabled={!isDisabled}
         aria-label={`${task.title} 체크`}
       />
       <span

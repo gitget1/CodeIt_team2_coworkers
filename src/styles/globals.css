@@ -88,3 +88,19 @@
   --color-icon-inverse: #f8fafc;
   --color-icon-brand: #74a1fb;
 }
+
+/* 아이콘 마운트 시 한 번 재생 (React state 대신 CSS animation 사용) */
+@keyframes icon-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-icon-enter {
+  animation: icon-enter 200ms ease-out both;
+}

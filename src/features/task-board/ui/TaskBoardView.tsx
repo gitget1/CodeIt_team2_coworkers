@@ -1,11 +1,23 @@
-import { useMemo, useRef, useState } from 'react';
-import type { TaskBoard, TaskBoardColumnStatus, TaskBoardTask, TaskBoardTaskGroup } from '../model/taskBoard.types';
+import { useRef, useState } from 'react';
+import { cn } from '@/shared/lib/cn';
+import type {
+  TaskBoard,
+  TaskBoardColumn,
+  TaskBoardColumnStatus,
+  TaskBoardTask,
+  TaskBoardTaskGroup,
+} from '../model/taskBoard.types';
 import { MOCK_TASK_BOARD } from '../lib/mockData';
-import type { TaskBoardColumn } from '../model/taskBoard.types';
 import { TaskColumn } from './TaskColumn';
 
 type Props = {
   initialBoard?: TaskBoard;
+};
+
+const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
+  TODO: 1,
+  IN_PROGRESS: 1,
+  DONE: 1,
 };
 
 function createTask(id: string, title: string, completed: boolean): TaskBoardTask {
@@ -25,12 +37,10 @@ function createTaskGroup(status: TaskBoardColumnStatus, index: number): TaskBoar
 
 export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
   const [board, setBoard] = useState<TaskBoard>(initialBoard);
-  const nextCardIndexRef = useRef(1);
-
-  const columns = useMemo(() => board.columns, [board.columns]);
+  const nextCardIndexByStatus = useRef<Record<TaskBoardColumnStatus, number>>({ ...INITIAL_CARD_INDEX });
 
   const handleAddCard = (status: TaskBoardColumnStatus) => {
-    const index = nextCardIndexRef.current++;
+    const index = nextCardIndexByStatus.current[status]++;
     const newGroup = createTaskGroup(status, index);
 
     setBoard((prev) => ({
@@ -43,15 +53,12 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
 
   return (
     <div
-      className="
-        flex flex-col
-        gap-[16px] items-start
-        overflow-x-visible
-        pb-2
-        lg:flex-row lg:gap-[20px] lg:overflow-x-auto
-      "
+      className={cn(
+        'flex flex-col gap-[16px] items-start overflow-x-visible pb-2',
+        'lg:flex-row lg:gap-[20px] lg:overflow-x-auto',
+      )}
     >
-      {columns.map((col: TaskBoardColumn) => (
+      {board.columns.map((col: TaskBoardColumn) => (
         <div
           key={col.id}
           className="flex-shrink-0 w-[270px] max-[767px]:w-[343px] min-[768px]:w-[620px] lg:w-[270px]"
@@ -62,4 +69,3 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
     </div>
   );
 }
-

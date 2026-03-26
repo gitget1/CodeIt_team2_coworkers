@@ -4,7 +4,7 @@ import Dropdown from '@/shared/ui/dropdown';
 import { Profile, ProfileEdit } from '@/shared/ui/profile';
 import sampleProfileImg from '@/shared/assets/images/logo-sm.png';
 import { Checkbox } from '@/shared/ui/checkbox';
-import { TaskBoardView } from '@/features/task-board';
+import { TaskBoardView } from '@/features/task-board/ui';
 
 export default function TestPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>('team-1');

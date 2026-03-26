@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 
 export type IconProgressProps = {
@@ -19,15 +18,6 @@ export function IconProgress({
   progress = 0,
   animateOnMount = false,
 }: IconProgressProps) {
-  const [show, setShow] = useState(!animateOnMount);
-
-  useEffect(() => {
-    if (!animateOnMount) return;
-    setShow(false);
-    const t = window.setTimeout(() => setShow(true), 10);
-    return () => window.clearTimeout(t);
-  }, [animateOnMount]);
-
   const clampedProgress = Math.min(1, Math.max(0, progress));
   const r = 6.25;
   const circumference = 2 * Math.PI * r;
@@ -41,13 +31,7 @@ export function IconProgress({
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       focusable="false"
-      className={cn(
-        'shrink-0',
-        'transition-all duration-200 ease-out',
-        animateOnMount && !show && 'opacity-0 translate-y-1',
-        animateOnMount && show && 'opacity-100 translate-y-0',
-        className,
-      )}
+      className={cn('shrink-0', animateOnMount && 'animate-icon-enter', className)}
     >
       {/* 배경 원(회색) */}
       <circle cx="10" cy="10" r={r} stroke="#F8FAFC" strokeWidth="2.641" fill="none" />
@@ -68,4 +52,3 @@ export function IconProgress({
     </svg>
   );
 }
-
