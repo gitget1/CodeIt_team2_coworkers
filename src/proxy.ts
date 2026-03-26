@@ -9,7 +9,8 @@ export async function proxy(request: NextRequest) {
   const isAuthPage =
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
-    pathname.startsWith('/reset-password');
+    pathname.startsWith('/reset-password') ||
+    pathname.startsWith('/oauth');
   const isPublicPage =
     pathname === '/' ||
     pathname.startsWith('/test/lee') ||
@@ -17,7 +18,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith('/test/park') ||
     pathname.startsWith('/test/song') ||
     pathname.startsWith('/test/yeom') ||
-    pathname.startsWith('/boards')
+    pathname.startsWith('/boards');
 
   const hasToken = !!(accessToken || refreshToken);
 

@@ -6,16 +6,13 @@ import { Button } from '@/shared/ui/Button';
 import Link from 'next/link';
 import { SendResetEmailModal } from './SendResetEmailModal';
 import { KakaoAuthButton } from './KakaoAuthButton';
+import { getKakaoAuthUrl } from '../utils/getKakaoAuthUrl';
 
 export function LoginForm() {
   const { register, onSubmit, errors, isSubmitting } = useAuthForm();
 
-  const handleOauthLogin = () => {
-    console.log('연결 예정');
-    /**
-     * TODO
-     * Oauth api 연결
-     */
+  const handleKakaoLogin = () => {
+    window.location.href = getKakaoAuthUrl();
   };
 
   return (
@@ -74,7 +71,7 @@ export function LoginForm() {
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <KakaoAuthButton onClick={handleOauthLogin} />
+      <KakaoAuthButton onClick={handleKakaoLogin} />
     </div>
   );
 }

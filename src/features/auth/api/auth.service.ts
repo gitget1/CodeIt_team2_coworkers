@@ -17,4 +17,8 @@ export const authService = {
   signOut: async (): Promise<void> => {
     await axios.post('/api/auth/signOut');
   },
+  kakaoSignIn: async (payload: { redirectUri: string; token: string }): Promise<User> => {
+    const { data } = await axios.post<{ user: UserDTO }>('/api/auth/kakao', payload);
+    return mapUserDTOToDomain(data.user);
+  },
 };

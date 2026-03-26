@@ -5,16 +5,13 @@ import { AUTH_VALIDATION_RULES, validatePasswordMatch } from '../utils/validatio
 import { Button } from '@/shared/ui/Button';
 import { KakaoAuthButton } from './KakaoAuthButton';
 import Link from 'next/link';
+import { getKakaoAuthUrl } from '../utils/getKakaoAuthUrl';
 
 export function SignUpForm() {
   const { register, onSubmit, errors, isSubmitting } = useSignUpForm();
 
-  const handleOauthLogin = () => {
-    console.log('연결 예정');
-    /**
-     * TODO
-     * Oauth api 연결
-     */
+  const handleKakaoLogin = () => {
+    window.location.href = getKakaoAuthUrl();
   };
 
   return (
@@ -101,7 +98,7 @@ export function SignUpForm() {
         <div className="h-px flex-1 bg-gray-200"></div>
       </div>
 
-      <KakaoAuthButton onClick={handleOauthLogin} />
+      <KakaoAuthButton onClick={handleKakaoLogin} />
     </div>
   );
 }
