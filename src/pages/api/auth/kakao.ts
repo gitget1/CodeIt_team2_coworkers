@@ -8,6 +8,10 @@ import { ApiError } from '@/shared/types/apiError';
 import { serialize } from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+function isApiError(error: unknown): error is ApiError {
+  return typeof error === 'object' && error !== null && 'status' in error && 'message' in error;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: '올바르지 않은 접근입니다' });
@@ -24,9 +28,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ user });
   } catch (error: unknown) {
-    const apiError = error as ApiError;
-    return res
-      .status(apiError.status || 500)
-      .json({ message: apiError.message || '서버 오류가 발생했습니다.' });
+    if (isApiError(error)) {
+      return res
+        .status(error.status || 500)
+        .json({ message: error.message || '서버 오류가 발생했습니다.' });
+    }
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: '알 수 없는 서버 오류가 발생했습니다.' });
   }
 }
