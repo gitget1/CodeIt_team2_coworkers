@@ -9,6 +9,8 @@ import { TaskCommonParams } from '../model/params/task.params';
 
 type Props = {
   task: Task;
+  onClick: (task: Task) => void;
+  params: TaskCommonParams;
 };
 
 type MetaItemProps = {
@@ -17,7 +19,7 @@ type MetaItemProps = {
   className?: string;
 };
 
-function MetaItem({ icon, children, className }: MetaItemProps) {
+function MetaItem({ icon, children }: MetaItemProps) {
   return (
     <div className="text-txt-default flex items-center gap-1 text-xs">
       {icon}
@@ -26,13 +28,12 @@ function MetaItem({ icon, children, className }: MetaItemProps) {
   );
 }
 
-export default function TaskItem({ task, params }: Props & { params: TaskCommonParams }) {
+export default function TaskItem({ task, onClick, params }: Props) {
   const { mutate } = useToggleTaskMutation(params);
   const checkboxId = `task-${task.id}`;
 
   const handleToggle = (checked: boolean) => {
     mutate({
-      teamId: params.teamId,
       groupId: params.groupId,
       taskListId: params.taskListId,
       taskId: task.id,
@@ -40,13 +41,22 @@ export default function TaskItem({ task, params }: Props & { params: TaskCommonP
     });
   };
   return (
-    <li className="border-background-tertiary flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer">
+    <li
+      onClick={() => onClick(task)}
+      className="border-background-tertiary flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer"
+    >
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-2">
-          <Checkbox id={checkboxId} size="lg" checked={task.isCompleted} onChange={handleToggle} />
+          <Checkbox
+            id={checkboxId}
+            size="lg"
+            checked={task.isCompleted}
+            onChange={handleToggle}
+            onClick={(e) => e.stopPropagation()}
+          />
           <label
             htmlFor={checkboxId}
-            className={`text-sm cursor-pointer transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
+            className={`cursor-pointer text-sm transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
           >
             {task.title}
           </label>
