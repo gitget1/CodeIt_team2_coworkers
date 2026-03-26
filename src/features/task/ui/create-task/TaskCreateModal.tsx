@@ -1,7 +1,5 @@
-import { Modal } from '@/shared/ui/modal';
-import { useCreateTaskMutation } from '../../hooks/useCreateTaskMutation';
-import TaskForm from './TaskForm';
-import { useTaksParams } from '../../lib/useTaskParams';
+import { useTaskParams } from '../../lib/useTaskParams';
+import TaskCreateModalContent from './TaskCreateModalContet';
 
 type TaskCreateModalProps = {
   isOpen: boolean;
@@ -9,17 +7,7 @@ type TaskCreateModalProps = {
 };
 
 export default function TaskCreateModal({ isOpen, onClose }: TaskCreateModalProps) {
-  const params = useTaksParams();
-  if (!params) return null;
-  const { mutate, isPending } = useCreateTaskMutation(params);
-
-  return (
-    <Modal isOpen={isOpen} open={() => {}} close={onClose}>
-      <Modal.Content size="md" className="sm:px-5 sm:py-8">
-        <div className="flex-1 overflow-y-auto">
-          <TaskForm mutate={mutate} isPending={isPending} onSuccess={onClose} />
-        </div>
-      </Modal.Content>
-    </Modal>
-  );
+  const params = useTaskParams();
+  if (!isOpen || !params) return null;
+  return <TaskCreateModalContent params={params} isOpen={isOpen} onClose={onClose} />;
 }

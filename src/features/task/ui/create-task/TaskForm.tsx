@@ -4,48 +4,25 @@ import { Button } from '@/shared/ui/Button';
 import RecurrenceField from '../../components/recurrenceField';
 import { Controller, useForm } from 'react-hook-form';
 import { INITIAL_TASK_FORM_VALUES, TaskFormValues } from './taskForm.types';
-import { CreateRecurringParams, CreateTaskParams } from '../../model/params/task.create.params';
-import DateTimeField from '../../dateTimeField/dateTimeFiled';
-import { toCreateTaskPayload } from '../../lib/createTaskPayload';
-import { Toaster } from '@/shared/ui/toast/Toaster';
-import { combineDateTime } from './taskForm.utils';
+import DateTimeField from '../../dateTimeField/dateTimeField';
 
 type Props = {
-  mutate: (
-    data: CreateTaskParams | CreateRecurringParams,
-    options?: { onSuccess?: () => void },
-  ) => void;
+  onSubmit: (data: TaskFormValues) => void;
   isPending: boolean;
-  onSuccess: () => void;
 };
 
-export default function TaskForm({ mutate, isPending, onSuccess }: Props) {
+export default function TaskForm({ onSubmit, isPending }: Props) {
   const {
     register,
     handleSubmit,
     control,
-    setValue,
-    watch,
-    reset,
     formState: { errors, isValid },
   } = useForm<TaskFormValues>({ mode: 'onChange', defaultValues: INITIAL_TASK_FORM_VALUES });
 
-  const onSubmit = (data: TaskFormValues) => {
-    if (!data.date || !data.time) return;
-    try {
-      const payload = toCreateTaskPayload(data);
-
-      console.log('🔥 recurrence:', data.recurrence);
-      console.log('🔥 payload:', payload);
-
-      mutate(payload, {
-        onSuccess: () => {
-          reset();
-          onSuccess();
-        },
-      });
-    } catch (e) {}
+  const submitHandler = (data: TaskFormValues) => {
+    onSubmit(data);
   };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
@@ -73,35 +50,56 @@ export default function TaskForm({ mutate, isPending, onSuccess }: Props) {
         <FormField.Label>시작 날짜 및 시간</FormField.Label>
         <Controller
           control={control}
-          name="date"
-          render={({ field }) => (
-            <DateTimeField
-              date={field.value}
-              time={watch('time')}
-              onChangeDate={(d) => setValue('date', d)}
-              onChangeTime={(t) => setValue('time', t)}
-            />
-          )}
+          name="dateTime"
+          rules={{
+            validate: (value) => {
+              if (!value?.date || !value?.time) {
+                return '날짜와 시간을 모두 입력해주세요.';
+              }
+              return true;
+            },
+          }}
+          render={({ field }) => <DateTimeField value={field.value} onChange={field.onChange} />}
         />
-        <FormField.Message>
-          {(errors.date || errors.time) && '날짜와 시간을 모두 입력해주세요.'}
-        </FormField.Message>
+        <FormField.Message>{errors.dateTime?.message}</FormField.Message>
       </FormField>
 
-      <FormField>
-        <FormField.Label>반복 설정</FormField.Label>
-        <RecurrenceField
-          value={watch('recurrence')}
-          onChange={(v) => {
-            setValue('recurrence', v);
-            if (v !== 'WEEKLY') {
-              setValue('selectedDays', []);
-            }
-          }}
-          selectedDays={watch('selectedDays') ?? []}
-          onChangeDays={(days) => setValue('selectedDays', days)}
-        />
-      </FormField>
+      <Controller
+        control={control}
+        name="recurrence"
+        render={({ field: recurrenceField }) => (
+          <Controller
+            control={control}
+            name="selectedDays"
+            rules={{
+              validate: (value) => {
+                if (recurrenceField.value === 'WEEKLY' && value.length === 0) {
+                  return '요일을 선택해주세요.';
+                }
+                return true;
+              },
+            }}
+            render={({ field: daysField }) => (
+              <FormField>
+                <FormField.Label>반복 설정</FormField.Label>
+                <RecurrenceField
+                  value={recurrenceField.value}
+                  onChange={(v) => {
+                    recurrenceField.onChange(v);
+
+                    if (v !== 'WEEKLY') {
+                      daysField.onChange([]);
+                    }
+                  }}
+                  selectedDays={daysField.value ?? []}
+                  onChangeDays={daysField.onChange}
+                />
+                <FormField.Message>{errors.selectedDays?.message}</FormField.Message>
+              </FormField>
+            )}
+          />
+        )}
+      />
 
       <FormField>
         <FormField.Label>할 일 메모</FormField.Label>
@@ -110,8 +108,8 @@ export default function TaskForm({ mutate, isPending, onSuccess }: Props) {
         </FormField.Control>
       </FormField>
 
-      <Button onClick={handleSubmit(onSubmit)} disabled={!isValid}>
-        만들기
+      <Button onClick={handleSubmit(submitHandler)} disabled={!isValid || isPending}>
+        {isPending ? '생성 중..' : '만들기'}
       </Button>
     </div>
   );

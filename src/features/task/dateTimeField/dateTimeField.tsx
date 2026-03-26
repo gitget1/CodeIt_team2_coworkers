@@ -5,16 +5,19 @@ import DatePopover from './datePopover';
 import TimePopover from './timePopover';
 
 type Props = {
-  date?: Date;
-  time?: string;
-  onChangeDate: (d?: Date) => void;
-  onChangeTime: (t?: string) => void;
+  value?: {
+    date?: Date;
+    time?: string;
+  };
+  onChange: (value: { date?: Date; time?: string }) => void;
 };
 
-export default function DateTimeField({ date, time, onChangeDate, onChangeTime }: Props) {
+export default function DateTimeField({ value, onChange }: Props) {
   const [open, setOpen] = useState<'date' | 'time' | null>(null);
   const TASK_INPUT_STYLE =
     'text-txt-default !font-regular border-background-tertiary rounded-xl text-lg';
+  const date = value?.date;
+  const time = value?.time;
 
   return (
     <div className="w-full">
@@ -32,7 +35,10 @@ export default function DateTimeField({ date, time, onChangeDate, onChangeTime }
           <DatePopover
             selected={date}
             onSelect={(d) => {
-              onChangeDate(d);
+              onChange({
+                ...value,
+                date: d,
+              });
               setOpen(null);
             }}
           />
@@ -44,7 +50,10 @@ export default function DateTimeField({ date, time, onChangeDate, onChangeTime }
           <TimePopover
             value={time}
             onChange={(t) => {
-              onChangeTime(t);
+              onChange({
+                ...value,
+                time: t,
+              });
               setOpen(null);
             }}
           />

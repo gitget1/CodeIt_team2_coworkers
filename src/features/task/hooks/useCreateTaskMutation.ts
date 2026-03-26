@@ -3,50 +3,27 @@ import { createTask } from '../api/createTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
 import { createRecurring } from '../api/createRecurring';
-import { RecurrenceType } from '../model/types/recurrence.type';
+import { CreateRecurringParams, CreateTaskParams } from '../model/params/task.create.params';
 
 type UseCreateTaskMutationParams = TaskCommonParams & {
   date?: string;
-};
-
-type CreateTaskFormValues = {
-  name: string;
-  description?: string;
-  startDate?: Date;
-  frequencyType: RecurrenceType;
-  monthDay?: number;
 };
 
 export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: CreateTaskFormValues) => {
+    mutationFn: (body: CreateTaskParams | CreateRecurringParams) => {
       const path = {
         groupId: params.groupId,
         taskListId: params.taskListId,
       };
 
-      if (!body.startDate) {
-        throw new Error('startDate is required');
-      }
-
       if (body.frequencyType === 'ONCE') {
-        return createTask(path, {
-          name: body.name,
-          description: body.description,
-          startDate: body.startDate,
-          frequencyType: body.frequencyType,
-        });
+        return createTask(path, body);
       }
 
-      return createRecurring(path, {
-        name: body.name,
-        description: body.description,
-        startDate: body.startDate!,
-        frequencyType: body.frequencyType,
-        monthDay: body.monthDay,
-      });
+      return createRecurring(path, body);
     },
 
     onSuccess: () => {
@@ -56,6 +33,3 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
     },
   });
 }
-
-// TODO:
-// 추후 리팩토링이 필요함 body.startDate!, 확장성 고려로 로직 분리
