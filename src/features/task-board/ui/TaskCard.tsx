@@ -1,21 +1,30 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { TaskBoardTask, TaskBoardTaskGroup } from '../model/taskBoard.types';
+import type { HTMLAttributes } from 'react';
+import { useMemo, useState } from 'react';
+import type { TaskBoardTaskGroup } from '../model/taskBoard.types';
 import { TaskRow } from './TaskRow';
 import { TaskCardHeader } from './TaskCardHeader';
 import { TaskCardShell } from './TaskCardShell';
 
 export type TaskCardProps = {
   taskGroup: TaskBoardTaskGroup;
+  /** dnd-kit: 카드 드래그 핸들 ref */
+  setActivatorNodeRef?: (node: HTMLElement | null) => void;
+  /** dnd-kit: 드래그 어트리뷰트(aria/role 등) */
+  dragAttributes?: HTMLAttributes<HTMLDivElement>;
+  /** dnd-kit: 드래그 리스너(포인터 이벤트 등) */
+  dragListeners?: Record<string, unknown>;
   onTaskToggle?: (taskId: string, checked: boolean) => void;
 };
 
-export function TaskCard({ taskGroup, onTaskToggle }: TaskCardProps) {
+export function TaskCard({
+  taskGroup,
+  setActivatorNodeRef,
+  dragAttributes,
+  dragListeners,
+  onTaskToggle,
+}: TaskCardProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const [tasks, setTasks] = useState<TaskBoardTask[]>(taskGroup.tasks);
-
-  useEffect(() => {
-    setTasks(taskGroup.tasks);
-  }, [taskGroup.id, taskGroup.tasks]);
+  const tasks = taskGroup.tasks;
 
   const { checkedTaskCount, cardTaskCount } = useMemo(() => {
     const total = tasks.length;
@@ -30,7 +39,6 @@ export function TaskCard({ taskGroup, onTaskToggle }: TaskCardProps) {
   };
 
   const handleTaskToggle = (taskId: string, checked: boolean) => {
-    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, completed: checked } : t)));
     onTaskToggle?.(taskId, checked);
   };
 
@@ -43,6 +51,9 @@ export function TaskCard({ taskGroup, onTaskToggle }: TaskCardProps) {
         checkedTaskCount={checkedTaskCount}
         cardTaskCount={cardTaskCount}
         onToggleCollapsed={toggleCollapsed}
+        activatorRef={setActivatorNodeRef}
+        dragAttributes={dragAttributes}
+        dragListeners={dragListeners}
       />
 
       {!collapsed && (

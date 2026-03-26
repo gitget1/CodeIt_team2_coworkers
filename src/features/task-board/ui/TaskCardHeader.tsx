@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from 'react';
 import { IconArrowDown, IconDone, IconKebab, IconProgress } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/cn';
 
@@ -8,6 +9,12 @@ type TaskCardHeaderProps = {
   checkedTaskCount: number;
   cardTaskCount: number;
   onToggleCollapsed: () => void;
+  /** dnd-kit: 카드 드래그 핸들 ref */
+  activatorRef?: (node: HTMLElement | null) => void;
+  /** dnd-kit: 드래그 어트리뷰트(aria/role 등) */
+  dragAttributes?: HTMLAttributes<HTMLDivElement>;
+  /** dnd-kit: 드래그 리스너(포인터 이벤트 등) */
+  dragListeners?: Record<string, unknown>;
 };
 
 export function TaskCardHeader({
@@ -17,11 +24,19 @@ export function TaskCardHeader({
   checkedTaskCount,
   cardTaskCount,
   onToggleCollapsed,
+  activatorRef,
+  dragAttributes,
+  dragListeners,
 }: TaskCardHeaderProps) {
   const progressRatio = cardTaskCount === 0 ? 0 : checkedTaskCount / cardTaskCount;
 
   return (
-    <div className="flex items-center gap-3 translate-y-[-4px] max-[767px]:translate-y-0">
+    <div
+      ref={activatorRef}
+      {...dragAttributes}
+      {...dragListeners}
+      className={cn('flex items-center gap-3 translate-y-[-4px] max-[767px]:translate-y-0', 'cursor-grab')}
+    >
       <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"
