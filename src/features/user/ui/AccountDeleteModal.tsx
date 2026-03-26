@@ -1,9 +1,19 @@
 import { Modal, useModal } from '@/shared/ui/modal';
 import { Button } from '@/shared/ui/Button';
 import { IconAlert, IconSecession } from '@/shared/ui/icons';
+import { useDeleteUserMutation } from '../hooks/useDeleteUserMutation';
 
 export function AccountDeleteModal() {
   const { isOpen, open, close } = useModal();
+  const { mutate: deleteUser, isPending } = useDeleteUserMutation();
+
+  const handleDelete = () => {
+    deleteUser(undefined, {
+      onSuccess: () => {
+        close();
+      },
+    });
+  };
 
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
@@ -45,8 +55,14 @@ export function AccountDeleteModal() {
               닫기
             </Button>
           </Modal.Close>
-          <Button variant="danger" size="lg" className="flex-1 text-base font-semibold">
-            회원 탈퇴
+          <Button
+            variant="danger"
+            size="lg"
+            className="flex-1 text-base font-semibold"
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            {isPending ? '처리 중...' : '회원 탈퇴'}
           </Button>
         </Modal.Footer>
       </Modal.Content>
