@@ -18,11 +18,11 @@ export function useResponsive() {
     }, 100);
 
     window.addEventListener('resize', handler);
-    handler(); 
+    handler();
 
     return () => {
       window.removeEventListener('resize', handler);
-      handler.cancel(); 
+      handler.cancel();
     };
   }, []);
 
