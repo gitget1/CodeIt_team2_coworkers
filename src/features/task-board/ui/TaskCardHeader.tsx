@@ -1,6 +1,6 @@
-import type { HTMLAttributes } from 'react';
 import { IconArrowDown, IconDone, IconKebab, IconProgress } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/cn';
+import type { SortableDragAttributes, SortableDragListeners } from './TaskCard';
 
 type TaskCardHeaderProps = {
   cardName: string;
@@ -12,9 +12,9 @@ type TaskCardHeaderProps = {
   /** dnd-kit: 카드 드래그 핸들 ref */
   activatorRef?: (node: HTMLElement | null) => void;
   /** dnd-kit: 드래그 어트리뷰트(aria/role 등) */
-  dragAttributes?: HTMLAttributes<HTMLDivElement>;
+  dragAttributes?: SortableDragAttributes;
   /** dnd-kit: 드래그 리스너(포인터 이벤트 등) */
-  dragListeners?: Record<string, unknown>;
+  dragListeners?: SortableDragListeners;
 };
 
 export function TaskCardHeader({

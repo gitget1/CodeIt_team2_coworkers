@@ -59,8 +59,8 @@ export function TaskSortableCardItem({
       <TaskCard
         taskGroup={taskGroup}
         setActivatorNodeRef={setActivatorNodeRef}
-        dragAttributes={attributes as any}
-        dragListeners={listeners as any}
+        dragAttributes={attributes}
+        dragListeners={listeners}
         onTaskToggle={onTaskToggle}
       />
       {showDropIndicatorAfter && (
