@@ -4,7 +4,6 @@ import Dropdown from '@/shared/ui/dropdown';
 import { Profile, ProfileEdit } from '@/shared/ui/profile';
 import sampleProfileImg from '@/shared/assets/images/logo-sm.png';
 import { Checkbox } from '@/shared/ui/checkbox';
-import { Button } from '@/shared/ui/Button';
 import { TaskBoardView } from '@/features/task-board/ui';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
 
@@ -20,7 +19,7 @@ export default function TestPage() {
         selectedTeamId,
         onTeamSelect: setSelectedTeamId,
         onAddTeam: () => alert('팀 추가하기'),
-        isLoggedIn: false,
+        isLoggedIn: true,
       }}
     >
       <div className="p-6 space-y-10">
@@ -53,35 +52,16 @@ export default function TestPage() {
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-txt-primary">TeamCard</h2>
           <TeamCard
-            teamName="3팀"
-            progressPercent={65}
-            todayTaskCount={12}
-            completedTaskCount="8/12"
+            teamName="경영관리팀"
+            progressPercent={25}
+            todayTaskCount={20}
+            completedTaskCount={5}
+            memberImages={[sampleProfileImg, sampleProfileImg, sampleProfileImg]}
+            memberCount={4}
             onEditTeam={() => alert('팀 수정 클릭')}
             onDeleteTeam={() => alert('팀 삭제 클릭')}
           />
         </section>
-
-        <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-txt-primary">팀 버튼 스타일 테스트</h2>
-          <div className="flex max-w-full flex-col gap-3">
-            <Button
-              variant="primary"
-              size="lg"
-              className="h-[48px] w-[186px] rounded-[12px] px-[278px] py-[14px] text-[18px] leading-[20px] whitespace-nowrap"
-            >
-              팀 생성하기
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-[48px] w-[186px] rounded-[12px] px-[278px] py-[14px] text-[18px] leading-[20px] whitespace-nowrap"
-            >
-              팀 참여하기
-            </Button>
-          </div>
-        </section>
-
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-txt-primary">Profile (이미지 유무)</h2>
 
