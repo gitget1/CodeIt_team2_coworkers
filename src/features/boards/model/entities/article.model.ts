@@ -17,3 +17,7 @@ export interface ArticleList {
   totalCount: number;
   list: Article[];
 }
+
+export interface ArticleDetail extends Article {
+  isLiked: boolean;
+}

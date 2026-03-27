@@ -1,11 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getArticleList } from '../api/getArticleList';
+import { ARTICLE_QUERY_KEYS } from '../model/querykeys';
 
-export const ARTICLE_QUERY_KEYS = {
-  all: ['articles'] as const,
-  list: (params: { orderBy?: string; keyword?: string }) =>
-    [...ARTICLE_QUERY_KEYS.all, params] as const,
-};
 
 export function useArticleListQuery(params: { orderBy?: 'recent' | 'like'; keyword?: string }) {
   return useQuery({

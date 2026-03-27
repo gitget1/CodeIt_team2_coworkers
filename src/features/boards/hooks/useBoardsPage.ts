@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import { useEffect, useMemo, useState } from 'react';
 import { useArticleListQuery } from '@/features/boards/hooks/useArticleListQuery';
 import { useBestArticles } from '@/features/boards/hooks/useBestArticle';
+import { debounce } from '../utils/debounce';
 
 export function useBoardsPage() {
   const { data: allData, isLoading, error } = useArticleListQuery({ orderBy: 'recent' });
@@ -10,7 +10,17 @@ export function useBoardsPage() {
 
   const [search, setSearch] = useState('');
   const [sortOption, setSortOption] = useState<'recent' | 'like'>('recent');
-  const [debouncedSearch] = useDebounce(search, 300);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  const debouncedSetSearch = useMemo(
+    () => debounce((value: string) => setDebouncedSearch(value), 300),
+    [],
+  );
+
+  useEffect(() => {
+    debouncedSetSearch(search);
+    return () => debouncedSetSearch.cancel();
+  }, [search, debouncedSetSearch]);
 
   const { data: filteredData } = useArticleListQuery({
     orderBy: sortOption,
