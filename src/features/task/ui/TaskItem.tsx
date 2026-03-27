@@ -6,11 +6,13 @@ import { formatDate } from '@/shared/lib/date';
 import { IconComment } from '@/shared/ui/icons/IconComment';
 import { useToggleTaskMutation } from '../hooks/useToggleTaskMutation';
 import { TaskCommonParams } from '../model/params/task.params';
+import Dropdown from '@/shared/ui/dropdown';
 
 type Props = {
   task: Task;
   onClick: (task: Task) => void;
   params: TaskCommonParams;
+  onDeleteClick: (task: Task) => void;
 };
 
 type MetaItemProps = {
@@ -28,7 +30,7 @@ function MetaItem({ icon, children }: MetaItemProps) {
   );
 }
 
-export default function TaskItem({ task, onClick, params }: Props) {
+export default function TaskItem({ task, onClick, params, onDeleteClick }: Props) {
   const { mutate } = useToggleTaskMutation(params);
   const checkboxId = `task-${task.id}`;
 
@@ -43,17 +45,11 @@ export default function TaskItem({ task, onClick, params }: Props) {
   return (
     <li
       onClick={() => onClick(task)}
-      className="border-background-tertiary flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer"
+      className="border-background-tertiary relative flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer"
     >
       <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id={checkboxId}
-            size="lg"
-            checked={task.isCompleted}
-            onChange={handleToggle}
-            onClick={(e) => e.stopPropagation()}
-          />
+        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+          <Checkbox id={checkboxId} size="lg" checked={task.isCompleted} onChange={handleToggle} />
           <label
             htmlFor={checkboxId}
             className={`cursor-pointer text-sm transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
@@ -69,8 +65,38 @@ export default function TaskItem({ task, onClick, params }: Props) {
           <MetaItem icon={<IconRepeat />}>{task.recurrence}</MetaItem>
         </div>
       </div>
-
-      <button className="text-gray-400 hover:text-gray-600">...</button>
+      <Dropdown>
+        <Dropdown.Trigger
+          onClick={(e) => e.stopPropagation()}
+          className="text-icon-primary cursor-pointer rounded p-1"
+        >
+          ...
+        </Dropdown.Trigger>
+        <Dropdown.Menu className="absolute right-0 z-50 mt-2 w-28">
+          <Dropdown.Item
+          /** TODO:
+           * 수정하기 관련 기능 연결 예정 (현재 상세 패널로 fallback)
+           */
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick(task);
+            }}
+            className="px-3 py-2"
+          >
+            수정하기
+          </Dropdown.Item>
+          <Dropdown.Item
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteClick(task);
+            }}
+            className="px-3 py-2"
+          >
+            삭제하기
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     </li>
+    
   );
 }

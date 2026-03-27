@@ -5,6 +5,7 @@ import TaskCreateButton from './create-task/TaskCreateButton';
 import TaskItem from './TaskItem';
 import { Task } from '../model/entities/task.model';
 import TaskDetailPanel from './TaskDetailPanel';
+import TaskDeleteModal from './delete-task/TaskDeleteModal';
 
 type Props = TaskCommonParams & {
   date?: string;
@@ -14,12 +15,12 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
   const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date });
   const params = { groupId, taskListId };
   const taskCount = data?.tasks.length ?? 0;
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [detailTask, setDetailTask] = useState<Task | null>(null);
+  const [deleteTask, setDeleteTask] = useState<Task | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   if (isLoading) return <div>로딩중...</div>;
-
   if (isError) return <div>에러 발생</div>;
-
-  // TODO: 로딩/에러/빈 상태 UI 컴포넌트 분리 예정 (Skeleton 포함)
 
   return (
     <>
@@ -36,12 +37,32 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
             </li>
           ) : (
             data.tasks.map((task) => (
-              <TaskItem key={task.id} task={task} params={params} onClick={setSelectedTask} />
+              <TaskItem
+                key={task.id}
+                task={task}
+                params={params}
+                onClick={setDetailTask}
+                onDeleteClick={(task) => {
+                  setDeleteTask(task);
+                  setIsDeleteOpen(true);
+                }}
+              />
             ))
           )}
         </ul>
       </section>
-      <TaskDetailPanel task={selectedTask} onClose={() => setSelectedTask(null)} />
+      <TaskDetailPanel task={detailTask} onClose={() => setDetailTask(null)} />
+      {deleteTask && (
+        <TaskDeleteModal
+          taskId={deleteTask.id}
+          title={deleteTask.title}
+          isOpen={isDeleteOpen}
+          onClose={() => {
+            setIsDeleteOpen(false);
+            setDeleteTask(null);
+          }}
+        />
+      )}
     </>
   );
 }
