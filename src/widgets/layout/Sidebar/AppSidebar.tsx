@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
   Sidebar,
@@ -16,6 +16,8 @@ import { getImageSrc } from '@/shared/lib/getImageSrc';
 import logoLg from '@/shared/assets/images/logo-lg.png';
 import userIcon from '@/shared/assets/icons/user.svg';
 import { MemberChip, Profile } from '@/shared/ui/profile';
+import { getUserGroups } from '@/features/user/api/getUserGroups';
+import type { TeamItem } from './types';
 
 const defaultProfileImgSrc = getImageSrc(userIcon);
 const defaultProfileBgClass = 'rounded-xl bg-[#E2E8F0]';
@@ -86,7 +88,6 @@ function DefaultFooter({
 export function AppSidebar({
   selectedTeamId = null,
   onTeamSelect,
-  onAddTeam,
   footer,
   teams,
   isLoggedIn = false,
@@ -96,10 +97,42 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isTeamListOpen, setIsTeamListOpen] = useState(true);
+  const [fetchedTeams, setFetchedTeams] = useState<TeamItem[] | null>(null);
   const handleToggle = () => setIsExpanded((v) => !v);
   const handleTeamListToggle = () => setIsTeamListOpen((v) => !v);
 
-  const teamItems = teams ?? [...DEFAULT_TEAM_ITEMS];
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setFetchedTeams(null);
+      return;
+    }
+
+    let isMounted = true;
+
+    const fetchGroups = async () => {
+      try {
+        const groups = await getUserGroups();
+        if (!isMounted) return;
+
+        const mappedTeams: TeamItem[] = groups.map((group) => ({
+          id: group.teamId,
+          label: group.name,
+        }));
+        setFetchedTeams(mappedTeams);
+      } catch {
+        if (!isMounted) return;
+        setFetchedTeams(null);
+      }
+    };
+
+    void fetchGroups();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isLoggedIn]);
+
+  const teamItems = teams ?? fetchedTeams ?? [...DEFAULT_TEAM_ITEMS];
   const expanded = mobileDrawer ? true : isExpanded;
 
   return (
@@ -192,8 +225,8 @@ export function AppSidebar({
                   ))}
                   <SidebarNavItem
                     label="팀 추가하기"
+                    href={ROUTES.TEAM_CREATE}
                     isExpanded={expanded}
-                    onClick={() => onAddTeam?.()}
                     icon={<PlusIcon />}
                     className={cn(
                       expanded &&
