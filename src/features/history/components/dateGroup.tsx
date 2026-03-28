@@ -9,7 +9,6 @@ export function DateGroup({ dateHeader, children }: { dateHeader: string; childr
         <div className="border-brand-secondary grow border-t-2"></div>
       </div>
 
-      {/* TODO: 히스토리 슬라이더 동작*/}
       <ul className="flex flex-col gap-2">{children}</ul>
     </div>
   );

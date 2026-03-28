@@ -1,11 +1,17 @@
 import type { User } from '@/shared/types/user.model';
-import type { Membership, MembershipGroup, UserProfile } from '../../model/entities/user.model';
+import type {
+  Membership,
+  MembershipGroup,
+  UserProfile,
+  UserTaskHistory,
+} from '../../model/entities/user.model';
 
 import type {
   UserDto,
   MembershipDto,
   MembershipGroupDto,
   GetUserResponse,
+  UserTaskHistoryDto,
 } from '../../model/dto/user.dto';
 
 // 기본 유저 매퍼
@@ -45,3 +51,14 @@ export const toUserProfile = (dto: GetUserResponse): UserProfile => ({
   ...toUser(dto),
   memberships: dto.memberships.map(toMembership),
 });
+
+export const toUserTaskHistory = (dto: UserTaskHistoryDto): UserTaskHistory => {
+  return {
+    ...dto,
+    description: dto.description ?? '',
+    date: new Date(dto.date),
+    doneAt: dto.doneAt ? new Date(dto.doneAt) : null,
+    updatedAt: new Date(dto.updatedAt),
+    deletedAt: dto.deletedAt ? new Date(dto.deletedAt) : null,
+  };
+};

@@ -104,3 +104,14 @@
 .animate-icon-enter {
   animation: icon-enter 200ms ease-out both;
 }
+
+/*스크롤바를 숨기는 클래스 정의 */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
