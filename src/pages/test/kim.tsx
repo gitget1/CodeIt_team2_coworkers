@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { AppLayout, SidebarDropdownMenu, SidebarDropdownItem } from '@/widgets/layout/Sidebar';
 import Dropdown from '@/shared/ui/dropdown';
 import { Profile, ProfileEdit } from '@/shared/ui/profile';
@@ -6,8 +7,11 @@ import sampleProfileImg from '@/shared/assets/images/logo-sm.png';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { TaskBoardView } from '@/features/task-board/ui';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
+import { TeamCreateCard } from '@/shared/ui/team/TeamCreateCard';
+import { ROUTES } from '@/shared/constants/routes';
 
 export default function TestPage() {
+  const router = useRouter();
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>('team-1');
 
   const handleEdit = () => alert('수정 클릭');
@@ -18,7 +22,7 @@ export default function TestPage() {
       sidebarProps={{
         selectedTeamId,
         onTeamSelect: setSelectedTeamId,
-        onAddTeam: () => alert('팀 추가하기'),
+        onAddTeam: () => void router.push(ROUTES.TEAM_CREATE),
         isLoggedIn: true,
       }}
     >
@@ -47,6 +51,17 @@ export default function TestPage() {
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-txt-primary">TaskBoardView (+로 카드 추가)</h2>
           <TaskBoardView />
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold text-txt-primary">팀 생성하기 카드</h2>
+          <div className="flex min-h-[320px] items-center justify-center rounded-2xl bg-[#F4F7F9] p-6 md:p-10">
+            <TeamCreateCard
+              onSubmit={({ name, image }) => {
+                alert(`팀 생성 제출: 이름=${name}, 이미지=${image || '(없음)'}`);
+              }}
+            />
+          </div>
         </section>
 
         <section className="space-y-4">

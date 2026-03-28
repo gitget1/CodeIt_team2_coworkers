@@ -39,12 +39,6 @@ export interface PatchGroupRequest {
   image?: string | null;
 }
 
-// [POST] /{teamId}/groups/accept-invitation 팀 초대
-export interface AcceptInvitationRequest {
-  userEmail: string;
-  token: string;
-}
-
 // [POST] /{teamId}/groups/{id}/member
 export interface AddMemberRequest {
   userEmail: string;

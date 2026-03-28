@@ -50,7 +50,7 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
           isLoggedIn={sidebarProps?.isLoggedIn}
           onLoginClick={sidebarProps?.onLoginClick}
         />
-        <main className="flex-1 min-h-0">{children}</main>
+        <main className="relative flex min-h-0 flex-1 flex-col">{children}</main>
 
         {/* 모바일 메뉴 드로어 */}
         {isMobileMenuOpen && (
