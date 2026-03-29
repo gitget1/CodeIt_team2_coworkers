@@ -17,11 +17,13 @@ import { MOCK_TASK_BOARD } from '../lib/mockData';
 import { findTaskGroupLocation } from '../lib/taskBoardDnd.utils';
 import { useTaskBoardDnd } from '../lib/useTaskBoardDnd';
 import { useTaskBoardSensors } from '../lib/useTaskBoardSensors';
+import type { ReactNode } from 'react';
 import { TaskColumn } from './TaskColumn';
 import { TaskCard } from './TaskCard';
 
 type Props = {
   initialBoard?: TaskBoard;
+  trailingPanel?: ReactNode;
 };
 
 const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
@@ -45,7 +47,7 @@ function createTaskGroup(status: TaskBoardColumnStatus, index: number): TaskBoar
   return { id: groupId, name: '새 카드', tasks };
 }
 
-export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
+export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }: Props) {
   const [board, setBoard] = useState<TaskBoard>(initialBoard);
   const nextCardIndexByStatus = useRef<Record<TaskBoardColumnStatus, number>>({ ...INITIAL_CARD_INDEX });
   const sensors = useTaskBoardSensors();
@@ -104,13 +106,13 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
       <div
         className={cn(
           'flex flex-col gap-[16px] items-start overflow-x-visible pb-2',
-          'lg:flex-row lg:gap-[20px] lg:overflow-x-auto',
+          'lg:flex-row lg:items-start lg:gap-[20px] lg:overflow-x-auto',
         )}
       >
         {board.columns.map((col: TaskBoardColumn) => (
           <div
             key={col.id}
-            className="flex-shrink-0 w-[270px] max-[767px]:w-[343px] min-[768px]:w-[620px] lg:w-[270px]"
+            className="min-w-0 w-full shrink-0 lg:w-[270px]"
           >
             <TaskColumn
               status={col.status}
@@ -122,6 +124,9 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD }: Props) {
             />
           </div>
         ))}
+        {trailingPanel != null ? (
+          <div className="hidden min-w-0 shrink-0 self-start lg:flex lg:w-[240px] lg:flex-col">{trailingPanel}</div>
+        ) : null}
       </div>
 
       <DragOverlay

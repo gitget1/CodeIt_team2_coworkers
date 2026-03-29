@@ -106,34 +106,6 @@ export function TeamCard({
           </button>
         )}
       </header>
-      <div className="absolute right-5 top-5">
-        <Dropdown>
-          <Dropdown.Trigger
-            aria-label="팀 메뉴"
-            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-transparent p-0 text-icon-primary transition-colors hover:bg-background-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-          >
-            <IconGear size={ICON_SIZE.md} />
-          </Dropdown.Trigger>
-          <TeamCardDropdownMenu className={TEAM_CARD_DROPDOWN_PANEL_CLASS}>
-            <Dropdown.Item
-              align="center"
-              type="button"
-              className={TEAM_CARD_MENU_ITEM_CLASS}
-              onClick={() => onEditTeam?.()}
-            >
-              수정하기
-            </Dropdown.Item>
-            <Dropdown.Item
-              align="center"
-              type="button"
-              className={TEAM_CARD_MENU_ITEM_CLASS}
-              onClick={() => onDeleteTeam?.()}
-            >
-              삭제하기
-            </Dropdown.Item>
-          </TeamCardDropdownMenu>
-        </Dropdown>
-      </div>
 
       <TeamCardStatsSection
         progressPercent={progressPercent}
@@ -145,6 +117,34 @@ export function TeamCard({
       <TeamCardProgressRow
         teamName={teamName}
         progressPercent={progressPercent}
+        trailing={
+          <Dropdown>
+            <Dropdown.Trigger
+              aria-label="팀 메뉴"
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-transparent p-0 text-icon-primary transition-colors hover:bg-background-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            >
+              <IconGear size={ICON_SIZE.md} />
+            </Dropdown.Trigger>
+            <TeamCardDropdownMenu className={TEAM_CARD_DROPDOWN_PANEL_CLASS}>
+              <Dropdown.Item
+                align="center"
+                type="button"
+                className={TEAM_CARD_MENU_ITEM_CLASS}
+                onClick={() => onEditTeam?.()}
+              >
+                수정하기
+              </Dropdown.Item>
+              <Dropdown.Item
+                align="center"
+                type="button"
+                className={TEAM_CARD_MENU_ITEM_CLASS}
+                onClick={() => onDeleteTeam?.()}
+              >
+                삭제하기
+              </Dropdown.Item>
+            </TeamCardDropdownMenu>
+          </Dropdown>
+        }
       />
       <MemberCardModal
         isOpen={isMemberModalOpen}

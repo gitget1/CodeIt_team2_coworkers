@@ -7,6 +7,7 @@ export interface Group {
   image: string | null;
   createdAt: Date;
   updatedAt: Date;
+  teamId?: string;
 }
 
 export interface GroupMember {

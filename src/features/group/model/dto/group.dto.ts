@@ -6,6 +6,8 @@ export interface GroupDto {
   image: string | null;
   createdAt: string;
   updatedAt: string;
+  /** [GET] /groups/{id} 상세에 포함 */
+  teamId?: string;
 }
 
 export interface GroupMemberDto {

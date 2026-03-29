@@ -9,6 +9,7 @@ export function toGroup(dto: GroupDto): Group {
     image: dto.image,
     createdAt: new Date(dto.createdAt),
     updatedAt: new Date(dto.updatedAt),
+    teamId: dto.teamId,
   };
 }
 

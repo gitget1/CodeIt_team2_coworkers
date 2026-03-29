@@ -1,27 +1,33 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import { AppLayout } from './Sidebar';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
+import { teamDashboardPath, ROUTES } from '@/shared/constants/routes';
 
 interface GlobalLayoutProps {
   children: ReactNode;
 }
 
 export function GlobalLayout({ children }: GlobalLayoutProps) {
+  const router = useRouter();
   const { data: user, isLoading } = useUserQuery();
 
   const isLoggedIn = isLoading ? undefined : !!user;
+
+  const selectedTeamId = useMemo(() => {
+    if (!router.isReady || router.pathname !== '/[teamId]') return null;
+    const raw = router.query.teamId;
+    return typeof raw === 'string' ? raw : Array.isArray(raw) ? raw[0] ?? null : null;
+  }, [router.isReady, router.pathname, router.query.teamId]);
 
   return (
     <AppLayout
       sidebarProps={{
         isLoggedIn: isLoggedIn ?? false,
-        selectedTeamId: null,
-        onTeamSelect: (id) => console.log('팀 선택:', id),
-        onLoginClick: () => console.log('로그인 모달 띄우기 또는 페이지 이동'),
-        /**
-         * TODO
-         * 기능 구현은 부탁드립니다.
-         */
+        selectedTeamId,
+        onTeamSelect: (id) => void router.push(teamDashboardPath(id)),
+        onAddTeam: () => void router.push(ROUTES.TEAM_CREATE),
+        onLoginClick: () => void router.push('/login'),
       }}
     >
       {children}

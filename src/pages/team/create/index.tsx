@@ -1,6 +1,6 @@
 import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
 import { TeamCreateCard } from '@/shared/ui/team/TeamCreateCard';
-import { ROUTES } from '@/shared/constants/routes';
+import { teamDashboardPath } from '@/shared/constants/routes';
 import { useCreateGroupMutation } from '@/features/group/hooks/useCreateGroupMutation';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -24,14 +24,14 @@ export default function TeamCreatePage() {
           onSubmit={async ({ name, image }) => {
             const trimmedImage = image.trim();
             try {
-              await mutateAsync({
+              const created = await mutateAsync({
                 body: {
                   name: name.trim(),
                   ...(trimmedImage ? { image: trimmedImage } : {}),
                 },
               });
               toast.success('팀이 생성되었습니다.');
-              await router.push(ROUTES.FREE_BOARD);
+              await router.push(teamDashboardPath(String(created.id)));
             } catch (e) {
               const err = e as { message?: string };
               toast.error(err?.message ?? '팀 생성에 실패했습니다.');
