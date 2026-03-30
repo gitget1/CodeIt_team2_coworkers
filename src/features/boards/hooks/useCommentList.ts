@@ -4,8 +4,10 @@ import { ARTICLE_QUERY_KEYS } from '../model/querykeys';
 import { CommentList } from '../model/entities/comment.model';
 
 export function useCommentList(articleId: number, limit = 10) {
+  const isValidId = Number.isFinite(articleId) && articleId > 0;
+
   const query = useInfiniteQuery<CommentList>({
-    queryKey: ARTICLE_QUERY_KEYS.comments(articleId),
+    queryKey: isValidId ? ARTICLE_QUERY_KEYS.comments(articleId) : ['comments', 'invalid'],
     queryFn: ({ pageParam }) =>
       getComments({
         articleId,
@@ -14,7 +16,7 @@ export function useCommentList(articleId: number, limit = 10) {
       }),
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    enabled: !!articleId,
+    enabled: isValidId,
   });
 
   const comments = query.data?.pages.flatMap((page) => page.list) ?? [];
