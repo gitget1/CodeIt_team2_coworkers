@@ -71,9 +71,7 @@ export function TeamCreateCard({ onSubmit, className }: TeamCreateCardProps) {
         </Button>
       </form>
 
-      <p className="text-txt-default mt-6 text-center text-sm leading-relaxed">
-        이미지 URL은 선택 사항이에요. 나중에 팀 설정에서 바꿀 수 있어요.
-      </p>
+    
     </div>
   );
 }
