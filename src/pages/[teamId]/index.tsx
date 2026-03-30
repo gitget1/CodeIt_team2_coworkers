@@ -1,31 +1,15 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
 import { AppLayout } from '@/widgets/layout/Sidebar';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
 import { TaskBoardView } from '@/features/task-board/ui';
 import { MemberCard } from '@/shared/ui/profile';
-import type { MemberCardItem } from '@/shared/ui/profile';
-import { MOCK_TASK_BOARD } from '@/features/task-board/lib/mockData';
-import type { TaskBoard } from '@/features/task-board/model/taskBoard.types';
 import { teamDashboardPath, ROUTES } from '@/shared/constants/routes';
 import { useGroupQuery } from '@/features/group/hooks/useGroupQuery';
-import type { GroupMember } from '@/features/group/model/entities/group.model';
-
-function countTaskGroups(board: TaskBoard): number {
-  return board.columns.reduce((sum, col) => sum + col.taskGroups.length, 0);
-}
-
-const TASK_LIST_COUNT = countTaskGroups(MOCK_TASK_BOARD);
-
-function groupMembersToCardItems(members: GroupMember[]): MemberCardItem[] {
-  return members.map((m) => ({
-    id: String(m.userId),
-    name: m.userName,
-    email: m.userEmail,
-    imageSrc: m.userImage ?? undefined,
-  }));
-}
+import {
+  groupMembersToMemberCardItems,
+  groupMembersToMemberImagePreview,
+} from '@/features/group/lib/mappers/groupMembersToMemberCardItems';
 
 export default function TeamDashboardPage() {
   const router = useRouter();
@@ -35,19 +19,16 @@ export default function TeamDashboardPage() {
   const groupIdNum = groupIdStr !== undefined ? Number.parseInt(groupIdStr, 10) : Number.NaN;
   const isValidGroupId = Number.isFinite(groupIdNum) && groupIdNum > 0;
 
-  const { data: group, isLoading, isError } = useGroupQuery(groupIdNum);
-
-  const memberCardItems = useMemo(
-    () => (group ? groupMembersToCardItems(group.members) : []),
-    [group],
+  // router.isReady 전에는 groupId가 undefined일 수 있어, API 호출은 가능할 때만 수행
+  const shouldFetchGroup = router.isReady && isValidGroupId;
+  const { data: group, isLoading, isError } = useGroupQuery(
+    shouldFetchGroup ? groupIdNum : Number.NaN,
   );
 
-  const memberImagesPreview = useMemo(() => {
-    return group?.members
-      .slice(0, 3)
-      .map((m) => m.userImage)
-      .filter((url): url is string => url != null && url.length > 0);
-  }, [group]);
+  const memberCardItems = group ? groupMembersToMemberCardItems(group.members) : [];
+  const memberImagesPreview = group
+    ? groupMembersToMemberImagePreview(group.members, 3)
+    : [];
 
   if (!router.isReady) {
     return (
@@ -102,6 +83,7 @@ export default function TeamDashboardPage() {
           </div>
         ) : (
           <div className="flex flex-1 flex-col gap-6 bg-background-secondary p-4 md:p-6">
+            // TODO: taskLists 기반으로 todayTaskCount/completedTaskCount/progressPercent 산출 필요
             <TeamCard
               teamName={group.name}
               progressPercent={25}
@@ -110,14 +92,21 @@ export default function TeamDashboardPage() {
               memberImages={memberImagesPreview}
               members={memberCardItems}
               memberCount={group.members.length}
-              onEditTeam={() => alert('팀 수정')}
-              onDeleteTeam={() => alert('팀 삭제')}
+              onEditTeam={() => {
+                // TODO: 팀 수정 UI/뮤테이션 연결 후 toast/snackbar로 교체
+                alert('팀 수정');
+              }}
+              onDeleteTeam={() => {
+                // TODO: 팀 삭제 UI/뮤테이션 연결 후 확인 모달/에러처리 적용
+                alert('팀 삭제');
+              }}
               className="w-full max-w-full"
             />
 
             <section className="flex min-w-0 flex-col gap-4" aria-labelledby="team-task-board-heading">
               <h2 id="team-task-board-heading" className="text-lg font-bold text-txt-primary md:text-xl">
-                할 일 목록 ({TASK_LIST_COUNT}개)
+                {/* TODO: TaskBoardView의 taskGroup/TaskList 매핑이 정리되면 mockData 제거 */}
+                할 일 목록 ({group.taskLists.length}개)
               </h2>
               <div className="min-w-0 overflow-x-auto pb-2">
                 <TaskBoardView
@@ -125,7 +114,10 @@ export default function TeamDashboardPage() {
                     <MemberCard
                       members={memberCardItems}
                       title="멤버"
-                      onInvite={() => alert('멤버 초대')}
+                      onInvite={() => {
+                        // TODO: 멤버 초대 API/인비테이션 플로우 연결
+                        alert('멤버 초대');
+                      }}
                       className="w-full max-w-none"
                     />
                   }
