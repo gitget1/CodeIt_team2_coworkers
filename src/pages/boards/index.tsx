@@ -1,5 +1,7 @@
 import { ArticleList } from '@/features/boards/components/ArticleList';
+import ArticleListSkeleton from '@/features/boards/components/ArticleListSkeleton';
 import { BestArticleCarousel } from '@/features/boards/components/BestArticleCarousel';
+import BestArticleSkeleton from '@/features/boards/components/BestArticleSkeleton';
 import { BoardHeader } from '@/features/boards/components/BoardHeader';
 import { BoardToolbar } from '@/features/boards/components/BoardToolbar';
 import { useBoardsPage } from '@/features/boards/hooks/useBoardsPage';
@@ -23,7 +25,7 @@ export default function BoardsListPage() {
 
       <section className="mt-8 h-92.5 rounded-xl border border-slate-100 bg-slate-100 px-2 pt-10">
         {isLoading ? (
-          <div className="flex h-full items-center justify-center">로딩 중...</div>
+          <BestArticleSkeleton />
         ) : error ? (
           <div className="flex h-full items-center justify-center">
             데이터를 가져오는 중 오류 발생
@@ -44,7 +46,7 @@ export default function BoardsListPage() {
 
       <section className="mt-5 mb-8 flex justify-center">
         {isLoading ? (
-          <div className="flex h-20 w-full items-center justify-center">게시글 로딩 중...</div>
+          <ArticleListSkeleton />
         ) : error ? (
           <div className="flex h-20 w-full items-center justify-center">
             게시글을 가져오는 중 오류 발생

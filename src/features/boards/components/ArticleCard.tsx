@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Article } from '../model/entities/article.model';
 import { IconHeartEmpty } from '@/shared/ui/icons/IconHeartEmpty';
 import { IconBest } from '@/shared/ui/icons/IconBest';
+import Link from 'next/link';
+import { formatDate } from '@/shared/lib/date';
 interface Props {
   article: Article;
   variant?: 'default' | 'best';
@@ -13,7 +15,7 @@ export function ArticleCard({ article, variant }: Props) {
   const isBest = variant === 'best';
 
   return (
-    <article
+   <Link href={`/boards/${article.id}`}
       className={
         isBest
           ? 'h-51.25 w-85 rounded-xl border border-slate-200 bg-white px-5 py-6'
@@ -62,7 +64,7 @@ export function ArticleCard({ article, variant }: Props) {
         <div className="flex gap-2 text-sm font-medium">
           <span>{article.writer.nickname}</span>
           <span>|</span>
-          <time className="text-gray-400"> {article.createdAt.toLocaleDateString()}</time>
+          <time className="text-gray-400">{formatDate(article.createdAt)}</time>
         </div>
 
         <div className="flex items-center gap-1">
@@ -70,6 +72,6 @@ export function ArticleCard({ article, variant }: Props) {
           <span className="text-sm text-gray-400">{article.likeCount}</span>
         </div>
       </footer>
-    </article>
+    </Link>
   );
 }
