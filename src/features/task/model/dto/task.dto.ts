@@ -11,7 +11,7 @@ export type TaskDto = {
   name: string;
   description?: string | null;
   date?: string | null;
-  frequency?: RecurrenceType;
+  frequency: RecurrenceType;
   recurringId?: number | null;
   displayIndex: number;
   commentCount: number;

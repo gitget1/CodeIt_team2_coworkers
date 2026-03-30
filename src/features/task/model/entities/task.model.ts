@@ -18,7 +18,7 @@ export interface Task {
   completedAt?: string;
   isDeleted: boolean;
   date?: Date;
-  recurrence?: RecurrenceType;
+  recurrence: RecurrenceType;
   recurrenceId?: number;
 }
 

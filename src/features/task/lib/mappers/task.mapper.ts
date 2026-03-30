@@ -1,3 +1,4 @@
+import { formatTime } from '@/shared/lib/date';
 import { RecurrenceDto } from '../../model/dto/recurrence.dto';
 import { TaskDto, TaskListDto, UserDto } from '../../model/dto/task.dto';
 import { Task, TaskList, User } from '../../model/entities/task.model';
@@ -22,7 +23,7 @@ export const toTask = (dto: TaskDto): Task => ({
   completedAt: dto.doneAt ?? undefined,
   isDeleted: Boolean(dto.deletedAt),
   date: dto.date ? new Date(dto.date) : undefined,
-  recurrence: dto.frequency ?? undefined,
+  recurrence: dto.frequency,
   recurrenceId: dto.recurringId ?? undefined,
 });
 
@@ -67,13 +68,9 @@ export const toFormValues = (task: Task): TaskFormValues => {
     description: task.description ?? '',
     dateTime: {
       date: task.date,
-      time: task.date
-        ? `${String(task.date.getHours()).padStart(2, '0')}:${String(
-            task.date.getMinutes(),
-          ).padStart(2, '0')}`
-        : undefined,
+      time: formatTime(task.date),
     },
-    recurrence: task.recurrence ?? 'ONCE',
+    recurrence: task.recurrence,
     selectedDays: [],
   };
 };

@@ -12,6 +12,18 @@ export function formatDate(date?: Date | null) {
   return format(date, 'yyyy년 MM월 dd일');
 }
 
+export function formatTime(date?: Date | null) {
+  if (date === undefined || date === null) {
+    return '';
+  }
+
+  if (!isValid(date)) {
+    throw new Error(`[formatTime] Invalid date object provided: ${date}`);
+  }
+
+  return format(date, 'HH:mm');
+}
+
 export function formatDateTime(date?: Date | null) {
   if (date === undefined || date === null) {
     return '';
