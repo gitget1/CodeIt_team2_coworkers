@@ -17,7 +17,7 @@ export function useSidebarTeamItems({ teams, isLoggedIn }: UseSidebarTeamItemsPa
   const fetchedTeams = useMemo<TeamItem[] | null>(() => {
     if (!groupsData) return null;
     return groupsData.map((group) => ({
-      id: group.teamId,
+      id: String(group.id),
       label: group.name,
     }));
   }, [groupsData]);

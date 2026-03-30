@@ -74,16 +74,15 @@ export default function TeamDashboardPage() {
         }}
       >
         {isLoading ? (
-          <div className="flex min-h-[50vh] flex-1 items-center justify-center text-sm text-txt-secondary">
+          <div className="flex min-h-full flex-1 items-center justify-center bg-background-secondary p-4 text-sm text-txt-secondary md:p-6">
             팀 정보를 불러오는 중…
           </div>
         ) : isError || !group ? (
-          <div className="flex min-h-[50vh] flex-1 items-center justify-center text-sm text-txt-secondary">
+          <div className="flex min-h-full flex-1 items-center justify-center bg-background-secondary p-4 text-sm text-txt-secondary md:p-6">
             팀 정보를 불러오지 못했습니다.
           </div>
         ) : (
-          <div className="flex flex-1 flex-col gap-6 bg-background-secondary p-4 md:p-6">
-            // TODO: taskLists 기반으로 todayTaskCount/completedTaskCount/progressPercent 산출 필요
+          <div className="flex min-h-full flex-1 flex-col gap-6 bg-background-secondary p-4 md:p-6">
             <TeamCard
               teamName={group.name}
               progressPercent={25}

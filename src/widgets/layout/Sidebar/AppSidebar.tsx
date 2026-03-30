@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Sidebar,
   SidebarHeader,
@@ -124,19 +125,21 @@ export function AppSidebar({
             showToggle={isExpanded}
             toggleButton={isExpanded ? <FoldLeftIcon className="text-slate-300" /> : undefined}
             logo={
-              isExpanded ? (
-                <Image
-                  src={logoLg}
-                  alt="COWORKERS"
-                  width={180}
-                  height={32}
-                  className="h-8 w-auto shrink-0 object-contain object-left"
-                />
-              ) : (
-                <span className="flex items-center justify-center text-brand-primary">
-                  <LogoIcon />
-                </span>
-              )
+              <Link href={ROUTES.FREE_BOARD} aria-label="홈으로 이동">
+                {isExpanded ? (
+                  <Image
+                    src={logoLg}
+                    alt="COWORKERS"
+                    width={180}
+                    height={32}
+                    className="h-8 w-auto shrink-0 object-contain object-left"
+                  />
+                ) : (
+                  <span className="flex items-center justify-center text-brand-primary">
+                    <LogoIcon />
+                  </span>
+                )}
+              </Link>
             }
           />
         )}
