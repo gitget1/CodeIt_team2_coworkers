@@ -1,6 +1,8 @@
 import { cn } from '@/shared/lib/cn';
 import Image from 'next/image';
 import { LandingFeature } from './LandingContainer';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '../constants/animation';
 
 interface LandingFeatureSectionProps {
   feature: LandingFeature;
@@ -43,8 +45,14 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
 
   return (
     <section className={sectionClasses}>
-      <div className={containerClasses}>
-        <div className={textWrapperClasses}>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        className={containerClasses}
+      >
+        <motion.div variants={fadeInUp} className={textWrapperClasses}>
           <div className={iconClasses}>
             <Image src={icon} alt={`${imageAlt} 아이콘`} fill className="object-contain" />
           </div>
@@ -64,9 +72,9 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
           >
             {description}
           </p>
-        </div>
+        </motion.div>
 
-        <div className={imageWrapperClasses}>
+        <motion.div variants={fadeInUp} className={imageWrapperClasses}>
           <Image
             src={images.mobile}
             alt={`${imageAlt} 모바일 예시`}
@@ -91,8 +99,8 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
             className="hidden h-auto w-full lg:block"
             loading="lazy"
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
