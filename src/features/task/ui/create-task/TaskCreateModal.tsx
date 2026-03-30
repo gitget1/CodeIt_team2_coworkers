@@ -1,5 +1,5 @@
 import { useTaskParams } from '../../lib/useTaskParams';
-import TaskCreateModalContent from './TaskCreateModalContet';
+import TaskCreateModalContent from './TaskCreateModalContext';
 
 type TaskCreateModalProps = {
   isOpen: boolean;
