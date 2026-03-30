@@ -17,7 +17,6 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
   const taskCount = data?.tasks.length ?? 0;
   const [detailTask, setDetailTask] = useState<Task | null>(null);
   const [deleteTask, setDeleteTask] = useState<Task | null>(null);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러 발생</div>;
@@ -44,7 +43,6 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
                 onClick={setDetailTask}
                 onDeleteClick={(task) => {
                   setDeleteTask(task);
-                  setIsDeleteOpen(true);
                 }}
               />
             ))
@@ -56,9 +54,7 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
         <TaskDeleteModal
           taskId={deleteTask.id}
           title={deleteTask.title}
-          isOpen={isDeleteOpen}
           onClose={() => {
-            setIsDeleteOpen(false);
             setDeleteTask(null);
           }}
         />

@@ -7,32 +7,29 @@ type Props = {
   params: TaskCommonParams;
   taskId: number;
   title: string;
-  isOpen: boolean;
   onClose: () => void;
 };
 
-export default function TaskDeleteModalContent({ params, taskId, title, isOpen, onClose }: Props) {
+export default function TaskDeleteModalContent({ params, taskId, title, onClose }: Props) {
   const { mutate, isPending } = useDeleteTaskMutation(params);
 
   return (
-    <Modal isOpen={isOpen} open={() => {}} close={onClose}>
-      <Modal.Content size="md" className="sm:px-5 sm:py-8">
-        <TaskDeleteForm
-          isPending={isPending}
-          title={title}
-          onClose={onClose}
-          onConfirm={() => {
-            if (isPending) return;
+    <Modal.Content size="md" className="sm:px-5 sm:py-8">
+      <TaskDeleteForm
+        isPending={isPending}
+        title={title}
+        onClose={onClose}
+        onConfirm={() => {
+          if (isPending) return;
 
-            mutate(taskId, {
-              onSuccess: (result) => {
-                if (!result.ok) return;
-                onClose();
-              },
-            });
-          }}
-        />
-      </Modal.Content>
-    </Modal>
+          mutate(taskId, {
+            onSuccess: (result) => {
+              if (!result.ok) return;
+              onClose();
+            },
+          });
+        }}
+      />
+    </Modal.Content>
   );
 }

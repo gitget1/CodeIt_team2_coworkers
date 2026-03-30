@@ -25,7 +25,8 @@ export default function TaskDeleteForm({ title, onClose, onConfirm, isPending }:
           type="button"
           variant="secondary"
           onClick={onClose}
-          className="h-12 w-full max-w-[136px] rounded-xl px-12 whitespace-nowrap"
+          disabled={isPending}
+          className="h-12 w-full max-w-[136px] rounded-xl border border-[#CBD5E1] px-12 whitespace-nowrap"
         >
           닫기
         </Button>
@@ -37,7 +38,8 @@ export default function TaskDeleteForm({ title, onClose, onConfirm, isPending }:
           disabled={isPending}
           className="h-12 w-full max-w-[136px] rounded-xl px-10 whitespace-nowrap"
         >
-          {isPending ? '삭제 중...' : '삭제하기'}
+          {isPending && <span className="loading loading-spinner" />}
+          삭제하기
         </Button>
       </div>
     </div>
