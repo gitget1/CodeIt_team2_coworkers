@@ -17,9 +17,9 @@ export function IconArrowLeft({ size = ICON_SIZE.md, className, ...props }: Icon
           id="Vector"
           d="M15 6L9 12L15 18"
           stroke="#64748B"
-          stroke-width="2.25"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
     </svg>

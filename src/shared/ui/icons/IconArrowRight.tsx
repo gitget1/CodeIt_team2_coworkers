@@ -15,9 +15,9 @@ export function IconArrowRight({ size = ICON_SIZE.md, className, ...props }: Ico
       <path
         d="M9 18L15 12L9 6"
         stroke="#64748B"
-        stroke-width="2.25"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

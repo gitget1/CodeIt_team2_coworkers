@@ -2,8 +2,9 @@ import { RecurrenceType } from '../types/recurrence.type';
 
 export interface RecurrenceDto {
   name: string;
-  description: string;
+  description?: string | null;
   startDate: string;
   frequencyType: RecurrenceType;
-  monthDay: number;
+  monthDay?: number;
+  weekDays?: number[];
 }

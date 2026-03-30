@@ -1,4 +1,5 @@
 import { set } from 'date-fns';
+import { TaskFormValues, ValidTaskFormValues } from './taskForm.types';
 
 type Time = string;
 
@@ -11,4 +12,8 @@ export function combineDateTime(date: Date, time: Time): Date {
     seconds: 0,
     milliseconds: 0,
   });
+}
+
+export function isVaildTaskForm(data: TaskFormValues): data is ValidTaskFormValues {
+  return Boolean(data.dateTime?.date && data.dateTime?.time);
 }

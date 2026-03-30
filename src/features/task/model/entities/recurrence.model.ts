@@ -6,4 +6,5 @@ export interface Recurrence {
   startDate: Date;
   type: RecurrenceType;
   monthDay?: number;
+  weekDays?: number[];
 }

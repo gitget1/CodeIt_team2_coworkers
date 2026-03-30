@@ -59,6 +59,7 @@ export default function RecurrenceField({ value, onChange, selectedDays, onChang
             return (
               <button
                 key={day}
+                type="button"
                 onClick={() => {
                   onChangeDays(
                     selectedDays.includes(idx)

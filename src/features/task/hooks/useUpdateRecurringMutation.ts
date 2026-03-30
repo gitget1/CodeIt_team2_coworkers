@@ -1,23 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateTask } from '../api/updateTask';
+import { updateRecurring } from '../api/updateRecurring';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
-import { CreateTaskParams } from '../model/params/task.create.params';
+import { CreateRecurringParams } from '../model/params/task.create.params';
 
-type UseUpdateTaskMutationParams = TaskCommonParams & {
-  date?: string;
+type UseUpdateRecurringMutationParams = TaskCommonParams & {
 };
 
-export function useUpdateTaskMutation(params: UseUpdateTaskMutationParams) {
+export function useUpdateRecurringMutation(params: UseUpdateRecurringMutationParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ taskId, body }: { taskId: number; body: CreateTaskParams }) => {
-      return updateTask(
+    mutationFn: ({ recurringId, body }: { recurringId: number; body: CreateRecurringParams }) => {
+      return updateRecurring(
         {
           groupId: params.groupId,
           taskListId: params.taskListId,
-          taskId,
+          recurringId,
         },
         body,
       );
