@@ -17,3 +17,4 @@ export {
 } from './sidebar-icons';
 export { ROUTES } from '@/shared/constants/routes';
 export { DEFAULT_TEAM_ITEMS } from './constants';
+export { useSidebarTeamItems } from './useSidebarTeamItems';

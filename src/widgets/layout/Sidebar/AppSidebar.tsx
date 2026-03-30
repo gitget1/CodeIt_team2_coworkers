@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import {
   Sidebar,
@@ -10,14 +10,12 @@ import {
 import { cn } from '@/shared/lib/cn';
 import { TeamIcon, BoardIcon, PlusIcon, ArrowDownIcon, FoldLeftIcon, FoldRightIcon, LogoIcon, CloseIcon } from './sidebar-icons';
 import { ROUTES } from '@/shared/constants/routes';
-import { DEFAULT_TEAM_ITEMS } from './constants';
 import type { AppSidebarProps } from './types';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
 import logoLg from '@/shared/assets/images/logo-lg.png';
 import userIcon from '@/shared/assets/icons/user.svg';
 import { MemberChip, Profile } from '@/shared/ui/profile';
-import { getUserGroups } from '@/features/user/api/getUserGroups';
-import type { TeamItem } from './types';
+import { useSidebarTeamItems } from './useSidebarTeamItems';
 
 const defaultProfileImgSrc = getImageSrc(userIcon);
 const defaultProfileBgClass = 'rounded-xl bg-[#E2E8F0]';
@@ -97,46 +95,14 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isTeamListOpen, setIsTeamListOpen] = useState(true);
-  const [fetchedTeams, setFetchedTeams] = useState<TeamItem[] | null>(null);
+  const teamItems = useSidebarTeamItems({ teams, isLoggedIn });
+
   const handleToggle = () => setIsExpanded((v) => !v);
   const handleTeamListToggle = () => setIsTeamListOpen((v) => !v);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setFetchedTeams(null);
-      return;
-    }
-
-    let isMounted = true;
-
-    const fetchGroups = async () => {
-      try {
-        const groups = await getUserGroups();
-        if (!isMounted) return;
-
-        const mappedTeams: TeamItem[] = groups.map((group) => ({
-          id: group.teamId,
-          label: group.name,
-        }));
-        setFetchedTeams(mappedTeams);
-      } catch {
-        if (!isMounted) return;
-        setFetchedTeams(null);
-      }
-    };
-
-    void fetchGroups();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isLoggedIn]);
-
-  const teamItems = teams ?? fetchedTeams ?? [...DEFAULT_TEAM_ITEMS];
   const expanded = mobileDrawer ? true : isExpanded;
 
   return (
-    <div className={cn('relative shrink-0 overflow-visible', mobileDrawer && 'h-full')}>
+    <div className="relative h-full shrink-0 overflow-visible">
       <Sidebar
         isExpanded={expanded}
         onToggle={mobileDrawer ? () => {} : handleToggle}
