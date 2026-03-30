@@ -101,9 +101,9 @@ export function TeamDashboardView({ vm }: Props) {
             할 일 목록 ({group.taskLists.length}개)
           </h2>
           <div className="min-w-0 overflow-x-auto pb-2">
+            {/* TODO: onInvite — getInvitationToken + 모달. ApiError/토스트는 호출부 뮤테이션 또는 API 래퍼에서 처리. */}
             <TaskBoardView
               trailingPanel={
-                {/* TODO: onInvite — getInvitationToken + 모달. ApiError/토스트는 호출부 뮤테이션 또는 API 래퍼에서 처리. */}
                 <MemberCard members={memberCardItems} title="멤버" className="w-full max-w-none" />
               }
             />

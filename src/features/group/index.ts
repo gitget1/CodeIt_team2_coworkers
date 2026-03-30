@@ -5,6 +5,7 @@ export { deleteGroup } from './api/deleteGroup';
 export { getGroupMember } from './api/getGroupMember';
 export { removeGroupMember } from './api/removeGroupMember';
 export { getInvitationToken } from './api/getInvitationToken';
+export { acceptGroupInvitation } from './api/acceptGroupInvitation';
 export { addGroupMember } from './api/addGroupMember';
 export { getGroupTasks } from './api/getGroupTasks';
 
@@ -21,6 +22,7 @@ export { useDeleteGroupMutation } from './hooks/useDeleteGroupMutation';
 export { useGroupMemberQuery } from './hooks/useGroupMemberQuery';
 export { useRemoveGroupMemberMutation } from './hooks/useRemoveMemberMutation';
 export { useInvitationTokenQuery } from './hooks/useInvitationTokenQuery';
+export { useAcceptInvitationMutation } from './hooks/useAcceptInvitationMutation';
 export { useAddGroupMemberMutation } from './hooks/useAddGroupMemberMutation';
 export { useGroupTasksQuery } from './hooks/useGroupTasksQuery';
 
@@ -30,4 +32,6 @@ export type {
   PostGroupRequest,
   PatchGroupRequest,
   AddMemberRequest,
+  AcceptInvitationRequest,
+  AcceptInvitationResponse,
 } from './model/dto/group.dto';

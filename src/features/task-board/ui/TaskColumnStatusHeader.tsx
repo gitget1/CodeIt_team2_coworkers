@@ -14,17 +14,13 @@ export function TaskColumnStatusHeader({ label, onAddTask }: TaskColumnStatusHea
   return (
     <div
       className="
-        w-[270px] h-[38px]
-        max-[767px]:w-[343px]
-        min-[768px]:w-[620px]
-        lg:w-[270px]
-        rounded-[12px]
-        flex items-center justify-between
-        bg-background-secondary
-        pl-[20px] pr-[8px]
+        flex h-[38px] w-full max-w-full shrink-0 items-center justify-between
+        rounded-[12px] border border-solid border-background-tertiary/80
+        bg-background-tertiary
+        pl-5 pr-2
       "
     >
-      <span className="text-txt-primary text-sm font-semibold">{label}</span>
+      <span className="text-sm font-semibold text-txt-primary">{label}</span>
 
       <button
         type="button"
@@ -32,16 +28,13 @@ export function TaskColumnStatusHeader({ label, onAddTask }: TaskColumnStatusHea
         disabled={!isDisabled}
         aria-label="카드 추가"
         className="
-          w-[24px] h-[24px]
-          rounded-[8px]
-          border border-background-tertiary
-          bg-background-primary
-          flex items-center justify-center
-          text-icon-primary
+          flex h-6 w-6 shrink-0 items-center justify-center
+          rounded-lg border border-solid border-background-tertiary
+          bg-background-primary text-brand-primary
           disabled:opacity-50
         "
       >
-        <IconPlus size={12} className="text-icon-primary" aria-hidden="true" />
+        <IconPlus size={12} className="text-brand-primary" aria-hidden="true" />
       </button>
     </div>
   );

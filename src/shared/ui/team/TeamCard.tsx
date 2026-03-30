@@ -64,11 +64,11 @@ export function TeamCard({
   return (
     <article
       className={cn(
-        'relative box-border h-[196px] w-[375px] max-w-full rounded-[20px] border border-background-tertiary/60 bg-background-primary p-5 shadow-[0_4px_24px_rgba(15,23,42,0.06)] md:h-[239px] md:w-[620px] lg:w-[1120px]',
+        'relative box-border flex h-[196px] w-[375px] max-w-full flex-col rounded-[20px] border border-background-tertiary/60 bg-background-primary p-5 shadow-[0_4px_24px_rgba(15,23,42,0.06)] md:h-[239px] md:w-[620px] lg:w-[1120px]',
         className,
       )}
     >
-      <header className="flex items-center gap-3">
+      <header className="flex shrink-0 items-center gap-3">
         <h3 className="text-center text-[20px] font-bold leading-[24px] text-txt-tertiary">{teamName}</h3>
         {showMemberSummary && (
           <button
@@ -107,45 +107,47 @@ export function TeamCard({
         )}
       </header>
 
-      <TeamCardStatsSection
-        progressPercent={progressPercent}
-        todayTaskCount={todayTaskCount}
-        completedTaskCount={completedTaskCount}
-        statsClassName={statsClassName}
-      />
+      <div className="mt-auto flex min-h-0 w-full min-w-0 flex-col">
+        <TeamCardStatsSection
+          progressPercent={progressPercent}
+          todayTaskCount={todayTaskCount}
+          completedTaskCount={completedTaskCount}
+          statsClassName={statsClassName}
+        />
 
-      <TeamCardProgressRow
-        teamName={teamName}
-        progressPercent={progressPercent}
-        trailing={
-          <Dropdown>
-            <Dropdown.Trigger
-              aria-label="팀 메뉴"
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-transparent p-0 text-icon-primary transition-colors hover:bg-background-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-            >
-              <IconGear size={ICON_SIZE.md} />
-            </Dropdown.Trigger>
-            <TeamCardDropdownMenu className={TEAM_CARD_DROPDOWN_PANEL_CLASS}>
-              <Dropdown.Item
-                align="center"
-                type="button"
-                className={TEAM_CARD_MENU_ITEM_CLASS}
-                onClick={() => onEditTeam?.()}
+        <TeamCardProgressRow
+          teamName={teamName}
+          progressPercent={progressPercent}
+          trailing={
+            <Dropdown>
+              <Dropdown.Trigger
+                aria-label="팀 메뉴"
+                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-transparent p-0 text-icon-primary transition-colors hover:bg-background-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
               >
-                수정하기
-              </Dropdown.Item>
-              <Dropdown.Item
-                align="center"
-                type="button"
-                className={TEAM_CARD_MENU_ITEM_CLASS}
-                onClick={() => onDeleteTeam?.()}
-              >
-                삭제하기
-              </Dropdown.Item>
-            </TeamCardDropdownMenu>
-          </Dropdown>
-        }
-      />
+                <IconGear size={ICON_SIZE.md} />
+              </Dropdown.Trigger>
+              <TeamCardDropdownMenu className={TEAM_CARD_DROPDOWN_PANEL_CLASS}>
+                <Dropdown.Item
+                  align="center"
+                  type="button"
+                  className={TEAM_CARD_MENU_ITEM_CLASS}
+                  onClick={() => onEditTeam?.()}
+                >
+                  수정하기
+                </Dropdown.Item>
+                <Dropdown.Item
+                  align="center"
+                  type="button"
+                  className={TEAM_CARD_MENU_ITEM_CLASS}
+                  onClick={() => onDeleteTeam?.()}
+                >
+                  삭제하기
+                </Dropdown.Item>
+              </TeamCardDropdownMenu>
+            </Dropdown>
+          }
+        />
+      </div>
       <MemberCardModal
         isOpen={isMemberModalOpen}
         open={openMemberModal}

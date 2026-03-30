@@ -45,3 +45,13 @@ export interface PatchGroupRequest {
 export interface AddMemberRequest {
   userEmail: string;
 }
+
+// [POST] /groups/accept-invitation
+export interface AcceptInvitationRequest {
+  userEmail: string;
+  token: string;
+}
+
+export interface AcceptInvitationResponse {
+  groupId: number;
+}

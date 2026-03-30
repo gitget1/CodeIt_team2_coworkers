@@ -7,6 +7,7 @@ export function groupMembersToMemberCardItems(members: GroupMember[]): MemberCar
     name: m.userName,
     email: m.userEmail,
     imageSrc: m.userImage ?? undefined,
+    isAdmin: m.role === 'ADMIN',
   }));
 }
 

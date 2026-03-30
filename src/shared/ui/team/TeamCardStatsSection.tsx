@@ -17,7 +17,7 @@ export function TeamCardStatsSection({
   const safeProgressPercent = getSafeProgressPercent(progressPercent);
 
   return (
-    <div className="mt-6 flex items-end justify-between gap-4 md:gap-6">
+    <div className="flex items-end justify-between gap-4 md:gap-6">
       <div className="shrink-0">
         <p className="text-[12px] font-medium leading-[14px] text-txt-default">오늘의 진행 상황</p>
         <p className="mt-1 text-[32px] font-bold leading-[38px] text-brand-primary tabular-nums">

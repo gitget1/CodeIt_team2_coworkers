@@ -18,5 +18,8 @@ export type MemberCardProps = {
   /** 기본값: 모바일/태블릿에서만 멤버 행 클릭 가능 */
   isMemberRowInteractive?: boolean;
   onInvite?: () => void;
+  canManageMembers?: boolean;
+  currentUserId?: string;
+  onRemoveMember?: (member: MemberCardItem) => void;
 };
 

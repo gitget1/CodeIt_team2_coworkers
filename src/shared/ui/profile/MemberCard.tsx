@@ -13,6 +13,9 @@ export function MemberCard({
   maxVisibleCount = 5,
   isMemberRowInteractive,
   onInvite,
+  canManageMembers = false,
+  currentUserId,
+  onRemoveMember,
 }: MemberCardProps) {
   const [selectedMember, setSelectedMember] = useState<MemberCardItem | null>(null);
   const [modalMode, setModalMode] = useState<MemberCardModalMode>('member');
@@ -50,7 +53,7 @@ export function MemberCard({
     <>
       <section
         className={cn(
-          'flex w-[240px] flex-col gap-6 overflow-hidden rounded-xl border border-background-tertiary bg-background-primary px-5 pt-6 pb-4',
+          'flex w-[240px] flex-col gap-6 overflow-visible rounded-xl border border-background-tertiary bg-background-primary px-5 pt-6 pb-4',
           className,
         )}
       >
@@ -72,6 +75,9 @@ export function MemberCard({
           isInteractive={rowInteractive}
           onMemberClick={handleMemberClick}
           onMoreClick={handleMoreClick}
+          canManageMembers={canManageMembers}
+          currentUserId={currentUserId}
+          onRemoveMember={onRemoveMember}
         />
       </section>
 
