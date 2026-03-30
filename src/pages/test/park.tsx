@@ -1,11 +1,14 @@
+import GroupSettingMenu from '@/features/task/ui/header/groupSettingMenu';
+import Header from '@/features/task/ui/header/header';
 import TaskList from '@/features/task/ui/TaskList';
 import WeekCalendar from '@/features/task/ui/weekdate/weekDate';
-import { useState } from 'react';
 
 export default function TestTaskPage() {
-  const [date, setDate] = useState(new Date());
   return (
     <>
+      <div className="flex justify-center py-10">
+        <Header right={<GroupSettingMenu role="ADMIN" />} />
+      </div>
       <div className="flex justify-center py-10">
         <WeekCalendar initialDate={new Date()} />
       </div>
