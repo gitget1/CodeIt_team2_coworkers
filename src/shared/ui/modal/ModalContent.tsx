@@ -27,7 +27,7 @@ const modalStyles = {
   content:
     'relative w-full max-h-[90vh] bg-white rounded-t-[32px] rounded-b-none sm:rounded-[32px] shadow-lg flex flex-col gap-2 overflow-hidden',
   closeButton:
-    'absolute top-3 right-4 z-[60] p-1 text-icon-primary hover:text-gray-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-md',
+    'absolute top-3 right-4 z-[60] cursor-pointer p-1 text-icon-primary hover:text-gray-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-md',
 };
 
 export function ModalContent({

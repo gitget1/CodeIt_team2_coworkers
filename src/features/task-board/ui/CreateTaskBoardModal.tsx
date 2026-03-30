@@ -1,0 +1,59 @@
+import { Button } from '@/shared/ui/Button';
+import { Input } from '@/shared/ui/input/Input';
+import { Modal } from '@/shared/ui/modal';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+interface CreateTaskBoardModalProps {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  onSubmit: (title: string) => void;
+}
+
+interface TaskBoardFormValues {
+  title: string;
+}
+
+export function CreateTaskBoardModal({ isOpen, open, close, onSubmit }: CreateTaskBoardModalProps) {
+  const { register, handleSubmit, watch, reset } = useForm<TaskBoardFormValues>({
+    defaultValues: { title: '' },
+  });
+
+  const titleValue = watch('title');
+
+  const handleFormSubmit = (data: TaskBoardFormValues) => {
+    if (!data.title.trim()) return;
+    onSubmit(data.title);
+    reset();
+    close();
+  };
+
+  return (
+    <Modal isOpen={isOpen} open={open} close={close}>
+      <Modal.Content className="px-5">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col">
+          <Modal.Header className="pt-12 pb-2">
+            <Modal.Title className="text-lg">할 일 목록</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <Input {...register('title')} placeholder="목록 명을 입력해주세요." autoFocus />
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              disabled={!titleValue?.trim()}
+              className="w-full"
+            >
+              만들기
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal.Content>
+    </Modal>
+  );
+}
