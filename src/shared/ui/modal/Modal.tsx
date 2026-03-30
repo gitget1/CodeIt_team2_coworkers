@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useId, useState } fr
 
 export interface ModalContextProps {
   isOpen: boolean;
-  open: () => void;
+  open?: () => void;
   close: () => void;
   titleId: string;
   descriptionId: string;
@@ -33,12 +33,12 @@ export function useModalPartPresence(register: () => void, deregister: () => voi
 
 interface ModalRootProps {
   isOpen: boolean;
-  open: () => void;
+  open?: () => void;
   close: () => void;
   children: React.ReactNode;
 }
 
-export function Modal({ isOpen, open, close, children }: ModalRootProps) {
+export function Modal({ isOpen, open = () => {}, close, children }: ModalRootProps) {
   const [isTitleRendered, setTitleRendered] = useState(false);
   const [isDescriptionRendered, setDescriptionRendered] = useState(false);
 

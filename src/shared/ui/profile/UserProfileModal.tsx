@@ -1,10 +1,10 @@
 import { toast } from 'sonner';
 import { Modal } from '../modal';
 import { Button } from '../Button';
+import Image from 'next/image';
 
 interface UserProfileModalProps {
   isOpen: boolean;
-  open: () => void;
   close: () => void;
   user: {
     profileImageUrl: string;
@@ -13,7 +13,7 @@ interface UserProfileModalProps {
   };
 }
 
-export function UserProfileModal({ isOpen, open, close, user }: UserProfileModalProps) {
+export function UserProfileModal({ isOpen, close, user }: UserProfileModalProps) {
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(user.email);
@@ -25,14 +25,16 @@ export function UserProfileModal({ isOpen, open, close, user }: UserProfileModal
   };
 
   return (
-    <Modal isOpen={isOpen} open={open} close={close}>
+    <Modal isOpen={isOpen} close={close}>
       <Modal.Content size="md" className="px-2">
         <Modal.Header className="gap-1 pt-11">
-          <div className="mb-3 h-10 w-10 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-            <img
+          <div className="relative mb-3 h-10 w-10 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+            <Image
               src={user.profileImageUrl}
               alt={`${user.name}의 프로필`}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
+              sizes="40px"
             />
           </div>
           <Modal.Title>{user.name}</Modal.Title>
