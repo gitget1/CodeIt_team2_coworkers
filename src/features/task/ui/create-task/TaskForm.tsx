@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { TaskFormValues } from './taskForm.types';
 import DateTimeField from '../../dateTimeField/dateTimeField';
 import { InputBox } from '@/shared/ui/input/InputBox';
+import { useEffect } from 'react';
 
 type Props = {
   initialValues: TaskFormValues;
@@ -18,8 +19,13 @@ export default function TaskForm({ initialValues, onSubmit, isPending }: Props) 
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isValid },
   } = useForm<TaskFormValues>({ mode: 'onChange', defaultValues: initialValues });
+
+  useEffect(() => {
+    reset(initialValues);
+  }, [initialValues, reset]);
 
   const submitHandler = (data: TaskFormValues) => {
     onSubmit(data);
@@ -121,3 +127,8 @@ export default function TaskForm({ initialValues, onSubmit, isPending }: Props) 
     </form>
   );
 }
+
+/**TODO:
+ * FormField에서 전달되는 isInvalid prop이 DOM까지
+ * 내려가면서 React warning 발생
+ */

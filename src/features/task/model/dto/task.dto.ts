@@ -34,3 +34,18 @@ export type TaskListDto = {
   updatedAt: string;
   tasks: TaskDto[];
 };
+
+export type UpdateTaskDto = {
+  name?: string;
+  description?: string;
+  done?: boolean;
+};
+
+export type UpdateRecurringDto = {
+  name?: string;
+  description?: string;
+  startDate?: string;
+  frequencyType: RecurrenceType;
+  monthDay?: number;
+  weekDays?: number[];
+};

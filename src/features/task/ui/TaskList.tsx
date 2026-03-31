@@ -6,6 +6,7 @@ import TaskItem from './TaskItem';
 import { Task } from '../model/entities/task.model';
 import TaskDetailPanel from './TaskDetailPanel';
 import TaskDeleteModal from './delete-task/TaskDeleteModal';
+import TaskUpdateModalContent from './update-task/TaskUpdateModalContent';
 
 type Props = TaskCommonParams & {
   date?: string;
@@ -15,6 +16,7 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
   const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date });
   const params = { groupId, taskListId };
   const taskCount = data?.tasks.length ?? 0;
+  const [editTask, setEditTask] = useState<Task | null>(null);
   const [detailTask, setDetailTask] = useState<Task | null>(null);
   const [deleteTask, setDeleteTask] = useState<Task | null>(null);
 
@@ -44,6 +46,7 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
                 onDeleteClick={(task) => {
                   setDeleteTask(task);
                 }}
+                onEditClick={setEditTask}
               />
             ))
           )}
@@ -57,6 +60,14 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
           onClose={() => {
             setDeleteTask(null);
           }}
+        />
+      )}
+      {editTask && (
+        <TaskUpdateModalContent
+          task={editTask}
+          params={params}
+          isOpen={true}
+          onClose={() => setEditTask(null)}
         />
       )}
     </>

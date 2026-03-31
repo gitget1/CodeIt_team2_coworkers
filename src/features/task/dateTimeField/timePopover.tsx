@@ -36,9 +36,10 @@ export default function TimePopover({ value, onChange, interval = 30 }: Props) {
   }, [times, period]);
 
   return (
-    <div className="flex w-full min-w-[260px] gap-3 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md ">
+    <div className="flex w-full min-w-[260px] gap-3 rounded-2xl border-2 border-blue-500 bg-white p-4 shadow-md">
       <div className="flex flex-col gap-2">
         <button
+          type="button"
           onClick={() => setPeriod('AM')}
           className={cn(
             'h-[48px] w-[72px] rounded-xl border text-sm font-medium',
@@ -49,6 +50,7 @@ export default function TimePopover({ value, onChange, interval = 30 }: Props) {
         </button>
 
         <button
+          type="button"
           onClick={() => setPeriod('PM')}
           className={cn(
             'h-[48px] w-[72px] rounded-xl border text-sm font-medium',
@@ -67,6 +69,7 @@ export default function TimePopover({ value, onChange, interval = 30 }: Props) {
             return (
               <button
                 key={t}
+                type="button"
                 onClick={() => onChange?.(t)}
                 className={cn(
                   'text-left text-lg',

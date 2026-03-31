@@ -1,9 +1,16 @@
 import { formatTime } from '@/shared/lib/date';
 import { RecurrenceDto } from '../../model/dto/recurrence.dto';
-import { TaskDto, TaskListDto, UserDto } from '../../model/dto/task.dto';
+import {
+  TaskDto,
+  TaskListDto,
+  UpdateRecurringDto,
+  UpdateTaskDto,
+  UserDto,
+} from '../../model/dto/task.dto';
 import { Task, TaskList, User } from '../../model/entities/task.model';
 import { CreateRecurringParams, CreateTaskParams } from '../../model/params/task.create.params';
 import { TaskFormValues } from '../../ui/create-task/taskForm.types';
+import { UpdateRecurringParams, UpdateTaskParams } from '../../model/params/task.update.params';
 
 export const toUser = (dto: UserDto): User => ({
   id: dto.id,
@@ -35,6 +42,20 @@ export const toTaskList = (dto: TaskListDto): TaskList => ({
   createdAt: new Date(dto.createdAt),
   updatedAt: new Date(dto.updatedAt),
   tasks: dto.tasks.map(toTask),
+});
+
+export const toTaskListFromArray = (
+  dtos: TaskDto[],
+  groupId: number,
+  taskListId: number,
+): TaskList => ({
+  id: taskListId,
+  groupId,
+  title: '',
+  order: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  tasks: dtos.map(toTask),
 });
 
 export const toCreateTaskDto = (model: CreateTaskParams): Partial<TaskDto> => {
@@ -75,5 +96,10 @@ export const toFormValues = (task: Task): TaskFormValues => {
   };
 };
 
-export const toUpdateTaskDto = toCreateTaskDto;
-export const toUpdateRecurringDto = toCreateRecurringDto;
+export const toUpdateTask = (params: UpdateTaskParams): UpdateTaskDto => {
+  return {
+    name: params.name,
+    description: params.description,
+    done: params.done,
+  };
+};

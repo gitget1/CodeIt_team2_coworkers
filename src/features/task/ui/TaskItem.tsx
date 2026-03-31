@@ -13,12 +13,20 @@ type Props = {
   onClick: (task: Task) => void;
   params: TaskCommonParams;
   onDeleteClick: (task: Task) => void;
+  onEditClick: (task: Task) => void;
 };
 
 type MetaItemProps = {
   icon: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+};
+
+const recurrenceLabelMap: Record<string, string> = {
+  ONCE: '한 번',
+  DAILY: '매 일',
+  WEEKLY: '매 주',
+  MONTHLY: '매 달',
 };
 
 function MetaItem({ icon, children }: MetaItemProps) {
@@ -30,7 +38,7 @@ function MetaItem({ icon, children }: MetaItemProps) {
   );
 }
 
-export default function TaskItem({ task, onClick, params, onDeleteClick }: Props) {
+export default function TaskItem({ task, onClick, params, onDeleteClick, onEditClick }: Props) {
   const { mutate } = useToggleTaskMutation(params);
   const checkboxId = `task-${task.id}`;
 
@@ -62,7 +70,9 @@ export default function TaskItem({ task, onClick, params, onDeleteClick }: Props
         <div className="flex items-center gap-2">
           <MetaItem icon={<IconCalendar />}>{task.date && formatDate(task.date)}</MetaItem>
           <span className="bg-txt-secondary h-3 w-px" />
-          <MetaItem icon={<IconRepeat />}>{task.recurrence}</MetaItem>
+          <MetaItem icon={<IconRepeat />}>
+            {recurrenceLabelMap[task.recurrence] ?? task.recurrence}
+          </MetaItem>
         </div>
       </div>
       <Dropdown>
@@ -74,12 +84,9 @@ export default function TaskItem({ task, onClick, params, onDeleteClick }: Props
         </Dropdown.Trigger>
         <Dropdown.Menu className="absolute right-0 z-50 mt-2 w-28">
           <Dropdown.Item
-          /** TODO:
-           * 수정하기 관련 기능 연결 예정 (현재 상세 패널로 fallback)
-           */
             onClick={(e) => {
               e.stopPropagation();
-              onClick(task);
+              onEditClick(task);
             }}
             className="px-3 py-2"
           >
@@ -97,6 +104,5 @@ export default function TaskItem({ task, onClick, params, onDeleteClick }: Props
         </Dropdown.Menu>
       </Dropdown>
     </li>
-    
   );
 }

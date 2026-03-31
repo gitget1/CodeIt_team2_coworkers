@@ -24,24 +24,36 @@ export function useUpdateTaskHandler(params: TaskCommonParams, task: Task, onClo
     if (!isVaildTaskForm(data)) return;
 
     if (task.recurrenceId && isRecurringForm(data)) {
-      const payload = toUpdateTaskRecurringPayload(data);
+      const recurringPayload = toUpdateTaskRecurringPayload(data);
+      const taskPayload = toUpdateTaskPayload(data);
 
       updateRecurringMutation.mutate(
         {
           recurringId: task.recurrenceId,
-          body: payload,
+          body: recurringPayload,
         },
         {
-          onSuccess: (result) => {
-            if (!result.ok) return;
-            onClose();
+          onSuccess: (recurringResult) => {
+            if (!recurringResult.ok) return;
+
+            updateTaskMutation.mutate(
+              {
+                taskId: task.id,
+                body: taskPayload,
+              },
+              {
+                onSuccess: (taskResult) => {
+                  if (!taskResult.ok) return;
+                  onClose();
+                },
+              },
+            );
           },
         },
       );
       return;
     }
     const payload = toUpdateTaskPayload(data);
-
     updateTaskMutation.mutate(
       {
         taskId: task.id,

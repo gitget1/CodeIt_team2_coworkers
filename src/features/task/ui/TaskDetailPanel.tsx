@@ -17,6 +17,13 @@ type MetaItemProps = {
   children: React.ReactNode;
 };
 
+const recurrenceLabelMap: Record<string, string> = {
+  ONCE: '한 번',
+  DAILY: '매 일',
+  WEEKLY: '매 주',
+  MONTHLY: '매 달',
+};
+
 function MetaItem({ icon, children }: MetaItemProps) {
   return (
     <div className="text-txt-default flex items-center gap-1 text-xs">
@@ -29,10 +36,8 @@ function MetaItem({ icon, children }: MetaItemProps) {
 export default function TaskDetailPanel({ task, onClose }: Props) {
   return (
     <>
-      {/* dim */}
       {task && <div className="fixed inset-0 z-40" onClick={onClose} />}
 
-      {/* panel */}
       <aside
         className={`fixed top-0 right-0 z-50 h-full w-[420px] bg-white shadow-[0_15px_50px_-12px_rgba(0,0,0,0.3)] transition-transform duration-300 ${task ? 'translate-x-0' : 'translate-x-full'} `}
       >
@@ -64,7 +69,9 @@ export default function TaskDetailPanel({ task, onClose }: Props) {
                 </div>
                 <div className="flex gap-6">
                   <MetaItem icon={<IconRepeat />}>반복 설정</MetaItem>
-                  <p className="font-weight-regular text-txt-primary text-sm">{task.recurrence}</p>
+                  <p className="font-weight-regular text-txt-primary text-sm">
+                    {recurrenceLabelMap[task.recurrence] ?? task.recurrence}
+                  </p>
                 </div>
               </div>
               <Button leftIcon={<IconCheck />}>완료하기</Button>
