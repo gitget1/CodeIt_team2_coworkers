@@ -1,12 +1,11 @@
-import { useState } from 'react';
 import { useTaskListQuery } from '../hooks/useTaskListQuery';
 import { TaskCommonParams } from '../model/params/task.params';
 import TaskCreateButton from './create-task/TaskCreateButton';
 import TaskItem from './TaskItem';
-import { Task } from '../model/entities/task.model';
 import TaskDetailPanel from './TaskDetailPanel';
 import TaskDeleteModal from './delete-task/TaskDeleteModal';
 import TaskUpdateModalContent from './update-task/TaskUpdateModalContent';
+import { useTaskModal } from '../hooks/useTaskModal';
 
 type Props = TaskCommonParams & {
   date?: string;
@@ -16,9 +15,17 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
   const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date });
   const params = { groupId, taskListId };
   const taskCount = data?.tasks.length ?? 0;
-  const [editTask, setEditTask] = useState<Task | null>(null);
-  const [detailTask, setDetailTask] = useState<Task | null>(null);
-  const [deleteTask, setDeleteTask] = useState<Task | null>(null);
+  const {
+    detailTask,
+    editTask,
+    deleteTask,
+    openDetail,
+    openEdit,
+    openDelete,
+    closeDetail,
+    closeEdit,
+    closeDelete,
+  } = useTaskModal();
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러 발생</div>;
@@ -42,33 +49,20 @@ export default function TaskList({ groupId, taskListId, date }: Props) {
                 key={task.id}
                 task={task}
                 params={params}
-                onClick={setDetailTask}
-                onDeleteClick={(task) => {
-                  setDeleteTask(task);
-                }}
-                onEditClick={setEditTask}
+                onClick={openDetail}
+                onDeleteClick={openDelete}
+                onEditClick={openEdit}
               />
             ))
           )}
         </ul>
       </section>
-      <TaskDetailPanel task={detailTask} onClose={() => setDetailTask(null)} />
+      <TaskDetailPanel task={detailTask} onClose={closeDetail} />
       {deleteTask && (
-        <TaskDeleteModal
-          taskId={deleteTask.id}
-          title={deleteTask.title}
-          onClose={() => {
-            setDeleteTask(null);
-          }}
-        />
+        <TaskDeleteModal taskId={deleteTask.id} title={deleteTask.title} onClose={closeDelete} />
       )}
       {editTask && (
-        <TaskUpdateModalContent
-          task={editTask}
-          params={params}
-          isOpen={true}
-          onClose={() => setEditTask(null)}
-        />
+        <TaskUpdateModalContent task={editTask} params={params} isOpen={true} onClose={closeEdit} />
       )}
     </>
   );
