@@ -1,5 +1,6 @@
 import { IconArrowDown, IconDone, IconKebab, IconProgress } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/cn';
+import Dropdown from '@/shared/ui/dropdown';
 import type { SortableDragAttributes, SortableDragListeners } from './TaskCard';
 
 type TaskCardHeaderProps = {
@@ -15,6 +16,8 @@ type TaskCardHeaderProps = {
   dragAttributes?: SortableDragAttributes;
   /** dnd-kit: 드래그 리스너(포인터 이벤트 등) */
   dragListeners?: SortableDragListeners;
+  onEditCard?: () => void;
+  onDeleteCard?: () => void;
 };
 
 export function TaskCardHeader({
@@ -27,6 +30,8 @@ export function TaskCardHeader({
   activatorRef,
   dragAttributes,
   dragListeners,
+  onEditCard,
+  onDeleteCard,
 }: TaskCardHeaderProps) {
   const progressRatio = cardTaskCount === 0 ? 0 : checkedTaskCount / cardTaskCount;
 
@@ -76,13 +81,26 @@ export function TaskCardHeader({
           </span>
         </div>
 
-        <button
-          type="button"
-          aria-label="카드 옵션"
-          className="rounded-[8px] p-1 text-icon-primary hover:bg-background-secondary"
-        >
-          <IconKebab size={20} />
-        </button>
+        <Dropdown>
+          <Dropdown.Trigger
+            aria-label="카드 옵션"
+            className="rounded-[8px] p-1 text-icon-primary hover:bg-background-secondary"
+          >
+            <IconKebab size={20} />
+          </Dropdown.Trigger>
+          <Dropdown.Menu align="right" className="z-20 min-w-[120px] overflow-hidden rounded-xl">
+            <Dropdown.Item align="left" className="px-3 py-2 text-sm" onClick={onEditCard}>
+              수정하기
+            </Dropdown.Item>
+            <Dropdown.Item
+              align="left"
+              className="px-3 py-2 text-sm text-red-500 hover:bg-red-50 hover:text-red-600"
+              onClick={onDeleteCard}
+            >
+              삭제하기
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     </div>
   );

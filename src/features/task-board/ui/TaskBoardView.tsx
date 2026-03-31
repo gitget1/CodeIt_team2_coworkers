@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -10,7 +10,6 @@ import type {
   TaskBoard,
   TaskBoardColumn,
   TaskBoardColumnStatus,
-  TaskBoardTask,
   TaskBoardTaskGroup,
 } from '../model/taskBoard.types';
 import { MOCK_TASK_BOARD } from '../lib/mockData';
@@ -20,10 +19,16 @@ import { useTaskBoardSensors } from '../lib/useTaskBoardSensors';
 import type { ReactNode } from 'react';
 import { TaskColumn } from './TaskColumn';
 import { TaskCard } from './TaskCard';
+import { CreateTaskBoardModal } from './CreateTaskBoardModal';
+import { useTaskBoardCardActions } from './useTaskBoardCardActions';
+import { TaskBoardCardActionModals } from './TaskBoardCardActionModals';
 
 type Props = {
   initialBoard?: TaskBoard;
   trailingPanel?: ReactNode;
+  onCreateTaskGroup?: (params: { status: TaskBoardColumnStatus; title: string }) => Promise<boolean> | boolean;
+  onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean> | boolean;
+  onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean> | boolean;
 };
 
 const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
@@ -32,31 +37,40 @@ const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
   DONE: 1,
 };
 
-function createTask(id: string, title: string, completed: boolean): TaskBoardTask {
-  return { id, title, completed };
-}
-
-function createTaskGroup(status: TaskBoardColumnStatus, index: number): TaskBoardTaskGroup {
+function createTaskGroup(status: TaskBoardColumnStatus, index: number, name: string): TaskBoardTaskGroup {
   const groupId = `${status}-card-${index}`;
-  const tasks: TaskBoardTask[] = [
-    createTask(`${groupId}-task-1`, '새 체크리스트 항목 1', false),
-    createTask(`${groupId}-task-2`, '새 체크리스트 항목 2', false),
-    createTask(`${groupId}-task-3`, '새 체크리스트 항목 3', false),
-  ];
-
-  return { id: groupId, name: '새 카드', tasks };
+  return { id: groupId, name, tasks: [] };
 }
 
-export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }: Props) {
+export function TaskBoardView({
+  initialBoard = MOCK_TASK_BOARD,
+  trailingPanel,
+  onCreateTaskGroup,
+  onUpdateTaskGroup,
+  onDeleteTaskGroup,
+}: Props) {
   const [board, setBoard] = useState<TaskBoard>(initialBoard);
+  const [creatingStatus, setCreatingStatus] = useState<TaskBoardColumnStatus | null>(null);
   const nextCardIndexByStatus = useRef<Record<TaskBoardColumnStatus, number>>({ ...INITIAL_CARD_INDEX });
   const sensors = useTaskBoardSensors();
   const { activeTaskGroupId, dropIndicatorId, activeTaskGroup, handleDragStart, handleDragOver, handleDragEnd, handleDragCancel } =
     useTaskBoardDnd({ board, setBoard });
 
-  const handleAddCard = (status: TaskBoardColumnStatus) => {
+  const openCreateTaskBoardModal = (status: TaskBoardColumnStatus) => {
+    setCreatingStatus(status);
+  };
+
+  const handleAddCard = async (title: string) => {
+    if (!creatingStatus) return;
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
+
+    const status = creatingStatus;
+    const shouldCreateLocalCard = await onCreateTaskGroup?.({ status, title: trimmedTitle });
+    if (shouldCreateLocalCard === false) return;
+
     const index = nextCardIndexByStatus.current[status]++;
-    const newGroup = createTaskGroup(status, index);
+    const newGroup = createTaskGroup(status, index, trimmedTitle);
 
     setBoard((prev) => ({
       ...prev,
@@ -64,6 +78,7 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }:
         col.status === status ? { ...col, taskGroups: [newGroup, ...col.taskGroups] } : col,
       ),
     }));
+    setCreatingStatus(null);
   };
 
   const handleTaskToggle = (taskGroupId: string, taskId: string, checked: boolean) => {
@@ -94,6 +109,50 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }:
     });
   };
 
+  const setCardNameLocal = (taskGroupId: string, title: string) => {
+    setBoard((prev) => ({
+      ...prev,
+      columns: prev.columns.map((col) => ({
+        ...col,
+        taskGroups: col.taskGroups.map((group) =>
+          group.id === taskGroupId ? { ...group, name: title } : group,
+        ),
+      })),
+    }));
+  };
+
+  const removeCardLocal = (taskGroupId: string) => {
+    setBoard((prev) => ({
+      ...prev,
+      columns: prev.columns.map((col) => ({
+        ...col,
+        taskGroups: col.taskGroups.filter((group) => group.id !== taskGroupId),
+      })),
+    }));
+  };
+
+  const {
+    editingCard,
+    editedTitle,
+    setEditedTitle,
+    setEditingCard,
+    deletingCardId,
+    setDeletingCardId,
+    openEditCardModal,
+    handleConfirmEditCard,
+    openDeleteCardModal,
+    handleConfirmDeleteCard,
+  } = useTaskBoardCardActions({
+    onUpdateTaskGroup,
+    onDeleteTaskGroup,
+    setCardNameLocal,
+    removeCardLocal,
+  });
+
+  useEffect(() => {
+    setBoard(initialBoard);
+  }, [initialBoard]);
+
   return (
     <DndContext
       collisionDetection={closestCorners}
@@ -117,8 +176,10 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }:
             <TaskColumn
               status={col.status}
               taskGroups={col.taskGroups}
-              onAddCard={() => handleAddCard(col.status)}
+              onAddCard={() => openCreateTaskBoardModal(col.status)}
               onTaskToggle={handleTaskToggle}
+              onEditCard={openEditCardModal}
+              onDeleteCard={openDeleteCardModal}
               activeTaskGroupId={activeTaskGroupId}
               dropIndicatorId={dropIndicatorId}
             />
@@ -148,6 +209,23 @@ export function TaskBoardView({ initialBoard = MOCK_TASK_BOARD, trailingPanel }:
           </div>
         ) : null}
       </DragOverlay>
+
+      <CreateTaskBoardModal
+        isOpen={creatingStatus !== null}
+        close={() => setCreatingStatus(null)}
+        onSubmit={handleAddCard}
+      />
+
+      <TaskBoardCardActionModals
+        editingCard={editingCard}
+        editedTitle={editedTitle}
+        setEditedTitle={setEditedTitle}
+        setEditingCard={setEditingCard}
+        onConfirmEdit={handleConfirmEditCard}
+        deletingCardId={deletingCardId}
+        setDeletingCardId={setDeletingCardId}
+        onConfirmDelete={handleConfirmDeleteCard}
+      />
     </DndContext>
   );
 }

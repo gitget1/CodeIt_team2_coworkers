@@ -17,6 +17,8 @@ export type TaskCardProps = {
   /** dnd-kit: 드래그 리스너(포인터 이벤트 등) */
   dragListeners?: SortableDragListeners;
   onTaskToggle?: (taskId: string, checked: boolean) => void;
+  onEditCard?: (taskGroup: TaskBoardTaskGroup) => void;
+  onDeleteCard?: (taskGroup: TaskBoardTaskGroup) => void;
 };
 
 export function TaskCard({
@@ -25,6 +27,8 @@ export function TaskCard({
   dragAttributes,
   dragListeners,
   onTaskToggle,
+  onEditCard,
+  onDeleteCard,
 }: TaskCardProps) {
   const [collapsed, setCollapsed] = useState(false);
   const tasks = taskGroup.tasks;
@@ -57,6 +61,8 @@ export function TaskCard({
         activatorRef={setActivatorNodeRef}
         dragAttributes={dragAttributes}
         dragListeners={dragListeners}
+        onEditCard={() => onEditCard?.(taskGroup)}
+        onDeleteCard={() => onDeleteCard?.(taskGroup)}
       />
 
       {!collapsed && (

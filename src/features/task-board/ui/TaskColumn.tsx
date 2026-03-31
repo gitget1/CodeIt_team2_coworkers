@@ -12,6 +12,8 @@ export type TaskColumnProps = {
   taskGroups: TaskBoardTaskGroup[];
   onAddCard: () => void;
   onTaskToggle?: (taskGroupId: string, taskId: string, checked: boolean) => void;
+  onEditCard?: (taskGroupId: string, currentTitle: string) => void;
+  onDeleteCard?: (taskGroupId: string) => void;
   activeTaskGroupId?: string | null;
   dropIndicatorId?: string | null;
 };
@@ -24,6 +26,8 @@ export function TaskColumn({
   taskGroups,
   onAddCard,
   onTaskToggle,
+  onEditCard,
+  onDeleteCard,
   activeTaskGroupId,
   dropIndicatorId,
 }: TaskColumnProps) {
@@ -54,6 +58,8 @@ export function TaskColumn({
               key={group.id}
               taskGroup={group}
               onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
+              onEditCard={onEditCard}
+              onDeleteCard={onDeleteCard}
               activeTaskGroupId={activeTaskGroupId}
               dropIndicatorId={dropIndicatorId}
             />

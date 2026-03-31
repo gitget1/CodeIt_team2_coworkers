@@ -12,10 +12,10 @@ import { CreateRecurringParams, CreateTaskParams } from '../../model/params/task
 import { TaskFormValues } from '../../ui/create-task/taskForm.types';
 import { UpdateRecurringParams, UpdateTaskParams } from '../../model/params/task.update.params';
 
-export const toUser = (dto: UserDto): User => ({
-  id: dto.id,
-  nickname: dto.nickname,
-  imageUrl: dto.image ?? undefined,
+export const toUser = (dto?: Partial<UserDto> | null): User => ({
+  id: dto?.id ?? 0,
+  nickname: dto?.nickname ?? '',
+  imageUrl: dto?.image ?? undefined,
 });
 
 export const toTask = (dto: TaskDto): Task => ({
@@ -24,6 +24,7 @@ export const toTask = (dto: TaskDto): Task => ({
   description: dto.description ?? undefined,
   order: dto.displayIndex,
   commentCount: dto.commentCount,
+  // recurring 생성 응답 스키마가 task 조회 응답과 다를 수 있어 writer를 방어적으로 매핑
   writer: toUser(dto.writer),
   isCompleted: Boolean(dto.doneAt),
   completedBy: dto.doneBy?.user ? toUser(dto.doneBy.user) : undefined,
@@ -41,7 +42,7 @@ export const toTaskList = (dto: TaskListDto): TaskList => ({
   order: dto.displayIndex,
   createdAt: new Date(dto.createdAt),
   updatedAt: new Date(dto.updatedAt),
-  tasks: dto.tasks.map(toTask),
+  tasks: (dto.tasks ?? []).map(toTask),
 });
 
 export const toTaskListFromArray = (

@@ -9,6 +9,8 @@ import { TaskCard } from './TaskCard';
 type TaskSortableCardItemProps = {
   taskGroup: TaskBoardTaskGroup;
   onTaskToggle?: (taskId: string, checked: boolean) => void;
+  onEditCard?: (taskGroupId: string, currentTitle: string) => void;
+  onDeleteCard?: (taskGroupId: string) => void;
   activeTaskGroupId?: string | null;
   dropIndicatorId?: string | null;
 };
@@ -16,6 +18,8 @@ type TaskSortableCardItemProps = {
 export function TaskSortableCardItem({
   taskGroup,
   onTaskToggle,
+  onEditCard,
+  onDeleteCard,
   activeTaskGroupId,
   dropIndicatorId,
 }: TaskSortableCardItemProps) {
@@ -62,6 +66,8 @@ export function TaskSortableCardItem({
         dragAttributes={attributes}
         dragListeners={listeners}
         onTaskToggle={onTaskToggle}
+        onEditCard={(group) => onEditCard?.(group.id, group.name)}
+        onDeleteCard={(group) => onDeleteCard?.(group.id)}
       />
       {showDropIndicatorAfter && (
         <div className="pointer-events-none absolute -bottom-[6px] left-0 right-0 h-[3px] rounded-full bg-brand-primary" />

@@ -6,8 +6,10 @@ import { TEAM_CARD_PLACEHOLDER_STATS } from '@/features/group/constants/teamDash
 import type { TeamDashboardViewModel } from '@/features/group/hooks/useTeamDashboard';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
 import { useTeamDashboardMemberActions } from './useTeamDashboardMemberActions';
+import { useTeamDashboardTaskListActions } from './useTeamDashboardTaskListActions';
 import { TeamDashboardInviteModal } from './TeamDashboardInviteModal';
 import { TeamDashboardRemoveMemberModal } from './TeamDashboardRemoveMemberModal';
+import { toTaskBoard } from './taskBoardAdapter';
 
 type ReadyVm = Extract<TeamDashboardViewModel, { phase: 'ready' }>;
 
@@ -18,6 +20,8 @@ type Props = {
 export function TeamDashboardReadyView({ vm }: Props) {
   const { group, memberCardItems, memberImagesPreview, isFetching } = vm;
   const { data: me } = useUserQuery();
+  const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup } =
+    useTeamDashboardTaskListActions({ groupId: group.id });
   const {
     isInviteModalOpen,
     openInviteModal,
@@ -69,11 +73,14 @@ export function TeamDashboardReadyView({ vm }: Props) {
 
         <section className="flex min-w-0 flex-col gap-4" aria-labelledby="team-task-board-heading">
           <h2 id="team-task-board-heading" className="text-lg font-bold text-txt-primary md:text-xl">
-            {/* TODO: TaskBoardView — MOCK_TASK_BOARD 제거 후 그룹 taskLists·API와 매핑. 그 다음 E2E/API 테스트로 회귀 검증. */}
             할 일 목록 ({group.taskLists.length}개)
           </h2>
           <div className="min-w-0 overflow-x-auto pb-2">
             <TaskBoardView
+              initialBoard={toTaskBoard(group.taskLists)}
+              onCreateTaskGroup={handleCreateTaskGroup}
+              onUpdateTaskGroup={handleUpdateTaskGroup}
+              onDeleteTaskGroup={handleDeleteTaskGroup}
               trailingPanel={
                 <MemberCard
                   members={memberCardItems}
