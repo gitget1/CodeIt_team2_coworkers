@@ -1,6 +1,6 @@
 import GroupSettingMenu from '@/features/task/ui/header/groupSettingMenu';
 import Header from '@/features/task/ui/header/header';
-import TaskList from '@/features/task/ui/TaskList';
+import TaskList from '@/features/task/ui/TasksSection';
 import WeekCalendar from '@/features/task/ui/weekdate/weekDate';
 
 export default function TestTaskPage() {
