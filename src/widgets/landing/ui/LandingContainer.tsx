@@ -81,7 +81,7 @@ export const LANDING_FEATURES: LandingFeature[] = [
 
 export const LandingContainer = () => {
   return (
-    <main className="flex w-full flex-col">
+    <main className="flex w-full flex-col select-none">
       <LandingHero />
       {LANDING_FEATURES.map((feature) => (
         <LandingFeatureSection key={feature.id} feature={feature} />
