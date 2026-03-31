@@ -8,7 +8,7 @@ export default function ArticleDetail() {
   const { article, comments, isLoading, isError } = useArticleDetailPage();
 
   return (
-    <div className="flex justify-center bg-slate-100 p-6">
+    <div className="flex min-h-screen justify-center bg-slate-100 p-6">
       <div className="mx-auto w-full max-w-225 space-y-4 rounded-[20px] border border-white bg-white p-4 px-15 py-15">
         <Link href="/boards" className="text-slate-400">
           자유게시판으로

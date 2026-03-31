@@ -22,11 +22,11 @@ export function ImageUploadSlot({
   return (
     <label
       className={cn(
-        'flex h-[120px] w-[120px] cursor-pointer flex-col items-center justify-center rounded-[10px] border',
+        'flex h-[120px] w-[120px] cursor-pointer flex-col items-center justify-center rounded-[10px] border border-slate-200',
         className,
       )}
     >
-      <IconImg/>
+      <IconImg />
       <input
         type="file"
         multiple
@@ -40,7 +40,7 @@ export function ImageUploadSlot({
       />
 
       {isCount && (
-        <div className='pt-4'>
+        <div className="pt-4">
           {count}/{maxCount}
         </div>
       )}

@@ -8,6 +8,7 @@ import { IconHeartEmpty } from '@/shared/ui/icons/IconHeartEmpty';
 import { useToggleLikeArticle } from '../hooks/useToggleLikeArticle';
 import { useDeleteArticle } from '../hooks/useDeleteArticleMutation';
 import { IconHeart } from '@/shared/ui/icons/IconHeart';
+import { useRouter } from 'next/router';
 
 interface Props {
   article: ArticleDetail;
@@ -18,7 +19,7 @@ export default function ArticleContent({ article }: Props) {
   const { data: currentUser } = useUserQuery();
   const { toggleLike } = useToggleLikeArticle();
   const { deleteArticle } = useDeleteArticle();
-
+  const router = useRouter();
   return (
     <>
       <div className="mt-7 flex items-center justify-between">
@@ -26,7 +27,7 @@ export default function ArticleContent({ article }: Props) {
 
         {currentUser?.id === article.writer.id && (
           <KebabMenu
-            onEdit={() => console.log('게시글 수정')}
+            onEdit={() => router.push(`/boards/${article.id}/editArticle`)}
             onDelete={() => deleteArticle(article.id)}
           />
         )}
