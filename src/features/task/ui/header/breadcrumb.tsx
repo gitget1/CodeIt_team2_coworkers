@@ -1,13 +1,13 @@
-import Link from 'next/link';
 import { cn } from '@/shared/lib/cn';
+import { BreadcrumbItem } from './breadcrumbItem';
 
-type BreadcrumbItem = {
+type BreadcrumbData = {
   label: string;
   href?: string;
 };
 
 type Props = {
-  items: BreadcrumbItem[];
+  items: BreadcrumbData[];
   className?: string;
 };
 
@@ -19,14 +19,7 @@ export default function Breadcrumb({ items, className }: Props) {
 
         return (
           <div key={index} className="flex items-center gap-2">
-            {item.href && !isLast ? (
-              <Link href={item.href} className="hover:underline">
-                {item.label}
-              </Link>
-            ) : (
-              <span className={cn(isLast && 'text-txt-primary font-medium')}>{item.label}</span>
-            )}
-
+            <BreadcrumbItem label={item.label} href={item.href} readonly={isLast} />
             {!isLast && <span className="text-txt-tertiary">{'>'}</span>}
           </div>
         );
