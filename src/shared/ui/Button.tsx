@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { motion, HTMLMotionProps } from 'framer-motion';
 
-export type ButtonVariant = 'primary' | 'danger' | 'outline' | 'ghost' | 'secondary' | 'custom';
+export type ButtonVariant = 'primary' | 'danger' | 'outline' | 'ghost' | 'secondary';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
@@ -25,7 +25,6 @@ const variantStyles: Record<ButtonVariant, string> = {
     'bg-background-primary border border-brand-primary text-brand-primary hover:border-interaction-hover hover:text-interaction-hover active:border-interaction-pressed active:text-interaction-pressed disabled:border-interaction-inactive disabled:text-interaction-inactive',
   secondary:
     'bg-transparent border border-txt-secondary text-txt-primary hover:opacity-80 active:opacity-60 disabled:opacity-50 disabled:border-interaction-inactive disabled:text-interaction-inactive',
-  custom: '',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
