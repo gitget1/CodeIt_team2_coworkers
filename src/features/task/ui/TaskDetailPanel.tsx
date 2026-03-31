@@ -6,6 +6,7 @@ import { Button } from '@/shared/ui/Button';
 import { IconCheck } from '@/shared/ui/icons';
 import { IconCommentBtn } from '@/shared/ui/icons/IconCommentBtn';
 import { Input } from '@/shared/ui/input/Input';
+import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
 
 type Props = {
   task: Task | null;
@@ -15,13 +16,6 @@ type Props = {
 type MetaItemProps = {
   icon: React.ReactNode;
   children: React.ReactNode;
-};
-
-const recurrenceLabelMap: Record<string, string> = {
-  ONCE: '한 번',
-  DAILY: '매 일',
-  WEEKLY: '매 주',
-  MONTHLY: '매 달',
 };
 
 function MetaItem({ icon, children }: MetaItemProps) {
@@ -70,7 +64,7 @@ export default function TaskDetailPanel({ task, onClose }: Props) {
                 <div className="flex gap-6">
                   <MetaItem icon={<IconRepeat />}>반복 설정</MetaItem>
                   <p className="font-weight-regular text-txt-primary text-sm">
-                    {recurrenceLabelMap[task.recurrence] ?? task.recurrence}
+                    {RECURRENCE_LABEL_MAP[task.recurrence]}
                   </p>
                 </div>
               </div>

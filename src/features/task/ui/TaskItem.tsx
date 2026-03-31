@@ -7,6 +7,7 @@ import { IconComment } from '@/shared/ui/icons/IconComment';
 import { useToggleTaskMutation } from '../hooks/useToggleTaskMutation';
 import { TaskCommonParams } from '../model/params/task.params';
 import Dropdown from '@/shared/ui/dropdown';
+import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
 
 type Props = {
   task: Task;
@@ -20,13 +21,6 @@ type MetaItemProps = {
   icon: React.ReactNode;
   children: React.ReactNode;
   className?: string;
-};
-
-const recurrenceLabelMap: Record<string, string> = {
-  ONCE: '한 번',
-  DAILY: '매 일',
-  WEEKLY: '매 주',
-  MONTHLY: '매 달',
 };
 
 function MetaItem({ icon, children }: MetaItemProps) {
@@ -70,9 +64,7 @@ export default function TaskItem({ task, onClick, params, onDeleteClick, onEditC
         <div className="flex items-center gap-2">
           <MetaItem icon={<IconCalendar />}>{task.date && formatDate(task.date)}</MetaItem>
           <span className="bg-txt-secondary h-3 w-px" />
-          <MetaItem icon={<IconRepeat />}>
-            {recurrenceLabelMap[task.recurrence] ?? task.recurrence}
-          </MetaItem>
+          <MetaItem icon={<IconRepeat />}>{RECURRENCE_LABEL_MAP[task.recurrence]}</MetaItem>
         </div>
       </div>
       <Dropdown>
