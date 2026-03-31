@@ -14,11 +14,9 @@ interface TaskBoardFormValues {
 }
 
 export function CreateTaskBoardModal({ isOpen, close, onSubmit }: CreateTaskBoardModalProps) {
-  const { register, handleSubmit, watch, reset } = useForm<TaskBoardFormValues>({
+  const { register, handleSubmit, reset } = useForm<TaskBoardFormValues>({
     defaultValues: { title: '' },
   });
-
-  const titleValue = watch('title');
 
   const handleFormSubmit = (data: TaskBoardFormValues) => {
     if (!data.title) return;
@@ -40,13 +38,7 @@ export function CreateTaskBoardModal({ isOpen, close, onSubmit }: CreateTaskBoar
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              disabled={!titleValue?.trim()}
-              className="w-full"
-            >
+            <Button type="submit" variant="primary" size="lg" className="w-full">
               만들기
             </Button>
           </Modal.Footer>

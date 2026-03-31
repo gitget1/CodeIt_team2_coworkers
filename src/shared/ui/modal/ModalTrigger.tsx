@@ -24,7 +24,7 @@ export function ModalTrigger({
     onClick?.(e as React.MouseEvent<HTMLButtonElement>);
 
     if (!e.defaultPrevented) {
-      open();
+      open?.();
     }
   };
 
