@@ -1,23 +1,51 @@
 import { IconArrowRight } from '@/shared/ui/icons/IconArrowRight';
 import { IconArrowLeft } from '@/shared/ui/icons/IconArrowLeft';
+import { cn } from '@/shared/lib/cn';
 
-export function MonthSelector({ currentMonth }: { currentMonth: string }) {
+interface MonthSelectorProps {
+  currentMonth: string;
+  isViewAll: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  onToggleViewAll: () => void;
+}
+
+export function MonthSelector({
+  currentMonth,
+  onPrevious,
+  onNext,
+  onToggleViewAll,
+}: MonthSelectorProps) {
+  const arrowButtonClasses = cn(
+    'flex items-center justify-center shrink-0',
+    'h-[16px] w-[16px] rounded-full transition-all',
+    'border border-background-tertiary bg-white text-txt-secondary',
+    'hover:bg-background-secondary shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)]',
+  );
   return (
-    <div className="flex items-center gap-6 py-4">
+    <div className="flex items-center gap-[13px] py-4">
       <button
         type="button"
+        onClick={onPrevious}
         aria-label="이전 달"
-        className="text-txt-secondary hover:text-txt-primary"
+        className={arrowButtonClasses}
       >
-        <IconArrowLeft size={24} />
+        <IconArrowLeft size={12} className="block" />
       </button>
-      <span className="text-txt-primary text-lg font-bold">{currentMonth}</span>
+
       <button
         type="button"
-        aria-label="다음 달"
-        className="text-txt-secondary hover:text-txt-primary"
+        onClick={onToggleViewAll}
+        className={cn(
+          'min-w-30 rounded-lg px-3 py-1.5 text-center text-lg font-bold transition-all',
+          'text-txt-primary hover:bg-background-secondary',
+          'active:text-brand-primary active:bg-brand-secondary active:scale-105',
+        )}
       >
-        <IconArrowRight size={24} />
+        {currentMonth}
+      </button>
+      <button type="button" onClick={onNext} aria-label="다음 달" className={arrowButtonClasses}>
+        <IconArrowRight size={12} className="block" />
       </button>
     </div>
   );

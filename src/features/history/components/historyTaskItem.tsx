@@ -1,17 +1,15 @@
 import Checkbox from '@/shared/ui/checkbox';
-import { formatDate } from '@/shared/lib/date';
 import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
 import { IconRepeat } from '@/shared/ui/icons/IconRepeat';
-import { IconComment } from '@/shared/ui/icons/IconComment';
 import { RECURRENCE_LABELS } from './recurrence';
 import { RecurrenceType } from '../../task/model/types/recurrence.type';
+import { formatDateWithDay } from '@/shared/lib/date';
 
 interface HistoryTaskItemProps {
   id: number;
   name: string;
   date: Date;
   frequency?: RecurrenceType;
-  commentCount?: number;
 }
 
 function MetaItem({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
@@ -23,13 +21,7 @@ function MetaItem({ icon, children }: { icon: React.ReactNode; children: React.R
   );
 }
 
-export function HistoryTaskItem({
-  id,
-  name,
-  date,
-  frequency,
-  commentCount = 0,
-}: HistoryTaskItemProps) {
+export function HistoryTaskItem({ id, name, date, frequency }: HistoryTaskItemProps) {
   const checkboxId = `history-item-${id}`;
 
   return (
@@ -39,15 +31,14 @@ export function HistoryTaskItem({
           <Checkbox id={checkboxId} size="lg" checked={true} disabled={true} readOnly={true} />
           <label
             htmlFor={checkboxId}
-            className="text-txt-disabled cursor-default text-sm line-through decoration-gray-400"
+            className="text-txt-disabled decoration-txt-disabled cursor-default text-sm line-through"
           >
             {name}
           </label>
-          {commentCount > 0 && <MetaItem icon={<IconComment />}>{commentCount}</MetaItem>}
         </div>
 
         <div className="flex items-center gap-2">
-          <MetaItem icon={<IconCalendar />}>{date && formatDate(date)}</MetaItem>
+          <MetaItem icon={<IconCalendar />}>{date && formatDateWithDay(date)}</MetaItem>
           {frequency && frequency !== 'ONCE' && (
             <>
               <span className="bg-txt-secondary h-3 w-px" />

@@ -1,4 +1,5 @@
 import { format, isValid } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 export function formatDate(date?: Date | null) {
   if (date === undefined || date === null) {
@@ -10,6 +11,13 @@ export function formatDate(date?: Date | null) {
   }
 
   return format(date, 'yyyy년 MM월 dd일');
+}
+
+export function formatDateWithDay(date?: Date | null) {
+  if (date === undefined || date === null) return '';
+  if (!isValid(date)) return '';
+
+  return format(date, 'yyyy년 MM월 dd일 (E)', { locale: ko });
 }
 
 export function formatTime(date?: Date | null) {
