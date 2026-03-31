@@ -14,6 +14,8 @@ export { toGroup, toGroupDetail, toGroupMember } from './lib/mappers/group.mappe
 // Query Hook
 export { useCreateGroupMutation } from './hooks/useCreateGroupMutation';
 export { useGroupQuery } from './hooks/useGroupQuery';
+export { useTeamDashboard } from './hooks/useTeamDashboard';
+export type { TeamDashboardViewModel } from './hooks/useTeamDashboard';
 export { useUpdateGroupMutation } from './hooks/useUpdateGroupMutation';
 export { useDeleteGroupMutation } from './hooks/useDeleteGroupMutation';
 export { useGroupMemberQuery } from './hooks/useGroupMemberQuery';
