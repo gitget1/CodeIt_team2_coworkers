@@ -28,8 +28,9 @@ type Props = {
   initialBoard?: TaskBoard;
   trailingPanel?: ReactNode;
   onCreateTaskGroup?: (params: { status: TaskBoardColumnStatus; title: string }) => Promise<boolean> | boolean;
-  onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean> | boolean;
-  onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean> | boolean;
+  /** true면 캐시/프롭이 곧 반영되므로 보드 로컬 갱신 생략. false 실패. undefined·void면 로컬 갱신. */
+  onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean | void> | boolean | void;
+  onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean | void> | boolean | void;
 };
 
 const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {

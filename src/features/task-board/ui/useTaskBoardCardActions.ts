@@ -1,8 +1,12 @@
 import { useState } from 'react';
 
+/** 반환: false 실패, true 성공(캐시·프롭 등으로 이미 반영됨 → 로컬 setBoard 생략), undefined/void는 로컬 반영. */
 type Params = {
-  onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean> | boolean;
-  onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean> | boolean;
+  onUpdateTaskGroup?: (params: {
+    taskGroupId: string;
+    title: string;
+  }) => Promise<boolean | void> | boolean | void;
+  onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean | void> | boolean | void;
   setCardNameLocal: (taskGroupId: string, title: string) => void;
   removeCardLocal: (taskGroupId: string) => void;
 };
@@ -32,11 +36,12 @@ export function useTaskBoardCardActions({
       return;
     }
 
-    // false: API/비즈니스 실패. undefined: 콜백 없음(목 데이터 등) → 로컬만 반영.
     const ok = await onUpdateTaskGroup?.({ taskGroupId: editingCard.taskGroupId, title: trimmedTitle });
     if (ok === false) return;
 
-    setCardNameLocal(editingCard.taskGroupId, trimmedTitle);
+    if (ok !== true) {
+      setCardNameLocal(editingCard.taskGroupId, trimmedTitle);
+    }
     closeEditModal();
   };
 
@@ -50,7 +55,9 @@ export function useTaskBoardCardActions({
     const ok = await onDeleteTaskGroup?.({ taskGroupId: deletingCardId });
     if (ok === false) return;
 
-    removeCardLocal(deletingCardId);
+    if (ok !== true) {
+      removeCardLocal(deletingCardId);
+    }
     setDeletingCardId(null);
   };
 

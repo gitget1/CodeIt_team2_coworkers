@@ -69,7 +69,7 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       };
     });
 
-    // true: 보드 훅에서 모달 닫기·로컬 반영 허용. 캐시로도 동기화되므로 로컬 갱신은 중복일 수 있음.
+    // true: 캐시로 보드가 맞춰지므로 TaskBoard 쪽 로컬 setBoard 갱신 생략.
     return true;
   };
 
@@ -92,6 +92,7 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       };
     });
     toast.success('할 일 목록을 삭제했습니다.');
+    // true: 캐시로 보드가 맞춰지므로 TaskBoard 쪽 로컬 제거 생략.
     return true;
   };
 
