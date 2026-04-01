@@ -11,7 +11,13 @@ import { ICON_SIZE } from '@/shared/constants/icon';
 import { TeamCardProgressRow } from './TeamCardProgressRow';
 import { TeamCardStatsSection } from './TeamCardStatsSection';
 import { TeamCardDropdownMenu } from './TeamCardDropdownMenu';
-import { TEAM_CARD_DROPDOWN_PANEL_CLASS, TEAM_CARD_MENU_ITEM_CLASS } from './teamCard.constants';
+import {
+  TEAM_CARD_DROPDOWN_PANEL_CLASS,
+  TEAM_CARD_DROPDOWN_PANEL_CLASS_MEMBER,
+  TEAM_CARD_MENU_ITEM_CLASS,
+} from './teamCard.constants';
+
+export type TeamCardTeamMenuMode = 'admin' | 'member';
 
 export type TeamCardProps = {
   teamName: string;
@@ -19,8 +25,12 @@ export type TeamCardProps = {
   progressPercent: number;
   todayTaskCount: number;
   completedTaskCount: string | number;
+  /** admin: 수정·삭제, member: 팀 탈퇴만 */
+  teamMenuMode?: TeamCardTeamMenuMode;
   onEditTeam?: () => void;
   onDeleteTeam?: () => void;
+  /** `teamMenuMode === 'member'`일 때 */
+  onLeaveTeam?: () => void;
   /** 팀원 프로필 이미지(최대 3개 노출) */
   memberImages?: ImageAsset[];
   /** 모바일/태블릿에서 열리는 전체 멤버 목록 */
@@ -38,8 +48,10 @@ export function TeamCard({
   progressPercent,
   todayTaskCount,
   completedTaskCount,
+  teamMenuMode = 'admin',
   onEditTeam,
   onDeleteTeam,
+  onLeaveTeam,
   memberImages = [],
   members,
   memberCount,
@@ -126,23 +138,42 @@ export function TeamCard({
               >
                 <IconGear size={ICON_SIZE.md} />
               </Dropdown.Trigger>
-              <TeamCardDropdownMenu className={TEAM_CARD_DROPDOWN_PANEL_CLASS}>
-                <Dropdown.Item
-                  align="center"
-                  type="button"
-                  className={TEAM_CARD_MENU_ITEM_CLASS}
-                  onClick={() => onEditTeam?.()}
-                >
-                  수정하기
-                </Dropdown.Item>
-                <Dropdown.Item
-                  align="center"
-                  type="button"
-                  className={TEAM_CARD_MENU_ITEM_CLASS}
-                  onClick={() => onDeleteTeam?.()}
-                >
-                  삭제하기
-                </Dropdown.Item>
+              <TeamCardDropdownMenu
+                className={
+                  teamMenuMode === 'member'
+                    ? TEAM_CARD_DROPDOWN_PANEL_CLASS_MEMBER
+                    : TEAM_CARD_DROPDOWN_PANEL_CLASS
+                }
+              >
+                {teamMenuMode === 'admin' ? (
+                  <>
+                    <Dropdown.Item
+                      align="center"
+                      type="button"
+                      className={TEAM_CARD_MENU_ITEM_CLASS}
+                      onClick={() => onEditTeam?.()}
+                    >
+                      수정하기
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      align="center"
+                      type="button"
+                      className={TEAM_CARD_MENU_ITEM_CLASS}
+                      onClick={() => onDeleteTeam?.()}
+                    >
+                      삭제하기
+                    </Dropdown.Item>
+                  </>
+                ) : (
+                  <Dropdown.Item
+                    align="center"
+                    type="button"
+                    className={TEAM_CARD_MENU_ITEM_CLASS}
+                    onClick={() => onLeaveTeam?.()}
+                  >
+                    팀 탈퇴하기
+                  </Dropdown.Item>
+                )}
               </TeamCardDropdownMenu>
             </Dropdown>
           }
