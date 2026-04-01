@@ -3,7 +3,7 @@ export { deleteUser } from './api/deleteUser';
 export { getUserGroups } from './api/getUserGroups';
 export { updatePassword } from './api/updatePassword';
 export { updateUser } from './api/updateUser';
-export { uploadImage } from './api/uploadImage';
+export { uploadImage } from '../../shared/api/uploadImage';
 // Hooks
 export { useUserQuery } from './hooks/useUserQuery';
 export { useDeleteUserMutation } from './hooks/useDeleteUserMutation';

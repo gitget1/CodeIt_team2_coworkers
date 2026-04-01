@@ -1,5 +1,8 @@
 import { ArticleForm } from '@/features/boards/components/ArticleForm';
 import { useArticleDetailQuery } from '@/features/boards/hooks/useArticleDetailQuery';
+import { useUpdateArticle } from '@/features/boards/hooks/useUpdateArticle';
+import { handleImages } from '@/features/boards/utils/handleImages';
+import { uploadImage } from '@/features/user';
 import { useRouter } from 'next/router';
 
 export default function EditArticle() {
@@ -7,7 +10,7 @@ export default function EditArticle() {
   const { articleId } = router.query;
 
   const id = typeof articleId === 'string' ? Number(articleId) : NaN;
-
+  const { updateArticle } = useUpdateArticle();
   const { data: article } = useArticleDetailQuery(id);
   if (!article) return null;
   const initialImages = article?.image ? [{ type: 'url' as const, url: article.image }] : [];
@@ -17,8 +20,15 @@ export default function EditArticle() {
         initialTitle={article?.title}
         initialContent={article?.content}
         initialImages={initialImages}
-        onSubmit={(data) => {
-          console.log('edit', data);
+        onSubmit={async ({ title, content, images }) => {
+          try {
+            const allImages = await handleImages(images);
+            const image = allImages[0];
+
+            await updateArticle(article.id, title, content, image);
+          } catch (error) {
+            alert('게시글 수정 중 오류가 발생했습니다.');
+          }
         }}
         mode="edit"
       />

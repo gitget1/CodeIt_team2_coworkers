@@ -23,7 +23,7 @@ export function ArticleForm({
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
   const [images, setImages] = useState<ImageItem[]>(initialImages);
-  const MAX_COUNT = 5;
+  const MAX_COUNT = 1;
   const isTitleInvalid = !title.trim();
   const isContentInvalid = !content.trim();
 
