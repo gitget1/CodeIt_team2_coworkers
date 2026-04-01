@@ -8,11 +8,11 @@ import TaskUpdateModalContent from './update-task/TaskUpdateModalContent';
 import { useTaskModal } from '../hooks/useTaskModal';
 
 type Props = TaskCommonParams & {
-  date?: string;
+  date?: Date;
 };
 
 export default function TaskList({ groupId, taskListId, date }: Props) {
-  const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date });
+  const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date: date?.toISOString() });
   const params = { groupId, taskListId };
   const taskCount = data?.tasks.length ?? 0;
   const {

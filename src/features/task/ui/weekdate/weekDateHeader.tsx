@@ -8,6 +8,7 @@ import useClickOutside from '@/shared/hooks/useClickOutside';
 
 type Props = {
   value: Date;
+  groupName: string;
   onPrev: () => void;
   onNext: () => void;
   onOpenCalendar: () => void;
@@ -22,6 +23,7 @@ function formatMonth(date: Date) {
 
 export default function WeekDateHeader({
   value,
+  groupName,
   onNext,
   onPrev,
   onOpenCalendar,
@@ -40,9 +42,7 @@ export default function WeekDateHeader({
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h2 className="text-txt-primary text-lg font-bold">
-          test {/* TODO: 그룹 이름으로 교체 예정*/}
-        </h2>
+        <h2 className="text-txt-primary text-lg font-bold">{groupName}</h2>
       </div>
       <div className="flex items-center gap-2">
         <h2 className="text-txt-primary text-lg font-semibold">{formatMonth(value)}</h2>
