@@ -1,14 +1,6 @@
-import { Task } from "./task.model";
+import { TaskList } from './task.model';
 
-export type TaskLists = {
-  id: number;
-  title: string;
-  order: number;
-  tasks: Task[];
-
-  createdAt: Date;
-  updatedAt: Date;
-
+export type TaskListStats = TaskList & {
   totalCount: number;
   completedCount: number;
 };
