@@ -27,6 +27,7 @@ import { useTaskBoardBoard } from './useTaskBoardBoard';
 type Props = {
   initialBoard?: TaskBoard;
   trailingPanel?: ReactNode;
+  /** true 성공. false 실패. 콜백이 존재하고 true면 생성 로컬 setBoard는 생략(캐시/프롭 동기화 경로 사용). */
   onCreateTaskGroup?: (params: { status: TaskBoardColumnStatus; title: string }) => Promise<boolean> | boolean;
   /** true면 캐시/프롭이 곧 반영되므로 보드 로컬 갱신 생략. false 실패. undefined·void면 로컬 갱신. */
   onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean | void> | boolean | void;
@@ -68,8 +69,14 @@ export function TaskBoardView({
     if (!trimmedTitle) return;
 
     const status = creatingStatus;
-    const shouldCreateLocalCard = await onCreateTaskGroup?.({ status, title: trimmedTitle });
-    if (shouldCreateLocalCard === false) return;
+    const created = await onCreateTaskGroup?.({ status, title: trimmedTitle });
+    if (created === false) return;
+
+    // 콜백이 있는 경로(팀 대시보드)는 캐시 동기화로 반영되므로 로컬 중복 생성 방지.
+    if (onCreateTaskGroup && created === true) {
+      setCreatingStatus(null);
+      return;
+    }
 
     const index = nextCardIndexByStatus.current[status]++;
     const newGroup = createTaskGroup(status, index, trimmedTitle);

@@ -39,8 +39,8 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       };
     });
 
-    // 캐시 기반 렌더가 즉시 반영되므로 로컬 중복 생성은 막는다.
-    return false;
+    // true: 생성 성공. TaskBoardView에서 콜백 존재 시 로컬 생성을 건너뛴다.
+    return true;
   };
 
   const handleUpdateTaskGroup = async ({
