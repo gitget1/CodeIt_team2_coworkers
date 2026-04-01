@@ -20,6 +20,7 @@ export const toUser = (dto?: Partial<UserDto> | null): User => ({
 
 export const toTask = (dto: TaskDto): Task => ({
   id: dto.id,
+  taskListId: dto.taskListId ?? undefined,
   title: dto.name,
   description: dto.description ?? undefined,
   order: dto.displayIndex,

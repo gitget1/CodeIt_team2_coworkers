@@ -29,6 +29,15 @@ type Props = {
   trailingPanel?: ReactNode;
   /** true 성공. false 실패. 콜백이 존재하고 true면 생성 로컬 setBoard는 생략(캐시/프롭 동기화 경로 사용). */
   onCreateTaskGroup?: (params: { status: TaskBoardColumnStatus; title: string }) => Promise<boolean> | boolean;
+  onToggleTask?: (params: {
+    taskGroupId: string;
+    taskId: string;
+    checked: boolean;
+  }) => Promise<boolean | void> | boolean | void;
+  onCompleteTaskGroupByDrop?: (params: {
+    taskGroupId: string;
+    taskIds: string[];
+  }) => Promise<boolean | void> | boolean | void;
   /** true면 캐시/프롭이 곧 반영되므로 보드 로컬 갱신 생략. false 실패. undefined·void면 로컬 갱신. */
   onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean | void> | boolean | void;
   onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean | void> | boolean | void;
@@ -49,6 +58,8 @@ export function TaskBoardView({
   initialBoard = MOCK_TASK_BOARD,
   trailingPanel,
   onCreateTaskGroup,
+  onToggleTask,
+  onCompleteTaskGroupByDrop,
   onUpdateTaskGroup,
   onDeleteTaskGroup,
 }: Props) {
@@ -57,7 +68,14 @@ export function TaskBoardView({
   const nextCardIndexByStatus = useRef<Record<TaskBoardColumnStatus, number>>({ ...INITIAL_CARD_INDEX });
   const sensors = useTaskBoardSensors();
   const { activeTaskGroupId, dropIndicatorId, activeTaskGroup, handleDragStart, handleDragOver, handleDragEnd, handleDragCancel } =
-    useTaskBoardDnd({ board, setBoard });
+    useTaskBoardDnd({
+      board,
+      setBoard,
+      onTaskGroupDropped: ({ taskGroupId, targetStatus, taskIdsToComplete }) => {
+        if (targetStatus !== 'DONE' || taskIdsToComplete.length === 0) return;
+        void onCompleteTaskGroupByDrop?.({ taskGroupId, taskIds: taskIdsToComplete });
+      },
+    });
 
   const openCreateTaskBoardModal = (status: TaskBoardColumnStatus) => {
     setCreatingStatus(status);
@@ -90,8 +108,14 @@ export function TaskBoardView({
     setCreatingStatus(null);
   };
 
-  const handleTaskToggle = (taskGroupId: string, taskId: string, checked: boolean) => {
+  const handleTaskToggle = async (taskGroupId: string, taskId: string, checked: boolean) => {
+    const prevBoard = board;
     setBoard((prev) => applyTaskToggleToBoard(prev, taskGroupId, taskId, checked));
+
+    const toggled = await onToggleTask?.({ taskGroupId, taskId, checked });
+    if (toggled === false) {
+      setBoard(prevBoard);
+    }
   };
 
   const {

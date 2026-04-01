@@ -7,9 +7,14 @@ import { findTaskGroupLocation, parseStatusFromDroppableId } from './taskBoardDn
 type UseTaskBoardDndParams = {
   board: TaskBoard;
   setBoard: Dispatch<SetStateAction<TaskBoard>>;
+  onTaskGroupDropped?: (params: {
+    taskGroupId: string;
+    targetStatus: TaskBoardColumnStatus;
+    taskIdsToComplete: string[];
+  }) => void;
 };
 
-export function useTaskBoardDnd({ board, setBoard }: UseTaskBoardDndParams) {
+export function useTaskBoardDnd({ board, setBoard, onTaskGroupDropped }: UseTaskBoardDndParams) {
   const [activeTaskGroupId, setActiveTaskGroupId] = useState<string | null>(null);
   const [dropIndicatorId, setDropIndicatorId] = useState<string | null>(null);
 
@@ -49,6 +54,12 @@ export function useTaskBoardDnd({ board, setBoard }: UseTaskBoardDndParams) {
     const overId = String(over.id);
     if (activeId === overId) return;
 
+    let droppedPayload: {
+      taskGroupId: string;
+      targetStatus: TaskBoardColumnStatus;
+      taskIdsToComplete: string[];
+    } | null = null;
+
     setBoard((prev) => {
       const columns = prev.columns.map((col) => ({ ...col, taskGroups: [...col.taskGroups] }));
       const loc = findTaskGroupLocation(columns, activeId);
@@ -66,6 +77,11 @@ export function useTaskBoardDnd({ board, setBoard }: UseTaskBoardDndParams) {
 
       const dropTargetStatus = overIsColumn ? overStatusFromId : overCardStatus;
       if (!dropTargetStatus) return prev;
+
+      const taskIdsToComplete =
+        dropTargetStatus === 'DONE'
+          ? activeGroup.tasks.filter((task) => !task.completed).map((task) => task.id)
+          : [];
 
       const nextTasks =
         dropTargetStatus === 'DONE' ? activeGroup.tasks.map((t) => ({ ...t, completed: true })) : activeGroup.tasks;
@@ -91,8 +107,17 @@ export function useTaskBoardDnd({ board, setBoard }: UseTaskBoardDndParams) {
       }
 
       destination.taskGroups.splice(insertIndex, 0, { ...activeGroup, tasks: nextTasks });
+      droppedPayload = {
+        taskGroupId: activeId,
+        targetStatus: dropTargetStatus,
+        taskIdsToComplete,
+      };
       return { ...prev, columns };
     });
+
+    if (droppedPayload) {
+      onTaskGroupDropped?.(droppedPayload);
+    }
   };
 
   const handleDragCancel = () => {

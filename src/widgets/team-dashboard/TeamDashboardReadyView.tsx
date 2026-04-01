@@ -1,10 +1,14 @@
 import Head from 'next/head';
+import { useMemo } from 'react';
+import { useQueries } from '@tanstack/react-query';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
 import { MemberCard } from '@/shared/ui/profile';
 import { TaskBoardView } from '@/features/task-board/ui';
-import { TEAM_CARD_PLACEHOLDER_STATS } from '@/features/group/constants/teamDashboardPlaceholders';
 import type { TeamDashboardViewModel } from '@/features/group/hooks/useTeamDashboard';
+import { useGroupTasksQuery } from '@/features/group/hooks/useGroupTasksQuery';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
+import { getTaskList } from '@/features/task/api/getTaskList';
+import { TASK_QUERY_KEYS } from '@/features/task/lib/queryKeys';
 import { useTeamDashboardMemberActions } from './useTeamDashboardMemberActions';
 import { useTeamDashboardTaskListActions } from './useTeamDashboardTaskListActions';
 import { TeamDashboardInviteModal } from './TeamDashboardInviteModal';
@@ -19,8 +23,9 @@ type Props = {
 
 export function TeamDashboardReadyView({ vm }: Props) {
   const { group, memberCardItems, memberImagesPreview, isFetching } = vm;
+  const { data: groupTasks = [] } = useGroupTasksQuery(group.id);
   const { data: me } = useUserQuery();
-  const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup } =
+  const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup, handleToggleTask, handleCompleteTaskGroupByDrop } =
     useTeamDashboardTaskListActions({ groupId: group.id });
   const {
     isInviteModalOpen,
@@ -38,6 +43,25 @@ export function TeamDashboardReadyView({ vm }: Props) {
   } = useTeamDashboardMemberActions({ groupId: group.id });
   const myMembership = group.members.find((member) => member.userId === me?.id);
   const canManageMembers = myMembership?.role === 'ADMIN';
+  const todayTaskCount = groupTasks.length;
+  const completedTaskCount = groupTasks.filter((task) => task.isCompleted).length;
+  const progressPercent = todayTaskCount > 0 ? Math.round((100 * completedTaskCount) / todayTaskCount) : 0;
+  const taskListQueries = useQueries({
+    queries: group.taskLists.map((taskList) => ({
+      queryKey: TASK_QUERY_KEYS.list({ groupId: group.id, taskListId: taskList.id }),
+      queryFn: () => getTaskList({ groupId: group.id, taskListId: taskList.id }),
+      enabled: Boolean(group.id),
+    })),
+  });
+  const boardTaskLists = useMemo(
+    () =>
+      group.taskLists.map((taskList, index) => ({
+        ...taskList,
+        tasks: taskListQueries[index]?.data?.tasks ?? taskList.tasks,
+      })),
+    [group.taskLists, taskListQueries],
+  );
+  const initialBoard = useMemo(() => toTaskBoard(boardTaskLists), [boardTaskLists]);
 
   return (
     <>
@@ -62,9 +86,9 @@ export function TeamDashboardReadyView({ vm }: Props) {
         {/* TODO: 팀 수정/삭제 — 모달 + useUpdateGroupMutation / useDeleteGroupMutation. 에러 토스트는 각 뮤테이션 onError에서만 처리. */}
         <TeamCard
           teamName={group.name}
-          progressPercent={TEAM_CARD_PLACEHOLDER_STATS.progressPercent}
-          todayTaskCount={TEAM_CARD_PLACEHOLDER_STATS.todayTaskCount}
-          completedTaskCount={TEAM_CARD_PLACEHOLDER_STATS.completedTaskCount}
+          progressPercent={progressPercent}
+          todayTaskCount={todayTaskCount}
+          completedTaskCount={completedTaskCount}
           memberImages={memberImagesPreview}
           members={memberCardItems}
           memberCount={group.members.length}
@@ -77,8 +101,10 @@ export function TeamDashboardReadyView({ vm }: Props) {
           </h2>
           <div className="min-w-0 overflow-x-auto pb-2">
             <TaskBoardView
-              initialBoard={toTaskBoard(group.taskLists)}
+              initialBoard={initialBoard}
               onCreateTaskGroup={handleCreateTaskGroup}
+              onToggleTask={handleToggleTask}
+              onCompleteTaskGroupByDrop={handleCompleteTaskGroupByDrop}
               onUpdateTaskGroup={handleUpdateTaskGroup}
               onDeleteTaskGroup={handleDeleteTaskGroup}
               trailingPanel={

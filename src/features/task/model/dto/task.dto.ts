@@ -8,6 +8,7 @@ export type UserDto = {
 
 export type TaskDto = {
   id: number;
+  taskListId?: number | null;
   name: string;
   description?: string | null;
   date?: string | null;
