@@ -186,6 +186,13 @@ export function AppSidebar({
               isExpanded={expanded}
               icon={<BoardIcon className="text-slate-300" />}
             />
+            <SidebarNavItem
+              label="팀 참여하기"
+              href={ROUTES.ACCEPT_INVITATION}
+              isExpanded={expanded}
+              isSelected={router.pathname === '/accept-invitation'}
+              icon={<TeamIcon className="text-slate-300" />}
+            />
             {isLoggedIn && hasHistory && (
               <SidebarNavItem
                 label="마이 히스토리"
