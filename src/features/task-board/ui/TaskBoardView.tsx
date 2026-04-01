@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -13,7 +13,7 @@ import type {
   TaskBoardTaskGroup,
 } from '../model/taskBoard.types';
 import { MOCK_TASK_BOARD } from '../lib/mockData';
-import { findTaskGroupLocation } from '../lib/taskBoardDnd.utils';
+import { applyTaskToggleToBoard } from '../lib/applyTaskToggleToBoard';
 import { useTaskBoardDnd } from '../lib/useTaskBoardDnd';
 import { useTaskBoardSensors } from '../lib/useTaskBoardSensors';
 import type { ReactNode } from 'react';
@@ -22,6 +22,7 @@ import { TaskCard } from './TaskCard';
 import { CreateTaskBoardModal } from './CreateTaskBoardModal';
 import { useTaskBoardCardActions } from './useTaskBoardCardActions';
 import { TaskBoardCardActionModals } from './TaskBoardCardActionModals';
+import { useTaskBoardBoard } from './useTaskBoardBoard';
 
 type Props = {
   initialBoard?: TaskBoard;
@@ -49,7 +50,7 @@ export function TaskBoardView({
   onUpdateTaskGroup,
   onDeleteTaskGroup,
 }: Props) {
-  const [board, setBoard] = useState<TaskBoard>(initialBoard);
+  const { board, setBoard, setCardNameLocal, removeCardLocal } = useTaskBoardBoard(initialBoard);
   const [creatingStatus, setCreatingStatus] = useState<TaskBoardColumnStatus | null>(null);
   const nextCardIndexByStatus = useRef<Record<TaskBoardColumnStatus, number>>({ ...INITIAL_CARD_INDEX });
   const sensors = useTaskBoardSensors();
@@ -82,53 +83,7 @@ export function TaskBoardView({
   };
 
   const handleTaskToggle = (taskGroupId: string, taskId: string, checked: boolean) => {
-    setBoard((prev) => {
-      const columns = prev.columns.map((col) => ({ ...col, taskGroups: [...col.taskGroups] }));
-      const loc = findTaskGroupLocation(columns, taskGroupId);
-      if (!loc) return prev;
-
-      const { status: fromStatus } = loc;
-      const updatedTasks = loc.taskGroup.tasks.map((t) => (t.id === taskId ? { ...t, completed: checked } : t));
-      const nextGroup: TaskBoardTaskGroup = { ...loc.taskGroup, tasks: updatedTasks };
-      const allCompleted = nextGroup.tasks.length > 0 && nextGroup.tasks.every((t) => t.completed);
-      const derivedStatus: TaskBoardColumnStatus = allCompleted ? 'DONE' : 'IN_PROGRESS';
-
-      // remove from all columns first
-      for (const col of columns) {
-        col.taskGroups = col.taskGroups.filter((g) => g.id !== taskGroupId);
-      }
-
-      const destination = columns.find((c) => c.status === derivedStatus);
-      if (!destination) return prev;
-
-      // keep "more recent" on top when status changes
-      const insertIndex = derivedStatus === fromStatus ? loc.index : 0;
-      destination.taskGroups.splice(insertIndex, 0, nextGroup);
-
-      return { ...prev, columns };
-    });
-  };
-
-  const setCardNameLocal = (taskGroupId: string, title: string) => {
-    setBoard((prev) => ({
-      ...prev,
-      columns: prev.columns.map((col) => ({
-        ...col,
-        taskGroups: col.taskGroups.map((group) =>
-          group.id === taskGroupId ? { ...group, name: title } : group,
-        ),
-      })),
-    }));
-  };
-
-  const removeCardLocal = (taskGroupId: string) => {
-    setBoard((prev) => ({
-      ...prev,
-      columns: prev.columns.map((col) => ({
-        ...col,
-        taskGroups: col.taskGroups.filter((group) => group.id !== taskGroupId),
-      })),
-    }));
+    setBoard((prev) => applyTaskToggleToBoard(prev, taskGroupId, taskId, checked));
   };
 
   const {
@@ -148,10 +103,6 @@ export function TaskBoardView({
     setCardNameLocal,
     removeCardLocal,
   });
-
-  useEffect(() => {
-    setBoard(initialBoard);
-  }, [initialBoard]);
 
   return (
     <DndContext

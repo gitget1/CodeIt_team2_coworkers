@@ -22,19 +22,22 @@ export function useTaskBoardCardActions({
     setEditedTitle(currentTitle);
   };
 
+  const closeEditModal = () => setEditingCard(null);
+
   const handleConfirmEditCard = async () => {
     if (!editingCard) return;
     const trimmedTitle = editedTitle.trim();
     if (!trimmedTitle || trimmedTitle === editingCard.title) {
-      setEditingCard(null);
+      closeEditModal();
       return;
     }
 
-    const updated = await onUpdateTaskGroup?.({ taskGroupId: editingCard.taskGroupId, title: trimmedTitle });
-    if (updated === false) return;
+    // false: API/비즈니스 실패. undefined: 콜백 없음(목 데이터 등) → 로컬만 반영.
+    const ok = await onUpdateTaskGroup?.({ taskGroupId: editingCard.taskGroupId, title: trimmedTitle });
+    if (ok === false) return;
 
     setCardNameLocal(editingCard.taskGroupId, trimmedTitle);
-    setEditingCard(null);
+    closeEditModal();
   };
 
   const openDeleteCardModal = (taskGroupId: string) => {
@@ -44,8 +47,8 @@ export function useTaskBoardCardActions({
   const handleConfirmDeleteCard = async () => {
     if (!deletingCardId) return;
 
-    const deleted = await onDeleteTaskGroup?.({ taskGroupId: deletingCardId });
-    if (deleted === false) return;
+    const ok = await onDeleteTaskGroup?.({ taskGroupId: deletingCardId });
+    if (ok === false) return;
 
     removeCardLocal(deletingCardId);
     setDeletingCardId(null);

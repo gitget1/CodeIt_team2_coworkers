@@ -69,7 +69,8 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       };
     });
 
-    return false;
+    // true: 보드 훅에서 모달 닫기·로컬 반영 허용. 캐시로도 동기화되므로 로컬 갱신은 중복일 수 있음.
+    return true;
   };
 
   const handleDeleteTaskGroup = async ({
@@ -91,7 +92,7 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       };
     });
     toast.success('할 일 목록을 삭제했습니다.');
-    return false;
+    return true;
   };
 
   return {
