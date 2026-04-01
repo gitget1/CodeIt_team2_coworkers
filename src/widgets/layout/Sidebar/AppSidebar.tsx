@@ -27,6 +27,7 @@ import { getImageSrc } from '@/shared/lib/getImageSrc';
 import logoLg from '@/shared/assets/images/logo-lg.png';
 import userIcon from '@/shared/assets/icons/user.svg';
 import { MemberChip, Profile } from '@/shared/ui/profile';
+import { useUserQuery } from '@/features/user/hooks/useUserQuery';
 import { useSidebarTeamItems } from './useSidebarTeamItems';
 
 const defaultProfileImgSrc = getImageSrc(userIcon);
@@ -43,6 +44,8 @@ function DefaultFooter({
   mobileDrawer?: boolean;
   onLoginClick?: () => void;
 }) {
+  const { data: user } = useUserQuery();
+
   if (!isLoggedIn) {
     const showProfileImage = isExpanded && !mobileDrawer;
 
@@ -83,22 +86,25 @@ function DefaultFooter({
     );
   }
 
-  // TODO: 인증/프로필 API 연동 후 하드코딩 제거 — 실제 사용자 이름·팀명·프로필 이미지·ariaLabel을 props 또는 전역 상태로 주입
+  const profileImage = user?.profileImage;
+  const displayName = user?.name?.trim() || '사용자';
+  const displayEmail = user?.email ?? '';
+
   return (
     <SidebarFooter>
       {isExpanded ? (
         <MemberChip
-          imageSrc={defaultProfileImgSrc}
-          name="안해나"
-          teamName="경영관리팀"
+          imageSrc={profileImage ?? defaultProfileImgSrc}
+          name={displayName}
+          email={displayEmail || undefined}
           size="lg"
           avatarClassName="bg-background-tertiary"
         />
       ) : (
         <Profile
           size="lg"
-          imageSrc={defaultProfileImgSrc}
-          ariaLabel="프로필"
+          imageSrc={profileImage ?? defaultProfileImgSrc}
+          ariaLabel={`${displayName} 프로필`}
           className="bg-background-tertiary"
         />
       )}
