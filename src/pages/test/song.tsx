@@ -29,7 +29,7 @@ export default function HistoryPage() {
 
           {/* 월 선택 */}
           <div className="mb-6 flex items-center justify-start">
-            <MonthSelector currentMonth="2025년 5월" />
+            {/* <MonthSelector currentMonth="2025년 5월" /> */}
           </div>
           {isEmpty ? (
             <div className="mt-12">
@@ -64,7 +64,6 @@ export default function HistoryPage() {
                     name="test2"
                     date={new Date('2026-03-09T00:00:00.000Z')}
                     frequency="DAILY"
-                    commentCount={3}
                   />
                 </DateGroup>
 
@@ -74,14 +73,12 @@ export default function HistoryPage() {
                     name="가구 사기"
                     date={new Date('2026-03-07T00:00:00.000Z')}
                     frequency="DAILY"
-                    commentCount={2}
                   />
                   <HistoryTaskItem
                     id={3}
                     name="테스트임다"
                     date={new Date('2026-03-07T00:00:00.000Z')}
                     frequency="DAILY"
-                    commentCount={0}
                   />
                 </DateGroup>
 
@@ -91,7 +88,6 @@ export default function HistoryPage() {
                     name="댓글이 없을시에는 comment 없음"
                     date={new Date('2026-03-07T00:00:00.000Z')}
                     frequency="DAILY"
-                    commentCount={0}
                   />
                 </DateGroup>
               </section>

@@ -10,10 +10,14 @@ import { useGetUserHistory } from '@/features/user/hooks/useGetUserHistory';
 import { cn } from '@/shared/lib/cn';
 import { useHistoryBoardData } from '../hooks/useHistoryBoardData';
 
-export function HistoryBoard() {
+interface HistoryBoardProps {
+  selectedCategory: string | null;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>; // useState상위로 넘길떄
+}
+
+export function HistoryBoard({ selectedCategory, setSelectedCategory }: HistoryBoardProps) {
   const [isClient, setIsClient] = useState(false);
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const [currentDate, setCurrentDate] = useState(new Date());
 

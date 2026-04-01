@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useGetUserHistory } from '@/features/user/hooks/useGetUserHistory';
 import {
   Sidebar,
   SidebarHeader,
@@ -9,7 +11,16 @@ import {
   SidebarNavItem,
 } from '@/shared/ui/Sidebar';
 import { cn } from '@/shared/lib/cn';
-import { TeamIcon, BoardIcon, PlusIcon, ArrowDownIcon, FoldLeftIcon, FoldRightIcon, LogoIcon, CloseIcon } from './sidebar-icons';
+import {
+  TeamIcon,
+  BoardIcon,
+  PlusIcon,
+  ArrowDownIcon,
+  FoldLeftIcon,
+  FoldRightIcon,
+  LogoIcon,
+  CloseIcon,
+} from './sidebar-icons';
 import { ROUTES } from '@/shared/constants/routes';
 import type { AppSidebarProps } from './types';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
@@ -39,7 +50,13 @@ function DefaultFooter({
       <SidebarFooter className="py-4">
         <div className="flex items-center gap-3">
           {showProfileImage && (
-            <span className={cn('flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden', defaultProfileBgClass)} aria-hidden>
+            <span
+              className={cn(
+                'flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden',
+                defaultProfileBgClass,
+              )}
+              aria-hidden
+            >
               <img src={defaultProfileImgSrc} alt="" className="h-full w-full object-contain" />
             </span>
           )}
@@ -47,15 +64,15 @@ function DefaultFooter({
             <button
               type="button"
               onClick={onLoginClick}
-              className="flex-1 min-w-0 rounded-lg py-2 text-center text-sm font-medium text-txt-primary transition-colors hover:bg-background-tertiary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+              className="text-txt-primary hover:bg-background-tertiary focus-visible:ring-brand-primary min-w-0 flex-1 rounded-lg py-2 text-center text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               로그인
             </button>
           ) : (
             <span
               className={cn(
-                'text-sm font-medium text-txt-primary',
-                !isExpanded && 'flex-1 min-w-0 text-center',
+                'text-txt-primary text-sm font-medium',
+                !isExpanded && 'min-w-0 flex-1 text-center',
               )}
             >
               로그인
@@ -78,7 +95,12 @@ function DefaultFooter({
           avatarClassName="bg-background-tertiary"
         />
       ) : (
-        <Profile size="lg" imageSrc={defaultProfileImgSrc} ariaLabel="프로필" className="bg-background-tertiary" />
+        <Profile
+          size="lg"
+          imageSrc={defaultProfileImgSrc}
+          ariaLabel="프로필"
+          className="bg-background-tertiary"
+        />
       )}
     </SidebarFooter>
   );
@@ -94,9 +116,13 @@ export function AppSidebar({
   onClose,
   onLoginClick,
 }: AppSidebarProps) {
+  const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isTeamListOpen, setIsTeamListOpen] = useState(true);
   const teamItems = useSidebarTeamItems({ teams, isLoggedIn });
+
+  const { data: historyList } = useGetUserHistory();
+  const hasHistory = historyList && historyList.length > 0;
 
   const handleToggle = () => setIsExpanded((v) => !v);
   const handleTeamListToggle = () => setIsTeamListOpen((v) => !v);
@@ -107,7 +133,16 @@ export function AppSidebar({
       <Sidebar
         isExpanded={expanded}
         onToggle={mobileDrawer ? () => {} : handleToggle}
-        footer={footer ?? <DefaultFooter isExpanded={expanded} isLoggedIn={isLoggedIn} mobileDrawer={mobileDrawer} onLoginClick={onLoginClick} />}
+        footer={
+          footer ?? (
+            <DefaultFooter
+              isExpanded={expanded}
+              isLoggedIn={isLoggedIn}
+              mobileDrawer={mobileDrawer}
+              onLoginClick={onLoginClick}
+            />
+          )
+        }
         className={mobileDrawer ? 'h-full' : undefined}
       >
         {mobileDrawer ? (
@@ -135,7 +170,7 @@ export function AppSidebar({
                     className="h-8 w-auto shrink-0 object-contain object-left"
                   />
                 ) : (
-                  <span className="flex items-center justify-center text-brand-primary">
+                  <span className="text-brand-primary flex items-center justify-center">
                     <LogoIcon />
                   </span>
                 )}
@@ -144,76 +179,86 @@ export function AppSidebar({
           />
         )}
         <SidebarContent>
-        <nav className="flex flex-col gap-2 px-2">
-          <SidebarNavItem
-            label="자유게시판"
-            href={ROUTES.FREE_BOARD}
-            isExpanded={expanded}
-            icon={<BoardIcon className="text-slate-300" />}
-          />
-          {isLoggedIn && (
-            <>
-              <div className="my-2 border-t border-[var(--color-background-tertiary)]" role="separator" />
-              {expanded ? (
-                <button
-                  type="button"
-                  onClick={handleTeamListToggle}
-                  className={cn(
-                    'flex items-center gap-2 w-full min-h-[52px] px-3 rounded-lg text-left text-base font-medium text-txt-default',
-                    'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2',
-                  )}
-                  aria-expanded={isTeamListOpen}
-                  aria-label={isTeamListOpen ? '팀 목록 접기' : '팀 목록 펼치기'}
-                >
-                  <span className="shrink-0 flex items-center justify-center w-5 h-5 [&>svg]:w-5 [&>svg]:h-5 text-slate-300">
-                    <TeamIcon className="text-slate-300" />
-                  </span>
-                  <span className="truncate flex-1">팀 선택</span>
-                  <span
+          <nav className="flex flex-col gap-2 px-2">
+            <SidebarNavItem
+              label="자유게시판"
+              href={ROUTES.FREE_BOARD}
+              isExpanded={expanded}
+              icon={<BoardIcon className="text-slate-300" />}
+            />
+            {isLoggedIn && hasHistory && (
+              <SidebarNavItem
+                label="마이 히스토리"
+                href="/myhistory"
+                isExpanded={expanded}
+                isSelected={router.pathname.startsWith('/myhistory')}
+                icon={<BoardIcon className="text-slate-300" />}
+              />
+            )}
+
+            {isLoggedIn && (
+              <>
+                <div className="border-background-tertiary my-2 border-t" role="separator" />
+                {expanded ? (
+                  <button
+                    type="button"
+                    onClick={handleTeamListToggle}
                     className={cn(
-                      'shrink-0 transition-transform duration-200',
-                      !isTeamListOpen && 'rotate-180',
+                      'text-txt-default flex min-h-[52px] w-full items-center gap-2 rounded-lg px-3 text-left text-base font-medium',
+                      'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
+                      'focus-visible:ring-brand-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     )}
+                    aria-expanded={isTeamListOpen}
+                    aria-label={isTeamListOpen ? '팀 목록 접기' : '팀 목록 펼치기'}
                   >
-                    <ArrowDownIcon />
-                  </span>
-                </button>
-              ) : null}
-              {(isTeamListOpen || !expanded) && (
-                <>
-                  {teamItems.map(({ id, label }) => (
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-slate-300 [&>svg]:h-5 [&>svg]:w-5">
+                      <TeamIcon className="text-slate-300" />
+                    </span>
+                    <span className="flex-1 truncate">팀 선택</span>
+                    <span
+                      className={cn(
+                        'shrink-0 transition-transform duration-200',
+                        !isTeamListOpen && 'rotate-180',
+                      )}
+                    >
+                      <ArrowDownIcon />
+                    </span>
+                  </button>
+                ) : null}
+                {(isTeamListOpen || !expanded) && (
+                  <>
+                    {teamItems.map(({ id, label }) => (
+                      <SidebarNavItem
+                        key={id}
+                        label={label}
+                        isSelected={selectedTeamId === id}
+                        isExpanded={expanded}
+                        onClick={() => onTeamSelect?.(id)}
+                        icon={<TeamIcon className="text-slate-300" />}
+                      />
+                    ))}
                     <SidebarNavItem
-                      key={id}
-                      label={label}
-                      isSelected={selectedTeamId === id}
+                      label="팀 추가하기"
+                      href={ROUTES.TEAM_CREATE}
                       isExpanded={expanded}
-                      onClick={() => onTeamSelect?.(id)}
-                      icon={<TeamIcon className="text-slate-300" />}
+                      icon={<PlusIcon />}
+                      className={cn(
+                        expanded &&
+                          'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-[52px] w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
+                      )}
                     />
-                  ))}
-                  <SidebarNavItem
-                    label="팀 추가하기"
-                    href={ROUTES.TEAM_CREATE}
-                    isExpanded={expanded}
-                    icon={<PlusIcon />}
-                    className={cn(
-                      expanded &&
-                        'min-h-[52px] w-full justify-center gap-1 rounded-lg border border-brand-primary bg-background-primary py-2 px-3 text-center text-brand-primary hover:bg-brand-secondary hover:text-brand-primary',
-                    )}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </nav>
-      </SidebarContent>
-    </Sidebar>
+                  </>
+                )}
+              </>
+            )}
+          </nav>
+        </SidebarContent>
+      </Sidebar>
       {!mobileDrawer && !expanded && (
         <button
           type="button"
           onClick={handleToggle}
-          className="absolute right-0 top-7 z-10 flex h-8 w-8 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-[var(--color-background-tertiary)] bg-background-primary text-txt-default shadow-sm hover:bg-background-tertiary hover:text-txt-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+          className="bg-background-primary text-txt-default hover:bg-background-tertiary hover:text-txt-primary focus-visible:ring-brand-primary absolute top-7 right-0 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-background-tertiary)] shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           aria-label="사이드바 열기"
           aria-expanded={false}
         >
