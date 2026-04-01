@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { MemberCardMembersSection } from './MemberCardMembersSection';
-import { useIsMobileOrTablet } from './useIsMobileOrTablet';
 import { useModal } from '@/shared/ui/modal';
 import type { MemberCardItem, MemberCardModalMode, MemberCardProps } from './memberCard.types';
 import { MemberCardModal } from './MemberCardModal';
@@ -19,24 +18,45 @@ export function MemberCard({
 }: MemberCardProps) {
   const [selectedMember, setSelectedMember] = useState<MemberCardItem | null>(null);
   const [modalMode, setModalMode] = useState<MemberCardModalMode>('member');
-  const isMobileOrTablet = useIsMobileOrTablet();
+  /** 「더보기」목록에서 멤버를 골라 상세로 들어간 경우 — 뒤로가기 표시 */
+  const [memberDetailFromAllList, setMemberDetailFromAllList] = useState(false);
   const { isOpen, open, close } = useModal(false);
 
   const handleMemberClick = useCallback(
     (member: MemberCardItem) => {
-      if (!isMobileOrTablet) return;
+      setMemberDetailFromAllList(false);
       setSelectedMember(member);
       setModalMode('member');
       open();
     },
-    [isMobileOrTablet, open],
+    [open],
   );
 
+  const handleMemberClickInList = useCallback((member: MemberCardItem) => {
+    setMemberDetailFromAllList(true);
+    setSelectedMember(member);
+    setModalMode('member');
+  }, []);
+
+  const handleBackToList = useCallback(() => {
+    setMemberDetailFromAllList(false);
+    setSelectedMember(null);
+    setModalMode('all');
+  }, []);
+
   const handleMoreClick = useCallback(() => {
+    setMemberDetailFromAllList(false);
     setSelectedMember(null);
     setModalMode('all');
     open();
   }, [open]);
+
+  const handleModalClose = useCallback(() => {
+    close();
+    setSelectedMember(null);
+    setModalMode('member');
+    setMemberDetailFromAllList(false);
+  }, [close]);
 
   const sortedMembers = useMemo(
     () =>
@@ -47,7 +67,7 @@ export function MemberCard({
       }),
     [members],
   );
-  const rowInteractive = isMemberRowInteractive ?? isMobileOrTablet;
+  const rowInteractive = isMemberRowInteractive ?? true;
 
   return (
     <>
@@ -84,10 +104,12 @@ export function MemberCard({
       <MemberCardModal
         isOpen={isOpen}
         open={open}
-        close={close}
+        close={handleModalClose}
         modalMode={modalMode}
         selectedMember={selectedMember}
         members={sortedMembers}
+        onMemberClickInList={handleMemberClickInList}
+        onBackToList={memberDetailFromAllList ? handleBackToList : undefined}
       />
     </>
   );

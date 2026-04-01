@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Profile } from '@/shared/ui/profile';
 import type { ImageAsset } from '@/shared/ui/profile';
@@ -59,6 +59,10 @@ export function TeamCard({
   statsClassName,
 }: TeamCardProps) {
   const { isOpen: isMemberModalOpen, open: openMemberModal, close: closeMemberModal } = useModal(false);
+  const [memberModalMode, setMemberModalMode] = useState<'member' | 'all'>('all');
+  const [memberModalSelected, setMemberModalSelected] = useState<MemberCardItem | null>(null);
+  const [memberModalFromList, setMemberModalFromList] = useState(false);
+
   const normalizedMembers = useMemo<MemberCardItem[]>(
     () =>
       members && members.length > 0
@@ -70,6 +74,33 @@ export function TeamCard({
           })),
     [memberImages, members],
   );
+
+  const openFullMemberModal = useCallback(() => {
+    setMemberModalMode('all');
+    setMemberModalSelected(null);
+    setMemberModalFromList(false);
+    openMemberModal();
+  }, [openMemberModal]);
+
+  const handleMemberClickInList = useCallback((member: MemberCardItem) => {
+    setMemberModalFromList(true);
+    setMemberModalSelected(member);
+    setMemberModalMode('member');
+  }, []);
+
+  const handleBackToMemberList = useCallback(() => {
+    setMemberModalFromList(false);
+    setMemberModalSelected(null);
+    setMemberModalMode('all');
+  }, []);
+
+  const handleMemberModalClose = useCallback(() => {
+    closeMemberModal();
+    setMemberModalMode('all');
+    setMemberModalSelected(null);
+    setMemberModalFromList(false);
+  }, [closeMemberModal]);
+
   const visibleMemberImages = memberImages.slice(0, 3);
   const showMemberSummary = visibleMemberImages.length > 0 || normalizedMembers.length > 0 || typeof memberCount === 'number';
 
@@ -85,7 +116,7 @@ export function TeamCard({
         {showMemberSummary && (
           <button
             type="button"
-            onClick={openMemberModal}
+            onClick={openFullMemberModal}
             aria-label="전체 멤버 보기"
             className="inline-flex h-[40px] items-center rounded-[12px] border border-[var(--Border-Primary,#E2E8F0)] px-[10px] lg:hidden"
           >
@@ -182,10 +213,12 @@ export function TeamCard({
       <MemberCardModal
         isOpen={isMemberModalOpen}
         open={openMemberModal}
-        close={closeMemberModal}
-        modalMode="all"
-        selectedMember={null}
+        close={handleMemberModalClose}
+        modalMode={memberModalMode}
+        selectedMember={memberModalSelected}
         members={normalizedMembers}
+        onMemberClickInList={handleMemberClickInList}
+        onBackToList={memberModalFromList ? handleBackToMemberList : undefined}
       />
     </article>
   );

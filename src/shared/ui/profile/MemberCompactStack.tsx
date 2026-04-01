@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { useModal } from '@/shared/ui/modal';
 import type { MemberCardItem } from './memberCard.types';
@@ -27,6 +27,9 @@ export function MemberCompactStack({
   onOpen,
 }: MemberCompactStackProps) {
   const { isOpen, open, close } = useModal(false);
+  const [modalMode, setModalMode] = useState<'member' | 'all'>('all');
+  const [selectedMember, setSelectedMember] = useState<MemberCardItem | null>(null);
+  const [detailFromList, setDetailFromList] = useState(false);
 
   const sortedMembers = useMemo(() => sortMembersAdminsFirst(members), [members]);
   const totalCount = members.length;
@@ -38,8 +41,30 @@ export function MemberCompactStack({
 
   const handleOpen = useCallback(() => {
     onOpen?.();
+    setModalMode('all');
+    setSelectedMember(null);
+    setDetailFromList(false);
     open();
   }, [onOpen, open]);
+
+  const handleMemberClickInList = useCallback((member: MemberCardItem) => {
+    setDetailFromList(true);
+    setSelectedMember(member);
+    setModalMode('member');
+  }, []);
+
+  const handleBackToList = useCallback(() => {
+    setDetailFromList(false);
+    setSelectedMember(null);
+    setModalMode('all');
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    close();
+    setModalMode('all');
+    setSelectedMember(null);
+    setDetailFromList(false);
+  }, [close]);
 
   const stack = (
     <div className="flex min-w-0 flex-1 items-center">
@@ -96,10 +121,12 @@ export function MemberCompactStack({
       <MemberCardModal
         isOpen={isOpen}
         open={open}
-        close={close}
-        modalMode="all"
-        selectedMember={null}
+        close={handleModalClose}
+        modalMode={modalMode}
+        selectedMember={selectedMember}
         members={sortedMembers}
+        onMemberClickInList={handleMemberClickInList}
+        onBackToList={detailFromList ? handleBackToList : undefined}
       />
     </>
   );

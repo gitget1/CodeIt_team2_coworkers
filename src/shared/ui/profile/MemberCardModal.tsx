@@ -14,29 +14,53 @@ type Props = {
   modalMode: MemberCardModalMode;
   selectedMember: MemberCardItem | null;
   members: MemberCardItem[];
+  /** 「전체 멤버」목록에서 행 클릭 시 상세로 */
+  onMemberClickInList?: (member: MemberCardItem) => void;
+  /** 상세에서 목록으로 (목록에서 들어온 경우만) */
+  onBackToList?: () => void;
 };
 
-export function MemberCardModal({ isOpen, open, close, modalMode, selectedMember, members }: Props) {
+export function MemberCardModal({
+  isOpen,
+  open,
+  close,
+  modalMode,
+  selectedMember,
+  members,
+  onMemberClickInList,
+  onBackToList,
+}: Props) {
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
-      <Modal.Content size="sm" className="pb-4">
-        <Modal.Header>
-          <Modal.Title>{modalMode === 'all' ? '전체 멤버' : '멤버 정보'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="flex min-h-0 min-w-0 flex-1 flex-col !overflow-hidden px-8 py-2">
-          <div
-            className={cn(
-              'min-h-0 min-w-0 w-full flex-1 overflow-y-auto overscroll-y-contain [scrollbar-gutter:stable]',
-              modalMode === 'all' && MEMBER_CARD_MODAL_LIST_MAX_H,
-            )}
-          >
-            {modalMode === 'member' ? (
-              <MemberCardModalMember member={selectedMember} />
-            ) : (
-              <MemberCardModalMembersList members={members} />
-            )}
-          </div>
-        </Modal.Body>
+      <Modal.Content size="sm" className={modalMode === 'member' ? 'pb-0' : 'pb-4'}>
+        {modalMode === 'member' ? (
+          <>
+            <Modal.Header className="sr-only">
+              <Modal.Title>
+                {selectedMember ? `${selectedMember.name} 멤버 정보` : '멤버 정보'}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="!overflow-visible px-8 pb-8 pt-14">
+              <MemberCardModalMember member={selectedMember} onBackToList={onBackToList} />
+            </Modal.Body>
+          </>
+        ) : (
+          <>
+            <Modal.Header>
+              <Modal.Title>전체 멤버</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="flex min-h-0 min-w-0 flex-1 flex-col !overflow-hidden px-8 py-2">
+              <div
+                className={cn(
+                  'min-h-0 min-w-0 w-full flex-1 overflow-y-auto overscroll-y-contain [scrollbar-gutter:stable]',
+                  MEMBER_CARD_MODAL_LIST_MAX_H,
+                )}
+              >
+                <MemberCardModalMembersList members={members} onMemberClick={onMemberClickInList} />
+              </div>
+            </Modal.Body>
+          </>
+        )}
       </Modal.Content>
     </Modal>
   );
