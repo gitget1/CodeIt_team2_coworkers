@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IconClose } from '../icons';
 import useClickOutside from '@/shared/hooks/useClickOutside';
@@ -7,6 +7,7 @@ import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap';
 import { useEscapeKey } from '@/shared/hooks/useEscapeKey';
 import { useModalContext } from './Modal';
+import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion';
 
 const MODAL_SIZES = {
   sm: 'sm:w-[375px]',
@@ -15,10 +16,11 @@ const MODAL_SIZES = {
 
 type ModalSize = keyof typeof MODAL_SIZES;
 
-interface ModalContentProps extends React.ComponentProps<'div'> {
+interface ModalContentProps extends HTMLMotionProps<'div'> {
   closeOnOutsideClick?: boolean;
   showCloseButton?: boolean;
   size?: ModalSize;
+  children?: ReactNode;
 }
 
 const modalStyles = {
@@ -58,32 +60,46 @@ export function ModalContent({
   useFocusTrap(isOpen, modalRef);
   useEscapeKey(isOpen, close);
 
-  if (!mounted || !isOpen) return null;
+  if (!mounted) return null;
 
   return createPortal(
-    <div className={modalStyles.dimmed}>
-      <div
-        ref={modalRef}
-        className={cn(modalStyles.content, MODAL_SIZES[size], className)}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={isTitleRendered ? titleId : undefined}
-        aria-describedby={isDescriptionRendered ? descriptionId : undefined}
-        {...props}
-      >
-        {showCloseButton && (
-          <button
-            type="button"
-            onClick={close}
-            className={modalStyles.closeButton}
-            aria-label="닫기"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className={modalStyles.dimmed}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.div
+            ref={modalRef}
+            className={cn(modalStyles.content, MODAL_SIZES[size], className)}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: 'spring', bounce: 0.3, duration: 0.4 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={isTitleRendered ? titleId : undefined}
+            aria-describedby={isDescriptionRendered ? descriptionId : undefined}
+            {...props}
           >
-            <IconClose size={24} />
-          </button>
-        )}
-        {children}
-      </div>
-    </div>,
+            {showCloseButton && (
+              <button
+                type="button"
+                onClick={close}
+                className={modalStyles.closeButton}
+                aria-label="닫기"
+              >
+                <IconClose size={24} />
+              </button>
+            )}
+            {children}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
     document.body,
   );
 }
