@@ -15,10 +15,12 @@ export function useTeamDashboardRemoveMemberActions({ groupId }: Params) {
     close: closeRemoveMemberModal,
   } = useModal(false);
 
-  const [isRemovingMember, setIsRemovingMember] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<MemberCardItem | null>(null);
 
-  const { mutateAsync: removeGroupMember } = useRemoveGroupMemberMutation();
+  const {
+    mutateAsync: removeGroupMember,
+    isPending: isRemovingMember,
+  } = useRemoveGroupMemberMutation();
 
   const handleRemoveMemberRequest = (member: MemberCardItem) => {
     setMemberToRemove(member);
@@ -34,7 +36,6 @@ export function useTeamDashboardRemoveMemberActions({ groupId }: Params) {
       return;
     }
 
-    setIsRemovingMember(true);
     try {
       await removeGroupMember({ groupId, memberUserId });
       toast.success(`${memberToRemove.name}님을 팀에서 제외했습니다.`);
@@ -42,8 +43,6 @@ export function useTeamDashboardRemoveMemberActions({ groupId }: Params) {
       closeRemoveMemberModal();
     } catch {
       toast.error('멤버 제거에 실패했습니다.');
-    } finally {
-      setIsRemovingMember(false);
     }
   };
 
