@@ -4,6 +4,8 @@ import { useQueries } from '@tanstack/react-query';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
 import { MemberCard } from '@/shared/ui/profile';
 import { TaskBoardView } from '@/features/task-board/ui';
+import { TASK_QUERY_KEYS } from '@/features/task/lib/queryKeys';
+import { getTaskList } from '@/features/task/api/getTaskList';
 import type { TeamDashboardViewModel } from '@/features/group/hooks/useTeamDashboard';
 import { useGroupTasksQuery } from '@/features/group/hooks/useGroupTasksQuery';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
