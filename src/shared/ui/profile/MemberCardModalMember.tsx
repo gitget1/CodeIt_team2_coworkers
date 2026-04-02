@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { toast } from 'sonner';
 import { getImageSrc } from '@/shared/lib/getImageSrc';
 import { IconUser } from '@/shared/ui/icons';
 import type { MemberCardItem } from './memberCard.types';
+import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard';
 
 type Props = {
   member: MemberCardItem | null;
@@ -12,20 +12,19 @@ type Props = {
 
 export function MemberCardModalMember({ member, onBackToList }: Props) {
   const [imgError, setImgError] = useState(false);
+  const { copyText } = useCopyToClipboard();
 
   if (!member) return null;
 
   const email = member.email?.trim() ?? '';
-  const showImage = member.imageSrc != null && !imgError;
+  const imageSrc = member.imageSrc;
+  const showImage = imageSrc != null && !imgError;
 
   const handleCopyEmail = async () => {
-    if (!email) return;
-    try {
-      await navigator.clipboard.writeText(email);
-      toast.success('이메일이 복사되었습니다.');
-    } catch {
-      toast.error('이메일 복사에 실패했습니다.');
-    }
+    await copyText(email, {
+      successMessage: '이메일이 복사되었습니다.',
+      errorMessage: '이메일 복사에 실패했습니다.',
+    });
   };
 
   return (
@@ -42,7 +41,7 @@ export function MemberCardModalMember({ member, onBackToList }: Props) {
       <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background-tertiary">
         {showImage ? (
           <img
-            src={getImageSrc(member.imageSrc)}
+            src={getImageSrc(imageSrc)}
             alt=""
             className="h-full w-full object-cover"
             onError={() => setImgError(true)}

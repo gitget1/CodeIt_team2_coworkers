@@ -1,7 +1,7 @@
-import { toast } from 'sonner';
 import { Modal } from '../modal';
 import { Button } from '../Button';
 import Image from 'next/image';
+import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -14,14 +14,14 @@ interface UserProfileModalProps {
 }
 
 export function UserProfileModal({ isOpen, close, user }: UserProfileModalProps) {
+  const { copyText } = useCopyToClipboard();
+
   const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(user.email);
-      toast.success('이메일이 클립보드에 복사되었습니다.');
-      close();
-    } catch (error) {
-      toast.error('이메일 복사에 실패했습니다.');
-    }
+    await copyText(user.email, {
+      successMessage: '이메일이 클립보드에 복사되었습니다.',
+      errorMessage: '이메일 복사에 실패했습니다.',
+      onSuccess: () => close(),
+    });
   };
 
   return (

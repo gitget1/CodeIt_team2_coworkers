@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { MemberCardMembersSection } from './MemberCardMembersSection';
-import { useModal } from '@/shared/ui/modal';
-import type { MemberCardItem, MemberCardModalMode, MemberCardProps } from './memberCard.types';
+import type { MemberCardProps } from './memberCard.types';
 import { MemberCardModal } from './MemberCardModal';
+import { sortMembersAdminsFirst } from './lib/memberCard.utils';
+import { useMemberCardModalState } from './useMemberCardModalState';
 
 export function MemberCard({
   members,
@@ -16,58 +17,22 @@ export function MemberCard({
   currentUserId,
   onRemoveMember,
 }: MemberCardProps) {
-  const [selectedMember, setSelectedMember] = useState<MemberCardItem | null>(null);
-  const [modalMode, setModalMode] = useState<MemberCardModalMode>('member');
-  /** 「더보기」목록에서 멤버를 골라 상세로 들어간 경우 — 뒤로가기 표시 */
-  const [memberDetailFromAllList, setMemberDetailFromAllList] = useState(false);
-  const { isOpen, open, close } = useModal(false);
+  const {
+    isOpen,
+    open,
+    modalMode,
+    selectedMember,
+    memberDetailFromAllList,
+    onMemberClick,
+    onMemberClickInList,
+    onBackToList,
+    onMoreClick,
+    onModalClose,
+  } = useMemberCardModalState({ defaultModeOnClose: 'member' });
 
-  const handleMemberClick = useCallback(
-    (member: MemberCardItem) => {
-      setMemberDetailFromAllList(false);
-      setSelectedMember(member);
-      setModalMode('member');
-      open();
-    },
-    [open],
-  );
-
-  const handleMemberClickInList = useCallback((member: MemberCardItem) => {
-    setMemberDetailFromAllList(true);
-    setSelectedMember(member);
-    setModalMode('member');
-  }, []);
-
-  const handleBackToList = useCallback(() => {
-    setMemberDetailFromAllList(false);
-    setSelectedMember(null);
-    setModalMode('all');
-  }, []);
-
-  const handleMoreClick = useCallback(() => {
-    setMemberDetailFromAllList(false);
-    setSelectedMember(null);
-    setModalMode('all');
-    open();
-  }, [open]);
-
-  const handleModalClose = useCallback(() => {
-    close();
-    setSelectedMember(null);
-    setModalMode('member');
-    setMemberDetailFromAllList(false);
-  }, [close]);
-
-  const sortedMembers = useMemo(
-    () =>
-      [...members].sort((a, b) => {
-        const aAdmin = a.isAdmin ? 1 : 0;
-        const bAdmin = b.isAdmin ? 1 : 0;
-        return bAdmin - aAdmin;
-      }),
-    [members],
-  );
-  const rowInteractive = isMemberRowInteractive ?? true;
+  const sortedMembers = useMemo(() => sortMembersAdminsFirst(members), [members]);
+  const rowInteractive =
+    isMemberRowInteractive === undefined ? true : !!isMemberRowInteractive;
 
   return (
     <>
@@ -93,8 +58,8 @@ export function MemberCard({
           members={sortedMembers}
           maxVisibleCount={maxVisibleCount}
           isInteractive={rowInteractive}
-          onMemberClick={handleMemberClick}
-          onMoreClick={handleMoreClick}
+          onMemberClick={onMemberClick}
+          onMoreClick={onMoreClick}
           canManageMembers={canManageMembers}
           currentUserId={currentUserId}
           onRemoveMember={onRemoveMember}
@@ -104,12 +69,12 @@ export function MemberCard({
       <MemberCardModal
         isOpen={isOpen}
         open={open}
-        close={handleModalClose}
+        onClose={onModalClose}
         modalMode={modalMode}
         selectedMember={selectedMember}
         members={sortedMembers}
-        onMemberClickInList={handleMemberClickInList}
-        onBackToList={memberDetailFromAllList ? handleBackToList : undefined}
+        onMemberClickInList={onMemberClickInList}
+        onBackToList={memberDetailFromAllList ? onBackToList : undefined}
       />
     </>
   );

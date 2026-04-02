@@ -10,14 +10,7 @@ import {
   MEMBER_COMPACT_STACK_SHELL_SIZE,
 } from './memberCompactStack.constants';
 import { MemberCompactStackFace } from './MemberCompactStackFace';
-
-function sortMembersAdminsFirst(list: MemberCardItem[]) {
-  return [...list].sort((a, b) => {
-    const aAdmin = a.isAdmin ? 1 : 0;
-    const bAdmin = b.isAdmin ? 1 : 0;
-    return bAdmin - aAdmin;
-  });
-}
+import { sortMembersAdminsFirst } from './lib/memberCard.utils';
 
 export function MemberCompactStack({
   members,
@@ -121,7 +114,7 @@ export function MemberCompactStack({
       <MemberCardModal
         isOpen={isOpen}
         open={open}
-        close={handleModalClose}
+        onClose={handleModalClose}
         modalMode={modalMode}
         selectedMember={selectedMember}
         members={sortedMembers}

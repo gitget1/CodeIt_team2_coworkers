@@ -10,7 +10,7 @@ const MEMBER_CARD_MODAL_LIST_MAX_H = 'max-h-[min(75dvh,40rem)]';
 type Props = {
   isOpen: boolean;
   open: () => void;
-  close: () => void;
+  onClose: () => void;
   modalMode: MemberCardModalMode;
   selectedMember: MemberCardItem | null;
   members: MemberCardItem[];
@@ -23,7 +23,7 @@ type Props = {
 export function MemberCardModal({
   isOpen,
   open,
-  close,
+  onClose,
   modalMode,
   selectedMember,
   members,
@@ -31,7 +31,7 @@ export function MemberCardModal({
   onBackToList,
 }: Props) {
   return (
-    <Modal isOpen={isOpen} open={open} close={close}>
+    <Modal isOpen={isOpen} open={open} close={onClose}>
       <Modal.Content size="sm" className={modalMode === 'member' ? 'pb-0' : 'pb-4'}>
         {modalMode === 'member' ? (
           <>

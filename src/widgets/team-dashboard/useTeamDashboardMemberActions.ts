@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { getInvitationToken } from '@/features/group/api/getInvitationToken';
 import { useRemoveGroupMemberMutation } from '@/features/group/hooks/useRemoveMemberMutation';
 import { useModal } from '@/shared/ui/modal';
+import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard';
 
 type Params = {
   groupId: number;
@@ -11,6 +12,7 @@ type Params = {
 
 export function useTeamDashboardMemberActions({ groupId }: Params) {
   const { isOpen: isInviteModalOpen, open: openInviteModal, close: closeInviteModal } = useModal(false);
+  const { copyText } = useCopyToClipboard();
   const {
     isOpen: isRemoveMemberModalOpen,
     open: openRemoveMemberModal,
@@ -25,11 +27,11 @@ export function useTeamDashboardMemberActions({ groupId }: Params) {
     try {
       const token = await getInvitationToken({ groupId });
       const inviteUrl = `${window.location.origin}/accept-invitation?token=${encodeURIComponent(token)}`;
-      await navigator.clipboard.writeText(inviteUrl);
-      toast.success('초대 링크가 복사되었습니다.');
-      closeInviteModal();
-    } catch {
-      toast.error('초대 링크 복사에 실패했습니다.');
+      const ok = await copyText(inviteUrl, {
+        successMessage: '초대 링크가 복사되었습니다.',
+        errorMessage: '초대 링크 복사에 실패했습니다.',
+      });
+      if (ok) closeInviteModal();
     } finally {
       setIsCopyingInviteLink(false);
     }

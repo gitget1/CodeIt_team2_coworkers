@@ -213,7 +213,7 @@ export function TeamCard({
       <MemberCardModal
         isOpen={isMemberModalOpen}
         open={openMemberModal}
-        close={handleMemberModalClose}
+        onClose={handleMemberModalClose}
         modalMode={memberModalMode}
         selectedMember={memberModalSelected}
         members={normalizedMembers}
