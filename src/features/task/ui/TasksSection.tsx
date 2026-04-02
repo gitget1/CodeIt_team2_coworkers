@@ -11,8 +11,11 @@ type Props = TaskCommonParams & {
   date?: Date;
 };
 
-export default function TaskList({ groupId, taskListId, date }: Props) {
-  const { data, isLoading, isError } = useTaskListQuery({ groupId, taskListId }, { date: date?.toISOString() });
+export default function TasksSection({ groupId, taskListId, date }: Props) {
+  const { data, isLoading, isError } = useTaskListQuery(
+    { groupId, taskListId },
+    { date: date?.toISOString() },
+  );
   const params = { groupId, taskListId };
   const taskCount = data?.tasks.length ?? 0;
   const {

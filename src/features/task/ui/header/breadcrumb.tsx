@@ -13,7 +13,7 @@ type Props = {
 
 export default function Breadcrumb({ items, className }: Props) {
   return (
-    <nav className={cn('text-txt-secondary flex items-center gap-2 text-sm', className)}>
+    <nav className={cn('text-txt-secondary flex items-center gap-2 text-2xl', className)}>
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 

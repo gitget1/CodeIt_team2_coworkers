@@ -14,7 +14,7 @@ export default function Header({ right, className }: Props) {
   const { groupId } = useTaskParams();
   const { data: group, isLoading } = useGroupQuery(groupId);
   if (isLoading) {
-    return <Skeleton className="h-10 w-full max-w-[720px] rounded-xl" />;
+    return <Skeleton className="h-16 w-full rounded-xl" />;
   }
   const breadcrumbItems = [
     { label: group?.name ?? '', href: `/group/${groupId}` },
@@ -29,7 +29,7 @@ export default function Header({ right, className }: Props) {
   return (
     <header
       className={cn(
-        'bg-background-secondary flex w-full max-w-[720px] items-center justify-between rounded-xl px-6 py-4 text-2xl',
+        'bg-background-secondary flex w-full items-center justify-between rounded-xl px-6 py-4 text-2xl',
         className,
       )}
     >
