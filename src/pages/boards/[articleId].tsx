@@ -3,6 +3,8 @@ import ArticleContent from '@/features/boards/components/ArticleContent';
 import ArticleDetailSkeleton from '@/features/boards/components/ArticleDetailSkeleton';
 import CommentSection from '@/features/boards/components/CommentSection';
 import { useArticleDetailPage } from '@/features/boards/hooks/useArticleDetailPage';
+import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
+import { ReactElement } from 'react';
 
 export default function ArticleDetail() {
   const { article, comments, isLoading, isError } = useArticleDetailPage();
@@ -28,3 +30,6 @@ export default function ArticleDetail() {
     </div>
   );
 }
+ArticleDetail.getLayout = function getLayout(page: ReactElement) {
+  return <GlobalLayout>{page}</GlobalLayout>;
+};

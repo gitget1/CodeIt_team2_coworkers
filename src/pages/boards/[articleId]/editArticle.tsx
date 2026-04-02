@@ -3,7 +3,9 @@ import { useArticleDetailQuery } from '@/features/boards/hooks/useArticleDetailQ
 import { useUpdateArticle } from '@/features/boards/hooks/useUpdateArticle';
 import { handleImages } from '@/features/boards/utils/handleImages';
 import { uploadImage } from '@/features/user';
+import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
 import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
 
 export default function EditArticle() {
   const router = useRouter();
@@ -35,3 +37,6 @@ export default function EditArticle() {
     </div>
   );
 }
+EditArticle.getLayout = function getLayout(page: ReactElement) {
+  return <GlobalLayout>{page}</GlobalLayout>;
+};

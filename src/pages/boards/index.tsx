@@ -5,6 +5,8 @@ import BestArticleSkeleton from '@/features/boards/components/BestArticleSkeleto
 import { BoardHeader } from '@/features/boards/components/BoardHeader';
 import { BoardToolbar } from '@/features/boards/components/BoardToolbar';
 import { useBoardsPage } from '@/features/boards/hooks/useBoardsPage';
+import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
+import { ReactElement } from 'react';
 
 export default function BoardsListPage() {
   const {
@@ -58,3 +60,6 @@ export default function BoardsListPage() {
     </main>
   );
 }
+BoardsListPage.getLayout = function getLayout(page: ReactElement) {
+  return <GlobalLayout>{page}</GlobalLayout>;
+};

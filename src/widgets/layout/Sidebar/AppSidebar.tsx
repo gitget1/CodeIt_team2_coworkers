@@ -188,7 +188,7 @@ export function AppSidebar({
           <nav className="flex flex-col gap-2 px-2">
             <SidebarNavItem
               label="자유게시판"
-              href={ROUTES.FREE_BOARD}
+              href="/boards"
               isExpanded={expanded}
               icon={<BoardIcon className="text-slate-300" />}
             />

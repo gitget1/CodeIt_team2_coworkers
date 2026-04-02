@@ -2,6 +2,8 @@ import { ArticleForm } from '@/features/boards/components/ArticleForm';
 import { useCreateArticle } from '@/features/boards/hooks/useCreateArticle';
 import { handleImages } from '@/features/boards/utils/handleImages';
 import { uploadImage } from '@/features/user';
+import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
+import { ReactElement } from 'react';
 
 export default function CreateArticle() {
   const { createArticle } = useCreateArticle();
@@ -23,3 +25,6 @@ export default function CreateArticle() {
     </div>
   );
 }
+CreateArticle.getLayout = function getLayout(page: ReactElement) {
+  return <GlobalLayout>{page}</GlobalLayout>;
+};
