@@ -3,7 +3,7 @@ import { TaskLists } from '../../model/entities/taskList.model';
 import { toTask } from './task.mapper';
 
 export function toTaskList(dto: TaskListDto): TaskLists {
-  const tasks = dto.tasks.map(toTask);
+  const tasks = dto.tasks.map((taskDto) => toTask(taskDto, dto.id));
 
   const completedCount = tasks.filter((task) => task.completedAt).length;
 

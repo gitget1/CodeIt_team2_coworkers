@@ -18,9 +18,10 @@ export const toUser = (dto?: Partial<UserDto> | null): User => ({
   imageUrl: dto?.image ?? undefined,
 });
 
-export const toTask = (dto: TaskDto): Task => ({
+/** `taskListId`는 API 응답에 없을 수 있어, 호출부(목록 id·경로 파라미터 등)에서 넘긴다. */
+export const toTask = (dto: TaskDto, taskListId?: number): Task => ({
   id: dto.id,
-  taskListId: dto.taskListId ?? undefined,
+  ...(taskListId !== undefined ? { taskListId } : {}),
   title: dto.name,
   description: dto.description ?? undefined,
   order: dto.displayIndex,
@@ -43,7 +44,7 @@ export const toTaskList = (dto: TaskListDto): TaskList => ({
   order: dto.displayIndex,
   createdAt: new Date(dto.createdAt),
   updatedAt: new Date(dto.updatedAt),
-  tasks: (dto.tasks ?? []).map(toTask),
+  tasks: (dto.tasks ?? []).map((taskDto) => toTask(taskDto, dto.id)),
 });
 
 export const toTaskListFromArray = (
@@ -57,7 +58,7 @@ export const toTaskListFromArray = (
   order: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
-  tasks: dtos.map(toTask),
+  tasks: dtos.map((taskDto) => toTask(taskDto, taskListId)),
 });
 
 export const toCreateTaskDto = (model: CreateTaskParams): Partial<TaskDto> => {

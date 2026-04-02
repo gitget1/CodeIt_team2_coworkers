@@ -8,6 +8,7 @@ import { useUpdateTaskListMutation } from '@/features/task/hooks/useUpdateTaskLi
 import { useDeleteTaskListMutation } from '@/features/task/hooks/useDeleteTaskListMutation';
 import { updateTask } from '@/features/task/api/updateTask';
 import type { TaskBoardColumnStatus } from '@/features/task-board/model/taskBoard.types';
+import type { Result } from '@/shared/types/result';
 import { invalidateTeamTaskQueries, toNumberId, toNumberIds } from './taskListActionHelpers';
 
 type Params = {
@@ -148,8 +149,10 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
     const results = await Promise.all(
       numericTaskIds.map((taskId) => updateTask({ groupId, taskListId, taskId }, { done: true })),
     );
-    const failed = results.find((result) => !result.ok);
-    if (failed && !failed.ok) {
+    const failed = results.find(
+      (result): result is Extract<Result<void>, { ok: false }> => !result.ok,
+    );
+    if (failed) {
       toast.error(failed.error.message);
       return false;
     }

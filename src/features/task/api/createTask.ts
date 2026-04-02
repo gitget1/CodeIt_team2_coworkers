@@ -21,7 +21,7 @@ export async function createTask(
       },
     );
 
-    return { ok: true, data: toTask(res.data) };
+    return { ok: true, data: toTask(res.data, taskListId) };
   } catch (error: unknown) {
     return mapTaskErrorToFailure(error);
   }
