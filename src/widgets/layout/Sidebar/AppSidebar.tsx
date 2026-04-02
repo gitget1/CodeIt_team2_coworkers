@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useGetUserHistory } from '@/features/user/hooks/useGetUserHistory';
 import {
   Sidebar,
   SidebarHeader,
@@ -127,9 +126,6 @@ export function AppSidebar({
   const [isTeamListOpen, setIsTeamListOpen] = useState(true);
   const teamItems = useSidebarTeamItems({ teams, isLoggedIn });
 
-  const { data: historyList } = useGetUserHistory();
-  const hasHistory = historyList && historyList.length > 0;
-
   const handleToggle = () => setIsExpanded((v) => !v);
   const handleTeamListToggle = () => setIsTeamListOpen((v) => !v);
   const expanded = mobileDrawer ? true : isExpanded;
@@ -199,7 +195,7 @@ export function AppSidebar({
               isSelected={router.pathname === '/accept-invitation'}
               icon={<TeamIcon className="text-slate-300" />}
             />
-            {isLoggedIn && hasHistory && (
+            {isLoggedIn && (
               <SidebarNavItem
                 label="마이 히스토리"
                 href="/myhistory"

@@ -10,8 +10,8 @@ export const Toaster = () => {
         classNames: {
           toast:
             '!rounded-[16px] px-4 py-3 flex items-center border-none shadow-lg h-[49px] text-[14px] md:h-[57px] md:text-[16px] flex !items-center gap-[10px]',
-
-          title: '!text-white !font-medium !text-[14px] md:!text-[16px]',
+          content: '!flex-1',
+          title: '!text-white !font-medium !text-[14px] md:!text-[16px] !text-center',
           error: '!bg-status-danger',
           success: '!bg-brand-primary',
           warning: '!bg-point-orange',

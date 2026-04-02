@@ -11,18 +11,18 @@ export default function MyHistoryPage() {
       <main
         className={cn(
           'flex w-full flex-col',
-          'pt-5 md:pt-16 xl:pt-[90px]',
-          'px-[16px] md:px-[26px] xl:px-0 xl:pl-[85px]',
+          'mx-auto flex w-full max-w-300 flex-col items-center',
+          'px-4 pt-5 md:px-6 md:pt-16 xl:pt-22.5',
         )}
       >
-        <div className="mb-6 w-full md:mb-5.5 xl:mb-12">
+        <div className="mb-6 w-full max-w-85.75 md:mb-5.5 md:max-w-155 xl:mb-12 xl:max-w-280">
           <TeamHeader
             selectedCategory={selectedCategory}
             onResetCategory={() => setSelectedCategory(null)}
           />
         </div>
 
-        <div className="flex w-full justify-center xl:justify-start">
+        <div className="flex w-full justify-center">
           <HistoryBoard
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
