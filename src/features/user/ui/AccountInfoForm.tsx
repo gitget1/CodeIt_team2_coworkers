@@ -6,6 +6,7 @@ import { AccountDeleteModal } from './AccountDeleteModal';
 import { cn } from '@/shared/lib/cn';
 import { UnsavedChangesModal } from './UnsavedChangesModal';
 import { useAccountForm } from '../hooks/useAccountForm';
+import { IconCheck } from '@/shared/ui/icons';
 
 export function AccountInfoForm() {
   const {
@@ -68,9 +69,10 @@ export function AccountInfoForm() {
           <Button
             form="accountNameForm"
             type="submit"
-            variant="primary"
+            variant="outline"
             size="lg"
-            className="px-6 whitespace-nowrap"
+            leftIcon={<IconCheck className="h-4.5 w-4.5 transition-colors md:h-5 md:w-5" />}
+            className={cn('border-none', 'p-0', 'text-brand-primary text-md md:text-lg')}
             disabled={!isDirty || !isValid || isPending}
           >
             {isPending ? '저장 중...' : '변경사항 저장하기'}

@@ -18,13 +18,13 @@ export function AccountDeleteModal() {
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
       <Modal.Trigger asChild>
-        <button
-          type="button"
-          className="text-status-danger focus-visible:ring-status-danger flex cursor-pointer items-center gap-1.5 rounded transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        <Button
+          variant="outline"
+          className="text-md text-status-danger hover:text-status-danger border-none bg-transparent p-0 transition-colors hover:bg-transparent md:text-lg"
+          leftIcon={<IconSecession className="h-4.5 w-4.5 md:h-6 md:w-6" />}
         >
-          <IconSecession size={24} />
-          <span className="text-base font-semibold">회원 탈퇴하기</span>
-        </button>
+          회원 탈퇴하기
+        </Button>
       </Modal.Trigger>
 
       <Modal.Content size="sm" showCloseButton={false}>
