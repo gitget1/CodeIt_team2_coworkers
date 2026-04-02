@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAcceptInvitationMutation } from '@/features/group/hooks/useAcceptInvitationMutation';
 import { parseInvitationToken } from '@/features/group/lib/parseInvitationToken';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
+import { isApiError } from '@/shared/api/mapApiError';
 import { teamDashboardPath, ROUTES } from '@/shared/constants/routes';
 import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
 import { USER_QUERY_KEYS } from '@/features/user/lib/queryKeys';
@@ -25,11 +26,19 @@ export default function AcceptInvitationPage() {
     typeof rawToken === 'string' ? rawToken : Array.isArray(rawToken) ? rawToken[0] : undefined;
 
   useEffect(() => {
-    if (!router.isReady || !queryToken || typeof window === 'undefined') return;
+    if (!router.isReady || !queryToken) return;
     setTeamLink(
       `${window.location.origin}/accept-invitation?token=${encodeURIComponent(queryToken)}`,
     );
   }, [router.isReady, queryToken]);
+
+  const postLoginRedirectPath = (): string => {
+    const token = queryToken ?? parseInvitationToken(teamLink);
+    if (token) {
+      return `${ROUTES.ACCEPT_INVITATION}?token=${encodeURIComponent(token)}`;
+    }
+    return ROUTES.ACCEPT_INVITATION;
+  };
 
   const handleJoin = async () => {
     const token = parseInvitationToken(teamLink);
@@ -39,7 +48,10 @@ export default function AcceptInvitationPage() {
     }
     if (!user?.email) {
       toast.error('로그인 후 팀에 참여할 수 있습니다.');
-      void router.push(ROUTES.FREE_BOARD);
+      void router.push({
+        pathname: ROUTES.LOGIN,
+        query: { redirect: postLoginRedirectPath() },
+      });
       return;
     }
 
@@ -54,8 +66,7 @@ export default function AcceptInvitationPage() {
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.groups() });
       await router.push(teamDashboardPath(String(result.groupId)));
     } catch (error) {
-      const err = error as { message?: string };
-      toast.error(err?.message ?? '팀 참여에 실패했습니다.');
+      toast.error(isApiError(error) ? error.message : '팀 참여에 실패했습니다.');
     }
   };
 

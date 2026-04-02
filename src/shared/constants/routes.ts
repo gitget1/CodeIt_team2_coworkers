@@ -1,6 +1,7 @@
 /** 앱 전역 라우트 경로 정의 */
 export const ROUTES = {
   FREE_BOARD: '/',
+  LOGIN: '/login',
   TEAM_CREATE: '/team/create',
   /** TODO(임시): 팀 참여 플로우 확정 후 사이드바 노출 여부 정리 */
   ACCEPT_INVITATION: '/accept-invitation',

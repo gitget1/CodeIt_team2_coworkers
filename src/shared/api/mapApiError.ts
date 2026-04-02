@@ -1,6 +1,13 @@
 import axios from 'axios';
 import type { ApiError } from '../types/apiError';
 
+/** `clientFetcher` 등에서 `mapApiError`로 거절된 값 여부 (단언 없이 catch 분기용) */
+export function isApiError(error: unknown): error is ApiError {
+  if (typeof error !== 'object' || error === null) return false;
+  const o = error as Record<string, unknown>;
+  return typeof o.message === 'string';
+}
+
 type ApiErrorResponse = {
   message?: string;
   code?: string;
