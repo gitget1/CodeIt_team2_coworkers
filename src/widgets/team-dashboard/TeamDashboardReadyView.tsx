@@ -9,8 +9,9 @@ import { useGroupTasksQuery } from '@/features/group/hooks/useGroupTasksQuery';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
 import { getTaskList } from '@/features/task/api/getTaskList';
 import { TASK_QUERY_KEYS } from '@/features/task/lib/queryKeys';
-import { useTeamDashboardMemberActions } from './useTeamDashboardMemberActions';
 import { useTeamDashboardTaskListActions } from './useTeamDashboardTaskListActions';
+import { useTeamDashboardInviteActions } from './useTeamDashboardInviteActions';
+import { useTeamDashboardRemoveMemberActions } from './useTeamDashboardRemoveMemberActions';
 import { TeamDashboardInviteModal } from './TeamDashboardInviteModal';
 import { TeamDashboardRemoveMemberModal } from './TeamDashboardRemoveMemberModal';
 import { TeamDashboardDeleteTeamModal } from './TeamDashboardDeleteTeamModal';
@@ -34,16 +35,19 @@ export function TeamDashboardReadyView({ vm }: Props) {
     isInviteModalOpen,
     openInviteModal,
     closeInviteModal,
+    isCopyingInviteLink,
+    handleCopyInviteLink,
+  } = useTeamDashboardInviteActions({ groupId: group.id });
+
+  const {
     isRemoveMemberModalOpen,
     openRemoveMemberModal,
     closeRemoveMemberModal,
-    isCopyingInviteLink,
     isRemovingMember,
     memberToRemove,
-    handleCopyInviteLink,
     handleRemoveMemberRequest,
     handleConfirmRemoveMember,
-  } = useTeamDashboardMemberActions({ groupId: group.id });
+  } = useTeamDashboardRemoveMemberActions({ groupId: group.id });
   const myMembership = group.members.find((member) => member.userId === me?.id);
   const canManageMembers = myMembership?.role === 'ADMIN';
   const todayTaskCount = groupTasks.length;

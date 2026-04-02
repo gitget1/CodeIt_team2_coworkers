@@ -1,12 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Profile } from '@/shared/ui/profile';
 import type { ImageAsset } from '@/shared/ui/profile';
 import type { MemberCardItem } from '@/shared/ui/profile';
 import { MemberCardModal } from '@/shared/ui/profile/MemberCardModal';
+import { sortMembersAdminsFirst } from '@/shared/ui/profile/lib/memberCard.utils';
+import { useMemberCardModalState } from '@/shared/ui/profile/useMemberCardModalState';
 import { IconGear } from '@/shared/ui/icons/IconGear';
 import Dropdown from '@/shared/ui/dropdown';
-import { useModal } from '@/shared/ui/modal';
 import { ICON_SIZE } from '@/shared/constants/icon';
 import { TeamCardProgressRow } from './TeamCardProgressRow';
 import { TeamCardStatsSection } from './TeamCardStatsSection';
@@ -58,11 +59,6 @@ export function TeamCard({
   className,
   statsClassName,
 }: TeamCardProps) {
-  const { isOpen: isMemberModalOpen, open: openMemberModal, close: closeMemberModal } = useModal(false);
-  const [memberModalMode, setMemberModalMode] = useState<'member' | 'all'>('all');
-  const [memberModalSelected, setMemberModalSelected] = useState<MemberCardItem | null>(null);
-  const [memberModalFromList, setMemberModalFromList] = useState(false);
-
   const normalizedMembers = useMemo<MemberCardItem[]>(
     () =>
       members && members.length > 0
@@ -75,31 +71,22 @@ export function TeamCard({
     [memberImages, members],
   );
 
-  const openFullMemberModal = useCallback(() => {
-    setMemberModalMode('all');
-    setMemberModalSelected(null);
-    setMemberModalFromList(false);
-    openMemberModal();
-  }, [openMemberModal]);
+  const sortedMembers = useMemo(
+    () => sortMembersAdminsFirst(normalizedMembers),
+    [normalizedMembers],
+  );
 
-  const handleMemberClickInList = useCallback((member: MemberCardItem) => {
-    setMemberModalFromList(true);
-    setMemberModalSelected(member);
-    setMemberModalMode('member');
-  }, []);
-
-  const handleBackToMemberList = useCallback(() => {
-    setMemberModalFromList(false);
-    setMemberModalSelected(null);
-    setMemberModalMode('all');
-  }, []);
-
-  const handleMemberModalClose = useCallback(() => {
-    closeMemberModal();
-    setMemberModalMode('all');
-    setMemberModalSelected(null);
-    setMemberModalFromList(false);
-  }, [closeMemberModal]);
+  const {
+    isOpen: isMemberModalOpen,
+    open: openMemberModal,
+    modalMode: memberModalMode,
+    selectedMember: memberModalSelected,
+    memberDetailFromAllList,
+    onMemberClickInList,
+    onBackToList,
+    onMoreClick,
+    onModalClose,
+  } = useMemberCardModalState({ defaultModeOnClose: 'all' });
 
   const visibleMemberImages = memberImages.slice(0, 3);
   const showMemberSummary = visibleMemberImages.length > 0 || normalizedMembers.length > 0 || typeof memberCount === 'number';
@@ -116,7 +103,7 @@ export function TeamCard({
         {showMemberSummary && (
           <button
             type="button"
-            onClick={openFullMemberModal}
+            onClick={onMoreClick}
             aria-label="전체 멤버 보기"
             className="inline-flex h-[40px] items-center rounded-[12px] border border-[var(--Border-Primary,#E2E8F0)] px-[10px] lg:hidden"
           >
@@ -213,12 +200,12 @@ export function TeamCard({
       <MemberCardModal
         isOpen={isMemberModalOpen}
         open={openMemberModal}
-        onClose={handleMemberModalClose}
+        onClose={onModalClose}
         modalMode={memberModalMode}
         selectedMember={memberModalSelected}
-        members={normalizedMembers}
-        onMemberClickInList={handleMemberClickInList}
-        onBackToList={memberModalFromList ? handleBackToMemberList : undefined}
+        members={sortedMembers}
+        onMemberClickInList={onMemberClickInList}
+        onBackToList={memberDetailFromAllList ? onBackToList : undefined}
       />
     </article>
   );
