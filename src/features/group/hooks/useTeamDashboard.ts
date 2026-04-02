@@ -37,9 +37,10 @@ export function useTeamDashboard(): TeamDashboardViewModel {
   const { groupIdStr, groupIdNum, isValidGroupId } = parseTeamIdFromQuery(router.query.teamId);
 
   const shouldFetchGroup = router.isReady && isValidGroupId;
-  const { data: group, isPending, isFetching, isError } = useGroupQuery(
-    shouldFetchGroup ? groupIdNum : Number.NaN,
-  );
+  const safeGroupId = isValidGroupId ? groupIdNum : 0;
+  const { data: group, isPending, isFetching, isError } = useGroupQuery(safeGroupId, {
+    enabled: shouldFetchGroup,
+  });
 
   if (!router.isReady) {
     return { phase: 'router_loading' };
