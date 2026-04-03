@@ -14,6 +14,7 @@ import Feature3Icon from '@/shared/assets/images/landing-feature3.png';
 import { LandingHero } from './LandingHero';
 import { LandingFeatureSection } from './LandingFeatureSection';
 import { LandingCTA } from './LandingCTA';
+import { LazyMotion, domAnimation } from 'framer-motion';
 
 export type FeatureTheme = 'light' | 'primary';
 
@@ -81,12 +82,14 @@ export const LANDING_FEATURES: LandingFeature[] = [
 
 export const LandingContainer = () => {
   return (
-    <main className="flex w-full flex-col select-none">
-      <LandingHero />
-      {LANDING_FEATURES.map((feature) => (
-        <LandingFeatureSection key={feature.id} feature={feature} />
-      ))}
-      <LandingCTA />
-    </main>
+    <LazyMotion features={domAnimation}>
+      <main className="flex w-full flex-col select-none">
+        <LandingHero />
+        {LANDING_FEATURES.map((feature) => (
+          <LandingFeatureSection key={feature.id} feature={feature} />
+        ))}
+        <LandingCTA />
+      </main>
+    </LazyMotion>
   );
 };

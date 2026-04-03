@@ -86,6 +86,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
             alt={`${imageAlt} 모바일 예시`}
             width={1200}
             height={800}
+            sizes="(max-width: 768px) 400px, 800px"
             className="block h-auto w-full rounded-xl md:hidden"
             loading="lazy"
           />
@@ -94,6 +95,7 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
             alt={`${imageAlt} 태블릿 예시`}
             width={1600}
             height={1200}
+            sizes="100vw"
             className="hidden h-auto w-full rounded-xl md:block lg:hidden"
             loading="lazy"
           />
