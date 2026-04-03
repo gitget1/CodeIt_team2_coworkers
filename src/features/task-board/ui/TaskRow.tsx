@@ -8,17 +8,22 @@ export type TaskRowProps = {
 };
 
 export function TaskRow({ task, onToggle }: TaskRowProps) {
-  const isDisabled =  !!onToggle;
+  const isDisabled = !!onToggle;
 
   return (
     <div className="flex items-center gap-2">
-      <Checkbox
-        size="sm"
-        checked={task.completed}
-        onChange={(checked) => onToggle?.(checked)}
-        disabled={!isDisabled}
-        aria-label={`${task.title} 체크`}
-      />
+      <span
+        onClick={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <Checkbox
+          size="sm"
+          checked={task.completed}
+          onChange={(checked) => onToggle?.(checked)}
+          disabled={!isDisabled}
+          aria-label={`${task.title} 체크`}
+        />
+      </span>
       <span
         className={cn(
           'min-w-0 flex-1 truncate text-sm',

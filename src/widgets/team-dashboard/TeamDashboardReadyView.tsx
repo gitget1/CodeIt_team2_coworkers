@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
@@ -28,7 +29,8 @@ type Props = {
 };
 
 export function TeamDashboardReadyView({ vm }: Props) {
-  const { group, memberCardItems, memberImagesPreview, isFetching } = vm;
+  const router = useRouter();
+  const { groupIdStr, group, memberCardItems, memberImagesPreview, isFetching } = vm;
   const { data: groupTasks = [] } = useGroupTasksQuery(group.id);
   const { data: me } = useUserQuery();
   const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup, handleToggleTask, handleCompleteTaskGroupByDrop } =
@@ -71,6 +73,9 @@ export function TeamDashboardReadyView({ vm }: Props) {
     [group.taskLists, taskListQueries],
   );
   const initialBoard = useMemo(() => toTaskBoard(boardTaskLists), [boardTaskLists]);
+  const handleOpenTaskList = (taskGroupId: string) => {
+    void router.push(`/${encodeURIComponent(groupIdStr)}/task-lists/${encodeURIComponent(taskGroupId)}`);
+  };
 
   const {
     deleteModal,
@@ -134,6 +139,7 @@ export function TeamDashboardReadyView({ vm }: Props) {
               onCompleteTaskGroupByDrop={handleCompleteTaskGroupByDrop}
               onUpdateTaskGroup={handleUpdateTaskGroup}
               onDeleteTaskGroup={handleDeleteTaskGroup}
+              onOpenTaskList={handleOpenTaskList}
               trailingPanel={
                 <MemberCard
                   members={memberCardItems}

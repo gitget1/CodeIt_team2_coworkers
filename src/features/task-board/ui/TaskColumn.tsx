@@ -14,6 +14,7 @@ export type TaskColumnProps = {
   onTaskToggle?: (taskGroupId: string, taskId: string, checked: boolean) => void;
   onEditCard?: (taskGroupId: string, currentTitle: string) => void;
   onDeleteCard?: (taskGroupId: string) => void;
+  onOpenTaskList?: (taskGroupId: string) => void;
   activeTaskGroupId?: string | null;
   dropIndicatorId?: string | null;
 };
@@ -28,6 +29,7 @@ export function TaskColumn({
   onTaskToggle,
   onEditCard,
   onDeleteCard,
+  onOpenTaskList,
   activeTaskGroupId,
   dropIndicatorId,
 }: TaskColumnProps) {
@@ -60,6 +62,7 @@ export function TaskColumn({
               onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
               onEditCard={onEditCard}
               onDeleteCard={onDeleteCard}
+              onOpenTaskList={onOpenTaskList}
               activeTaskGroupId={activeTaskGroupId}
               dropIndicatorId={dropIndicatorId}
             />

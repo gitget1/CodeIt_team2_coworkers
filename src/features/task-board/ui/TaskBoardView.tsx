@@ -41,6 +41,7 @@ type Props = {
   /** true면 캐시/프롭이 곧 반영되므로 보드 로컬 갱신 생략. false 실패. undefined·void면 로컬 갱신. */
   onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean | void> | boolean | void;
   onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean | void> | boolean | void;
+  onOpenTaskList?: (taskGroupId: string) => void;
 };
 
 const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
@@ -62,6 +63,7 @@ export function TaskBoardView({
   onCompleteTaskGroupByDrop,
   onUpdateTaskGroup,
   onDeleteTaskGroup,
+  onOpenTaskList,
 }: Props) {
   const { board, setBoard, setCardNameLocal, removeCardLocal } = useTaskBoardBoard(initialBoard);
   const [creatingStatus, setCreatingStatus] = useState<TaskBoardColumnStatus | null>(null);
@@ -163,6 +165,7 @@ export function TaskBoardView({
               onTaskToggle={handleTaskToggle}
               onEditCard={openEditCardModal}
               onDeleteCard={openDeleteCardModal}
+              onOpenTaskList={onOpenTaskList}
               activeTaskGroupId={activeTaskGroupId}
               dropIndicatorId={dropIndicatorId}
             />

@@ -19,6 +19,7 @@ export type TaskCardProps = {
   onTaskToggle?: (taskId: string, checked: boolean) => void;
   onEditCard?: (taskGroup: TaskBoardTaskGroup) => void;
   onDeleteCard?: (taskGroup: TaskBoardTaskGroup) => void;
+  onOpenTaskList?: (taskGroup: TaskBoardTaskGroup) => void;
 };
 
 export function TaskCard({
@@ -29,6 +30,7 @@ export function TaskCard({
   onTaskToggle,
   onEditCard,
   onDeleteCard,
+  onOpenTaskList,
 }: TaskCardProps) {
   const [collapsed, setCollapsed] = useState(false);
   const tasks = taskGroup.tasks;
@@ -50,7 +52,7 @@ export function TaskCard({
   };
 
   return (
-    <TaskCardShell collapsed={collapsed}>
+    <TaskCardShell collapsed={collapsed} onClick={onOpenTaskList ? () => onOpenTaskList(taskGroup) : undefined}>
       <TaskCardHeader
         cardName={taskGroup.name}
         collapsed={collapsed}
