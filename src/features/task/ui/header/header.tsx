@@ -4,6 +4,7 @@ import Breadcrumb from './breadcrumb';
 import { useTaskParams } from '../../lib/useTaskParams';
 import { useGroupQuery } from '@/features/group';
 import { Skeleton } from '@/shared/ui/skeleton/Skeleton';
+import { teamDashboardPath } from '@/shared/constants/routes';
 
 type Props = {
   right?: ReactNode;
@@ -11,14 +12,18 @@ type Props = {
 };
 
 export default function Header({ right, className }: Props) {
-  const { groupId } = useTaskParams();
-  const { data: group, isLoading } = useGroupQuery(groupId);
-  if (isLoading) {
+  const { groupId, taskListId } = useTaskParams();
+
+  const { data: group, isLoading: isGroupLoading } = useGroupQuery(groupId);
+  if (isGroupLoading) {
     return <Skeleton className="h-16 w-full rounded-xl" />;
   }
+
+  const teamHref = teamDashboardPath(String(groupId));
+  const taskListTitle = group?.taskLists?.find((l) => l.id === taskListId)?.title ?? '할일 리스트';
   const breadcrumbItems = [
-    { label: group?.name ?? '', href: `/group/${groupId}` },
-    { label: '법인 등기' },
+    { label: group?.name ?? '', href: teamHref },
+    { label: taskListTitle },
   ];
   /**TODO:
    * BreadcrumbItem의 할일 리스트는
@@ -29,11 +34,11 @@ export default function Header({ right, className }: Props) {
   return (
     <header
       className={cn(
-        'bg-background-secondary flex w-full items-center justify-between rounded-xl px-6 py-4 text-2xl',
+        'bg-background-secondary flex w-full items-center justify-between rounded-xl px-4 py-3 text-xl sm:px-6 sm:py-4 sm:text-2xl',
         className,
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2">
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <div className="flex items-center gap-2">{right}</div>

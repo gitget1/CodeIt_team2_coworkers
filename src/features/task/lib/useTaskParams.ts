@@ -15,14 +15,9 @@ function toNumber(value: string | string[] | undefined, name: string): number {
 
 export function useTaskParams(): TaskCommonParams {
   const router = useRouter();
-  const { groupId, taskListId } = router.query;
-
-  /**
-   * TODO:
-   * 테스트 페이지에서 router.query 값이 없기 때문에 임시로 기본값 반환
-   * 추후 groupId, taskListId가 정상적으로 주입되면 해당 로직 제거 예정
-   */
-  if (!groupId || !taskListId) {
+  const { groupId, teamId, taskListId } = router.query;
+  const rawGroupId = groupId ?? teamId;
+  if (!rawGroupId || !taskListId) {
     return {
       groupId: 1,
       taskListId: 1,
@@ -30,7 +25,7 @@ export function useTaskParams(): TaskCommonParams {
   }
 
   return {
-    groupId: toNumber(groupId, 'groupId'),
+    groupId: toNumber(rawGroupId, 'groupId'),
     taskListId: toNumber(taskListId, 'taskListId'),
   };
 }
