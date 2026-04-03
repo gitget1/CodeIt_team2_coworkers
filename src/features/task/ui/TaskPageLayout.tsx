@@ -25,6 +25,10 @@ function toTaskListSidebarItem(list: TaskList): TaskListSidebarItem {
   };
 }
 
+function isFiniteNumber(value: number | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
 export function TaskPageLayout({ groupId, taskList }: Props) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const router = useRouter();
@@ -33,22 +37,21 @@ export function TaskPageLayout({ groupId, taskList }: Props) {
   const taskListIdFromUrl = Number(router.query.taskListId);
   const { data: group } = useGroupQuery(groupId);
 
-  const currentId: number | undefined =
-    Number.isFinite(taskListIdFromUrl)
-      ? taskListIdFromUrl
-      : taskList?.id ?? group?.taskLists?.[0]?.id;
+  const currentId: number | undefined = Number.isFinite(taskListIdFromUrl)
+    ? taskListIdFromUrl
+    : (taskList?.id ?? group?.taskLists?.[0]?.id);
 
-  if (!Number.isFinite(currentId)) return null;
-  const currentIdNum = currentId as number;
+  if (!isFiniteNumber(currentId)) return null;
+  const currentIdNum = currentId;
 
-  const taskListSidebarItems =
-    group?.taskLists?.map((l) => toTaskListSidebarItem(l)) ?? [];
+  const taskListSidebarItems = group?.taskLists?.map((l) => toTaskListSidebarItem(l)) ?? [];
 
   const selectedListFromGroup = group?.taskLists?.find((l) => l.id === currentIdNum);
   const selectedListFromDetail =
     taskList && taskList.id === currentIdNum ? toTaskListSidebarItem(taskList) : undefined;
-  const selectedList =
-    selectedListFromGroup ? toTaskListSidebarItem(selectedListFromGroup) : selectedListFromDetail;
+  const selectedList = selectedListFromGroup
+    ? toTaskListSidebarItem(selectedListFromGroup)
+    : selectedListFromDetail;
 
   const handleSelectTaskList = (id: number) => {
     router.push(
@@ -65,9 +68,9 @@ export function TaskPageLayout({ groupId, taskList }: Props) {
   };
 
   return (
-    <div className="flex w-full max-w-[1100px] flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6 mx-auto">
+    <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
       <Header right={<GroupSettingMenu role="ADMIN" />} />
-      <div className="flex w-full flex-col gap-4 lg:flex-row sm:gap-6">
+      <div className="flex w-full flex-col gap-4 sm:gap-6 lg:flex-row">
         <div className="hidden w-[240px] shrink-0 lg:flex lg:flex-col lg:gap-4">
           <h2 className="text-txt-primary text-lg font-semibold">할 일</h2>
 
