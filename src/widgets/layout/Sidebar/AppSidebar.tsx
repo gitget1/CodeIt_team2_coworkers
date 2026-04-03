@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Dropdown from '@/shared/ui/dropdown';
+import { SidebarDropdownMenu, SidebarDropdownItem } from './SidebarDropdown';
+import { useSignOut } from '@/features/auth/hooks/useSignOut';
 import {
   Sidebar,
   SidebarHeader,
@@ -44,17 +47,22 @@ function DefaultFooter({
   onLoginClick?: () => void;
 }) {
   const { data: user } = useUserQuery();
+  const { mutate: signOut } = useSignOut();
 
   if (!isLoggedIn) {
     const showProfileImage = isExpanded && !mobileDrawer;
 
     return (
       <SidebarFooter className="py-4">
-        <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onLoginClick}
+          className="flex w-full cursor-pointer items-center gap-3 rounded-lg text-left focus-visible:outline-none"
+        >
           {showProfileImage && (
             <span
               className={cn(
-                'flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden',
+                'flex h-10 w-10 shrink-0 items-center justify-center',
                 defaultProfileBgClass,
               )}
               aria-hidden
@@ -63,24 +71,20 @@ function DefaultFooter({
             </span>
           )}
           {mobileDrawer ? (
-            <button
-              type="button"
-              onClick={onLoginClick}
-              className="text-txt-primary hover:bg-background-tertiary focus-visible:ring-brand-primary min-w-0 flex-1 rounded-lg py-2 text-center text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
+            <span className="text-txt-primary border-brand-primary min-w-0 flex-1 rounded-lg py-2 text-center text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
               로그인
-            </button>
+            </span>
           ) : (
             <span
               className={cn(
-                'text-txt-primary text-sm font-medium',
+                'text-txt-primary py-2 text-sm font-medium',
                 !isExpanded && 'min-w-0 flex-1 text-center',
               )}
             >
               로그인
             </span>
           )}
-        </div>
+        </button>
       </SidebarFooter>
     );
   }
@@ -90,23 +94,45 @@ function DefaultFooter({
   const displayEmail = user?.email ?? '';
 
   return (
-    <SidebarFooter>
-      {isExpanded ? (
-        <MemberChip
-          imageSrc={profileImage ?? defaultProfileImgSrc}
-          name={displayName}
-          email={displayEmail || undefined}
-          size="lg"
-          avatarClassName="bg-background-tertiary"
-        />
-      ) : (
-        <Profile
-          size="lg"
-          imageSrc={profileImage ?? defaultProfileImgSrc}
-          ariaLabel={`${displayName} 프로필`}
-          className="bg-background-tertiary"
-        />
-      )}
+    <SidebarFooter className="overflow-visible!">
+      <Dropdown>
+        <Dropdown.Trigger className="w-full text-left">
+          {isExpanded ? (
+            <MemberChip
+              imageSrc={profileImage ?? defaultProfileImgSrc}
+              name={displayName}
+              email={displayEmail || undefined}
+              size="lg"
+              avatarClassName="bg-background-tertiary"
+            />
+          ) : (
+            <Profile
+              size="lg"
+              imageSrc={profileImage ?? defaultProfileImgSrc}
+              ariaLabel={`${displayName} 프로필`}
+              className="bg-background-tertiary"
+            />
+          )}
+        </Dropdown.Trigger>
+
+        <SidebarDropdownMenu
+          align="left"
+          className="border-background-tertiary bottom-full z-[100] mb-2 w-21.5 min-w-0 overflow-hidden rounded-xl py-0"
+        >
+          <SidebarDropdownItem
+            href="/mypage"
+            className="min-h-10 justify-center rounded-none px-2 text-[13px]"
+          >
+            계정 설정
+          </SidebarDropdownItem>
+          <SidebarDropdownItem
+            onClick={() => signOut()}
+            className="min-h-10 justify-center rounded-none px-2 text-[13px]"
+          >
+            로그아웃
+          </SidebarDropdownItem>
+        </SidebarDropdownMenu>
+      </Dropdown>
     </SidebarFooter>
   );
 }
@@ -131,7 +157,7 @@ export function AppSidebar({
   const expanded = mobileDrawer ? true : isExpanded;
 
   return (
-    <div className="relative h-full shrink-0 overflow-visible">
+    <div className="border-background-tertiary bg-background-primary relative z-50 h-full shrink-0 overflow-visible border-r">
       <Sidebar
         isExpanded={expanded}
         onToggle={mobileDrawer ? () => {} : handleToggle}
@@ -145,7 +171,7 @@ export function AppSidebar({
             />
           )
         }
-        className={mobileDrawer ? 'h-full' : undefined}
+        className={cn('overflow-visible!', mobileDrawer ? 'h-full' : undefined)}
       >
         {mobileDrawer ? (
           <SidebarHeader
@@ -213,7 +239,7 @@ export function AppSidebar({
                 icon={<PlusIcon />}
                 className={cn(
                   expanded &&
-                    'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-[52px] w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
+                    'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-13 w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
                 )}
               />
             )}
@@ -226,7 +252,7 @@ export function AppSidebar({
                     type="button"
                     onClick={handleTeamListToggle}
                     className={cn(
-                      'text-txt-default flex min-h-[52px] w-full items-center gap-2 rounded-lg px-3 text-left text-base font-medium',
+                      'text-txt-default flex min-h-13 w-full items-center gap-2 rounded-lg px-3 text-left text-base font-medium',
                       'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
                       'focus-visible:ring-brand-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     )}
@@ -277,7 +303,7 @@ export function AppSidebar({
         <button
           type="button"
           onClick={handleToggle}
-          className="bg-background-primary text-txt-default hover:bg-background-tertiary hover:text-txt-primary focus-visible:ring-brand-primary absolute top-7 right-0 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-background-tertiary)] shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="bg-background-primary text-txt-default hover:bg-background-tertiary hover:text-txt-primary focus-visible:ring-brand-primary border-background-tertiary absolute top-7 right-0 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           aria-label="사이드바 열기"
           aria-expanded={false}
         >

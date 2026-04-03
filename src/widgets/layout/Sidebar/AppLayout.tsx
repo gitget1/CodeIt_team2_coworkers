@@ -44,7 +44,7 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
 
   if (isMobile) {
     return (
-      <div className={cn('flex flex-col min-h-screen bg-background-primary', className)}>
+      <div className={cn('bg-background-primary flex min-h-screen flex-col', className)}>
         <MobileHeader
           onMenuClick={() => setIsMobileMenuOpen(true)}
           isLoggedIn={sidebarProps?.isLoggedIn}
@@ -61,7 +61,7 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <aside
-              className="fixed inset-y-0 left-0 z-50 w-[270px] flex flex-col bg-background-primary shadow-xl"
+              className="bg-background-primary fixed inset-y-0 left-0 z-50 flex w-67.5 flex-col shadow-xl"
               role="dialog"
               aria-label="메뉴"
             >
@@ -78,12 +78,12 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
   }
 
   return (
-    <div className={cn('flex min-h-screen bg-background-primary', className)}>
+    <div className={cn('bg-background-primary flex min-h-screen', className)}>
       {/* 긴 메인(랜딩)에서 사이드바가 문서 높이만큼 늘지 않도록 뷰포트에 고정 */}
-      <div className="sticky top-0 h-screen shrink-0">
+      <div className="bg-background-primary sticky top-0 z-[9999] h-screen shrink-0 !overflow-visible">
         <AppSidebar {...sidebarProps} />
       </div>
-      <main className="flex-1 min-h-0">{children}</main>
+      <main className="min-h-0 flex-1">{children}</main>
     </div>
   );
 }
