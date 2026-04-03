@@ -206,6 +206,19 @@ export function AppSidebar({
             )}
 
             {isLoggedIn && (
+              <SidebarNavItem
+                label="팀 추가하기"
+                href={ROUTES.TEAM_CREATE}
+                isExpanded={expanded}
+                icon={<PlusIcon />}
+                className={cn(
+                  expanded &&
+                    'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-[52px] w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
+                )}
+              />
+            )}
+
+            {isLoggedIn && (
               <>
                 <div className="border-background-tertiary my-2 border-t" role="separator" />
                 {expanded ? (
@@ -246,16 +259,6 @@ export function AppSidebar({
                         icon={<TeamIcon className="text-slate-300" />}
                       />
                     ))}
-                    <SidebarNavItem
-                      label="팀 추가하기"
-                      href={ROUTES.TEAM_CREATE}
-                      isExpanded={expanded}
-                      icon={<PlusIcon />}
-                      className={cn(
-                        expanded &&
-                          'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-[52px] w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
-                      )}
-                    />
                   </>
                 )}
               </>
