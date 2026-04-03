@@ -1,6 +1,6 @@
-import { authKeys } from '@/shared/lib/queryKeys/authKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../api/auth.service';
+import { USER_QUERY_KEYS } from '@/features/user';
 
 export const useSignOut = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export const useSignOut = () => {
     onSuccess: async () => {
       await queryClient.cancelQueries();
       queryClient.clear();
-      queryClient.setQueryData(authKeys.me(), null);
+      queryClient.setQueryData(USER_QUERY_KEYS.me(), null);
     },
   });
 };

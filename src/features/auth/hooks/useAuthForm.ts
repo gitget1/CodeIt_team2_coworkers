@@ -3,12 +3,10 @@ import { SignInRequest } from '../model/dto/auth.dto';
 import { useSignIn } from './useSignIn';
 import { toast } from 'sonner';
 import { useRouter } from 'next/router';
-import { USER_QUERY_KEYS } from '@/features/user/lib/queryKeys';
-import { useQueryClient } from '@tanstack/react-query';
+import { getRedirectQuery } from '../utils/getRedirectQuery';
 
 export function useAuthForm() {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const {
     register,
@@ -24,9 +22,8 @@ export function useAuthForm() {
   const submitHandler = (data: SignInRequest) => {
     signIn(data, {
       onSuccess: (user) => {
-        queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.me() });
         toast.success(`${user.name}님 환영합니다!`);
-        const returnUrl = (router.query.redirect as string) || '/';
+        const returnUrl = getRedirectQuery(router.query.redirect);
         router.push(returnUrl);
       },
       onError: () => {

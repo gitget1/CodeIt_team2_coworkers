@@ -4,13 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useSignUp } from './useSignUp';
 import axios from 'axios';
-
-const SIGNUP_FIELDS: Array<keyof SignUpRequest> = [
-  'email',
-  'nickname',
-  'password',
-  'passwordConfirmation',
-];
+import { getRedirectQuery } from '../utils/getRedirectQuery';
 
 export function useSignUpForm() {
   const router = useRouter();
@@ -18,7 +12,6 @@ export function useSignUpForm() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<SignUpRequest>({ mode: 'onSubmit' });
 
@@ -28,21 +21,12 @@ export function useSignUpForm() {
     signUp(data, {
       onSuccess: (user) => {
         toast.success(`${user.name}님 환영합니다!`);
-        router.push('/');
+        const returnUrl = getRedirectQuery(router.query.redirect);
+        router.push(returnUrl);
       },
       onError: (error: unknown) => {
         if (axios.isAxiosError(error) && error.response) {
-          const { message, details } = error.response.data;
-          toast.error(message || '회원가입에 실패했습니다.');
-          if (details) {
-            (Object.keys(details) as Array<keyof SignUpRequest>).forEach((field) => {
-              setError(field, { type: 'server', message: '' });
-            });
-          } else {
-            SIGNUP_FIELDS.forEach((field) => {
-              setError(field, { type: 'server', message: '' });
-            });
-          }
+          toast.error(error.response.data.message || '회원가입에 실패했습니다.');
         } else {
           toast.error('회원가입 중 알 수 없는 오류가 발생했습니다.');
         }
