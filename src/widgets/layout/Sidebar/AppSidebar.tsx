@@ -249,16 +249,23 @@ export function AppSidebar({
                 ) : null}
                 {(isTeamListOpen || !expanded) && (
                   <>
-                    {teamItems.map(({ id, label }) => (
-                      <SidebarNavItem
-                        key={id}
-                        label={label}
-                        isSelected={selectedTeamId === id}
-                        isExpanded={expanded}
-                        onClick={() => onTeamSelect?.(id)}
-                        icon={<TeamIcon className="text-slate-300" />}
-                      />
-                    ))}
+                    {teamItems.map(({ id, label }) => {
+                      const isTeamSelected = selectedTeamId === id;
+                      return (
+                        <SidebarNavItem
+                          key={id}
+                          label={label}
+                          isSelected={isTeamSelected}
+                          isExpanded={expanded}
+                          onClick={() => onTeamSelect?.(id)}
+                          icon={
+                            <TeamIcon
+                              className={isTeamSelected ? 'text-brand-primary' : 'text-slate-300'}
+                            />
+                          }
+                        />
+                      );
+                    })}
                   </>
                 )}
               </>
