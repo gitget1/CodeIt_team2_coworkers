@@ -30,12 +30,12 @@ export function ImagePreviewList({ images, onRemove, className }: Props) {
   return (
     <>
       {images.map((image, index) => (
-        <div key={index} className={cn('relative h-[120px] w-[120px]', className)}>
+        <div key={index} className={cn('relative w-20 h-20 md:h-30 md:w-30', className)}>
           <img src={objectUrls[index]} className="h-full w-full rounded object-cover" />
           <button
             type="button"
             onClick={() => onRemove(index)}
-            className="absolute top-1 right-1 bg-black px-1 text-xs text-white"
+            className="absolute -top-1 -right-1 border border-slate-400 w-6 h-6 flex items-center justify-center  bg-white px-1 text-xs rounded-full text-slate-500"
           >
             <IconClose size={16} />
           </button>

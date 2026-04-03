@@ -22,7 +22,7 @@ export function ImageUploadSlot({
   return (
     <label
       className={cn(
-        'flex h-[120px] w-[120px] cursor-pointer flex-col items-center justify-center rounded-[10px] border border-slate-200',
+        'flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-[10px] border border-slate-200 md:h-30 md:w-30',
         className,
       )}
     >

@@ -11,7 +11,8 @@ export function useCommentSection(articleId: number) {
   const [commentInput, setCommentInput] = useState('');
   const [updateInputs, setUpdateInputs] = useState<{ [id: number]: string }>({});
   const [editCommentIds, setEditCommentIds] = useState<Set<number>>(new Set());
-
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const handleCreateComment = () => {
     if (!commentInput.trim()) return;
     createComment(articleId, commentInput);
@@ -34,18 +35,37 @@ export function useCommentSection(articleId: number) {
       return newSet;
     });
   };
+  const openDeleteModal = (id: number) => {
+    setDeleteTargetId(id);
+    setIsDeleteOpen(true);
+  };
 
+  const closeDeleteModal = () => {
+    setDeleteTargetId(null);
+    setIsDeleteOpen(false);
+  };
+  const confirmDelete = () => {
+    if (deleteTargetId !== null) {
+      deleteComment(deleteTargetId);
+      closeDeleteModal();
+    }
+  };
+  const isActive = commentInput.trim().length > 0 && !isCreating;
   return {
     commentInput,
     setCommentInput,
     updateInputs,
     editCommentIds,
     isCreating,
-
+    isActive,
     handleCreateComment,
     handleInputChange,
     toggleEdit,
     deleteComment,
     updateComment,
+    openDeleteModal,
+    closeDeleteModal,
+    confirmDelete,
+    isDeleteOpen,
   };
 }

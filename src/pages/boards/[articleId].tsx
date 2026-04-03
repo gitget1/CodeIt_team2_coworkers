@@ -5,6 +5,7 @@ import CommentSection from '@/features/boards/components/CommentSection';
 import { useArticleDetailPage } from '@/features/boards/hooks/useArticleDetailPage';
 import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
 import { ReactElement } from 'react';
+import { IconArrowLeft } from '@/shared/ui/icons/IconArrowLeft';
 
 export default function ArticleDetail() {
   const { article, comments, isLoading, isError } = useArticleDetailPage();
@@ -12,9 +13,12 @@ export default function ArticleDetail() {
   return (
     <div className="flex min-h-screen justify-center bg-slate-100 p-6">
       <div className="mx-auto w-full max-w-225 space-y-4 rounded-[20px] border border-white bg-white p-4 px-15 py-15">
-        <Link href="/boards" className="text-slate-400">
-          자유게시판으로
-        </Link>
+        <Link
+  href="/boards"
+  className="flex items-center gap-1 text-slate-400 hover:text-slate-600"
+>
+  <IconArrowLeft size={24} />
+</Link>
 
         {isLoading ? (
           <ArticleDetailSkeleton />

@@ -15,7 +15,8 @@ export function ArticleCard({ article, variant }: Props) {
   const isBest = variant === 'best';
 
   return (
-   <Link href={`/boards/${article.id}`}
+    <Link
+      href={`/boards/${article.id}`}
       className={
         isBest
           ? 'h-51.25 w-85 rounded-xl border border-slate-200 bg-white px-5 py-6'
@@ -44,7 +45,7 @@ export function ArticleCard({ article, variant }: Props) {
           </p>
         </div>
         {article.image && (
-          <div className="h-22 w-22 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+          <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-gray-100 md:h-22 md:w-22 lg:h-15 lg:w-15">
             {!isError ? (
               <img
                 src={article.image}

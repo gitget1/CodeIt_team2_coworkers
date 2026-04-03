@@ -2,7 +2,6 @@ import { ArticleForm } from '@/features/boards/components/ArticleForm';
 import { useArticleDetailQuery } from '@/features/boards/hooks/useArticleDetailQuery';
 import { useUpdateArticle } from '@/features/boards/hooks/useUpdateArticle';
 import { handleImages } from '@/features/boards/utils/handleImages';
-import { uploadImage } from '@/features/user';
 import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';

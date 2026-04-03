@@ -28,8 +28,8 @@ export function BestArticleCarousel({ best, onPrev, onNext, onSwipe }: BestArtic
   };
 
   return (
-    <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} className="mx-auto w-fit">
-      <h2 className="text-xl font-bold">베스트 게시글</h2>
+    <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} className="mx-auto">
+      <h2 className="px-4 text-xl font-bold md:px-2 lg:px-6">베스트 게시글</h2>
       <div className="flex justify-center gap-4 pt-6">
         {best.visibleBest.map((article) => (
           <ArticleCard key={article.id} article={article} variant="best" />
