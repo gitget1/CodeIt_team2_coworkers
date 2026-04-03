@@ -22,7 +22,7 @@ export const LandingHero = ({ className }: LandingHeroProps) => {
           animate="visible"
           className="relative z-10 ml-10 flex w-full flex-col items-start text-left md:px-10 lg:ml-26 lg:w-90 lg:gap-80 lg:px-0 xl:w-100"
         >
-          <div className="relative flex flex-col items-start">
+          <div className="relative flex flex-col items-start lg:mt-20">
             <motion.div
               variants={fadeInUp}
               className="absolute -top-9 -left-4 h-9 w-9 md:-top-10 md:-left-5 lg:-top-13 lg:-left-6 lg:h-12 lg:w-12"
@@ -48,7 +48,7 @@ export const LandingHero = ({ className }: LandingHeroProps) => {
             </motion.h1>
           </div>
 
-          <motion.div variants={fadeInUp} className="mb-1 shrink-0 lg:mb-0">
+          <motion.div variants={fadeInUp} className="mb-1 shrink-0 lg:mb-10">
             <CTAButton />
           </motion.div>
         </motion.div>
