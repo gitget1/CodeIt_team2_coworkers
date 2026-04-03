@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -54,13 +54,21 @@ export function TaskSortableCardItem({
     },
   });
 
-  const style: CSSProperties = useMemo(
-    () => ({
-      transform: CSS.Transform.toString(transform),
-      transition,
-    }),
-    [transform, transition],
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+  const setRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      nodeRef.current = node;
+      setNodeRef(node);
+    },
+    [setNodeRef],
   );
+
+  useLayoutEffect(() => {
+    const el = nodeRef.current;
+    if (!el) return;
+    el.style.transform = CSS.Transform.toString(transform) ?? '';
+    el.style.transition = transition ?? '';
+  }, [transform, transition]);
 
   const showDropIndicatorBefore =
     dropIndicatorId === `before:${taskGroup.id}` && activeTaskGroupId !== taskGroup.id;
@@ -69,8 +77,7 @@ export function TaskSortableCardItem({
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
+      ref={setRef}
       className={cn(
         'relative will-change-transform transition-[opacity,transform] duration-200 ease-out',
         isDragging && 'opacity-60 scale-[1.01]',

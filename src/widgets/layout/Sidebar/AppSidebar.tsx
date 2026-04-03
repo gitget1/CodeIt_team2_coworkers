@@ -195,6 +195,8 @@ export function AppSidebar({
                     alt="COWORKERS"
                     width={180}
                     height={32}
+                    priority
+                    sizes="180px"
                     className="h-8 w-auto shrink-0 object-contain object-left"
                   />
                 ) : (
@@ -256,7 +258,9 @@ export function AppSidebar({
                       'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
                       'focus-visible:ring-brand-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     )}
-                    aria-expanded={isTeamListOpen}
+                    {...(isTeamListOpen
+                      ? { 'aria-expanded': true as const }
+                      : { 'aria-expanded': false as const })}
                     aria-label={isTeamListOpen ? '팀 목록 접기' : '팀 목록 펼치기'}
                   >
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center text-slate-300 [&>svg]:h-5 [&>svg]:w-5">
@@ -305,7 +309,7 @@ export function AppSidebar({
           onClick={handleToggle}
           className="bg-background-primary text-txt-default hover:bg-background-tertiary hover:text-txt-primary focus-visible:ring-brand-primary border-background-tertiary absolute top-7 right-0 z-10 flex h-8 w-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           aria-label="사이드바 열기"
-          aria-expanded={false}
+          {...{ 'aria-expanded': false as const }}
         >
           <FoldRightIcon className="h-6 w-6 text-slate-300" />
         </button>

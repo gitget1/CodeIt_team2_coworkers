@@ -104,7 +104,7 @@ export function TeamDashboardReadyView({ vm }: Props) {
 
       <div
         className="relative flex min-h-full flex-1 flex-col gap-6 bg-background-secondary p-4 md:p-6"
-        aria-busy={isFetching}
+        {...(isFetching ? { 'aria-busy': true as const } : {})}
       >
         {isFetching ? (
           <div

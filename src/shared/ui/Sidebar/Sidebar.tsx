@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { useSidebarStore } from '@/shared/store/sidebarStore';
 import { SidebarContext } from './SidebarContext';
@@ -38,19 +38,25 @@ export function Sidebar({
   const onToggle = onToggleProp ?? storeToggle;
 
   const width = isExpanded ? expandedWidth : collapsedWidth;
+  const asideRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const el = asideRef.current;
+    if (!el) return;
+    el.style.width = `${width}px`;
+  }, [width]);
 
   return (
     <SidebarContext.Provider value={{ isExpanded, onToggle, sidebarId }}>
       <aside
+        ref={asideRef}
         id={sidebarId}
         role="navigation"
         aria-label="사이드바"
         className={cn(
-          'flex h-full flex-col shrink-0 bg-background-primary border-r border-[var(--color-border-primary)] transition-[width] duration-200 ease-out overflow-hidden',
+          'flex h-full flex-col shrink-0 bg-background-primary border-r border-background-tertiary transition-[width] duration-200 ease-out overflow-hidden',
           className,
         )}
-        style={{ width }}
-        aria-expanded={isExpanded}
       >
         <div className="min-h-0 flex-1 flex flex-col overflow-hidden">{children}</div>
         {footer != null && (
