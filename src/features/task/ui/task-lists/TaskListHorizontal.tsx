@@ -22,35 +22,40 @@ export function TaskListHorizontal({
 }: Props) {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex flex-1 gap-3 overflow-x-auto pb-2">
-        {taskLists.map((list) => {
-          const isActive = list.id === selectedId;
+      <div className="flex flex-1 pb-2">
+        <div className="flex gap-3 overflow-x-auto">
+          {taskLists.map((list) => {
+            const isActive = list.id === selectedId;
 
-          return (
-            <div
-              key={list.id}
-              onClick={() => onSelect(list.id)}
-              className={`border-background-tertiary flex min-w-[140px] shrink-0 items-center justify-between rounded-xl border px-3 py-2 transition ${
-                isActive ? 'border-blue-500 bg-blue-50' : 'bg-white'
-              }`}
-            >
-              <div className="flex flex-col">
-                <span className="text-txt-primary text-sm font-medium">{list.title}</span>
+            return (
+              <div
+                key={list.id}
+                onClick={() => onSelect(list.id)}
+                className={`border-background-tertiary flex min-w-[140px] shrink-0 cursor-pointer items-center justify-between rounded-xl border px-3 py-2 transition ${
+                  isActive ? 'border-blue-500 bg-blue-50' : 'bg-white'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => onSelect(list.id)}
+                  className="flex flex-1 cursor-pointer flex-col text-left"
+                >
+                  <span className="text-txt-primary text-sm font-medium">{list.title}</span>
 
-                <div className="mt-1 flex items-center gap-1 text-xs text-blue-500">
-                  <IconProgress size={14} progress={list.completedCount / list.totalCount} />
-                  <span>
-                    {list.completedCount}/{list.totalCount}
-                  </span>
+                  <div className="mt-1 flex items-center gap-1 text-xs text-blue-500">
+                    <IconProgress size={14} progress={list.completedCount / list.totalCount} />
+                    <span>
+                      {list.completedCount}/{list.totalCount}
+                    </span>
+                  </div>
+                </button>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <TaskListMenu onEdit={() => onEdit(list.id)} onDelete={() => onDelete(list.id)} />
                 </div>
               </div>
-
-              <div onClick={(e) => e.stopPropagation()}>
-                <TaskListMenu onEdit={() => onEdit(list.id)} onDelete={() => onDelete(list.id)} />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       <Button
         variant="outline"

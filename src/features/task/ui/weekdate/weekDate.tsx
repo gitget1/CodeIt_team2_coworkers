@@ -3,50 +3,45 @@ import WeekDateHeader from './weekDateHeader';
 import WeekDateSelector from './weekDateSelector';
 
 type Props = {
-  initialDate: Date;
-  onSelectDate?: (date: Date) => void;
+  value: Date;
+  onChange?: (date: Date) => void;
   groupName: string;
 };
 
-export default function WeekCalendar({ initialDate, onSelectDate, groupName }: Props) {
-  const [date, setDate] = useState(new Date(initialDate));
+export default function WeekCalendar({ value, onChange, groupName }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handlePrevWeek = () => {
-    const prev = new Date(date);
+    const prev = new Date(value);
     prev.setDate(prev.getDate() - 7);
-    setDate(prev);
-    onSelectDate?.(prev);
+    onChange?.(prev);
   };
 
   const handleNextWeek = () => {
-    const next = new Date(date);
+    const next = new Date(value);
     next.setDate(next.getDate() + 7);
-    setDate(next);
-    onSelectDate?.(next);
+    onChange?.(next);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <WeekDateHeader
-        value={date}
+        value={value}
         groupName={groupName}
         onPrev={handlePrevWeek}
         onNext={handleNextWeek}
         isOpen={isOpen}
         onOpenCalendar={() => setIsOpen((prev) => !prev)}
         onSelectDate={(d) => {
-          setDate(d);
           setIsOpen(false);
-          onSelectDate?.(d);
+          onChange?.(d);
         }}
         onCloseCalendar={() => setIsOpen(false)}
       />
       <WeekDateSelector
-        value={date}
+        value={value}
         onChange={(d) => {
-          setDate(d);
-          onSelectDate?.(d);
+          onChange?.(d);
         }}
       />
     </div>
