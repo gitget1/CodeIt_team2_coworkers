@@ -54,7 +54,13 @@ export const LandingFeatureSection = ({ feature, className }: LandingFeatureSect
       >
         <motion.div variants={fadeInUp} className={textWrapperClasses}>
           <div className={iconClasses}>
-            <Image src={icon} alt={`${imageAlt} 아이콘`} fill className="object-contain" />
+            <Image
+              src={icon}
+              alt={`${imageAlt} 아이콘`}
+              fill
+              sizes="48px"
+              className="object-contain"
+            />
           </div>
           <h2
             className={cn(

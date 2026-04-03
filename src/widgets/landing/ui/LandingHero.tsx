@@ -31,6 +31,7 @@ export const LandingHero = ({ className }: LandingHeroProps) => {
                 src={LandingHeaderIcon}
                 alt="Coworkers 아이콘"
                 fill
+                sizes="48px"
                 className="object-contain"
               />
             </motion.div>
