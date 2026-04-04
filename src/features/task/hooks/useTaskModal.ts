@@ -8,6 +8,7 @@ export function useTaskModal() {
 
   return {
     detailTask,
+    setDetailTask,
     editTask,
     deleteTask,
 

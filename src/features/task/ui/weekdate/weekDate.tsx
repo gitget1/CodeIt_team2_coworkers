@@ -11,15 +11,15 @@ type Props = {
 export default function WeekCalendar({ value, onChange, groupName }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handlePrevWeek = () => {
+  const handlePrevMonth = () => {
     const prev = new Date(value);
-    prev.setDate(prev.getDate() - 7);
+    prev.setMonth(prev.getMonth() - 1);
     onChange?.(prev);
   };
 
-  const handleNextWeek = () => {
+  const handleNextMonth = () => {
     const next = new Date(value);
-    next.setDate(next.getDate() + 7);
+    next.setMonth(next.getMonth() + 1);
     onChange?.(next);
   };
 
@@ -28,8 +28,8 @@ export default function WeekCalendar({ value, onChange, groupName }: Props) {
       <WeekDateHeader
         value={value}
         groupName={groupName}
-        onPrev={handlePrevWeek}
-        onNext={handleNextWeek}
+        onPrev={handlePrevMonth}
+        onNext={handleNextMonth}
         isOpen={isOpen}
         onOpenCalendar={() => setIsOpen((prev) => !prev)}
         onSelectDate={(d) => {

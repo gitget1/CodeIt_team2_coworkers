@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import emptyImage from '@/shared/assets/images/empty-my-history.png';
 import { useTaskListQuery } from '../hooks/useTaskListQuery';
 import { TaskCommonParams } from '../model/params/task.params';
 import TaskCreateButton from './create-task/TaskCreateButton';
@@ -20,6 +22,7 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
   const taskCount = data?.tasks.length ?? 0;
   const {
     detailTask,
+    setDetailTask,
     editTask,
     deleteTask,
     openDetail,
@@ -43,8 +46,18 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
         <ul className="flex w-full flex-col gap-2">
           <TaskCreateButton params={params} />
           {!data || data.tasks.length === 0 ? (
-            <li className="text-txt-secondary rounded-lg border border-dashed p-4 text-sm">
-              할일이 없습니다
+            <li className="border-background-tertiary flex w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-10">
+              <div className="relative aspect-square w-48 max-w-full shrink-0">
+                <Image
+                  src={emptyImage}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  sizes="192px"
+                  unoptimized
+                />
+              </div>
+              <p className="text-txt-secondary text-sm">할일이 없습니다</p>
             </li>
           ) : (
             data.tasks.map((task) => (
@@ -60,9 +73,21 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
           )}
         </ul>
       </section>
-      <TaskDetailPanel task={detailTask} onClose={closeDetail} />
+      <TaskDetailPanel
+        task={detailTask}
+        onClose={closeDetail}
+        params={params}
+        onTaskChange={setDetailTask}
+        onEditClick={openEdit}
+        onDeleteClick={openDelete}
+      />
       {deleteTask && (
-        <TaskDeleteModal taskId={deleteTask.id} title={deleteTask.title} onClose={closeDelete} />
+        <TaskDeleteModal
+          taskId={deleteTask.id}
+          title={deleteTask.title}
+          onClose={closeDelete}
+          onDeleteSuccess={closeDetail}
+        />
       )}
       {editTask && (
         <TaskUpdateModalContent task={editTask} params={params} isOpen={true} onClose={closeEdit} />

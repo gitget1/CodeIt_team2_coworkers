@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { GROUP_QUERY_KEYS } from '@/features/group/lib/queryKeys';
 import { createTask } from '../api/createTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
@@ -29,6 +30,9 @@ export function useCreateTaskMutation(params: UseCreateTaskMutationParams) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: TASK_QUERY_KEYS.lists(params.groupId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: GROUP_QUERY_KEYS.detail(params.groupId),
       });
     },
   });

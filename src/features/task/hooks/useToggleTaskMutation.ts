@@ -1,55 +1,85 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { GroupDetail } from '@/features/group/model/entities/group.model';
+import { GROUP_QUERY_KEYS } from '@/features/group/lib/queryKeys';
 import { toggleTask } from '../api/toggleTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
+import type { TaskList } from '../model/entities/task.model';
 
 type ToggleTaskParams = TaskCommonParams & {
   taskId: number;
   done: boolean;
 };
 
+function patchTaskCompletion(
+  list: TaskList,
+  taskListId: number,
+  taskId: number,
+  done: boolean,
+): TaskList {
+  if (list.id !== taskListId) return list;
+  return {
+    ...list,
+    tasks: list.tasks.map((task) =>
+      task.id === taskId
+        ? {
+            ...task,
+            isCompleted: done,
+            completedAt: done ? new Date().toISOString() : undefined,
+          }
+        : task,
+    ),
+  };
+}
+
 export function useToggleTaskMutation(params: TaskCommonParams) {
   const queryClient = useQueryClient();
-  const queryKey = TASK_QUERY_KEYS.lists(params.groupId);
+  const groupDetailKey = GROUP_QUERY_KEYS.detail(params.groupId);
 
   return useMutation({
     mutationFn: toggleTask,
 
     onMutate: async (variables: ToggleTaskParams) => {
-      const { taskId } = variables;
+      const { taskId, taskListId, done } = variables;
+      const listQueryFilter = {
+        queryKey: [...TASK_QUERY_KEYS.lists(params.groupId), taskListId],
+      };
 
-      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries(listQueryFilter);
+      await queryClient.cancelQueries({ queryKey: groupDetailKey });
 
-      const previousData = queryClient.getQueryData(queryKey);
+      const previousEntries = queryClient.getQueriesData<TaskList>(listQueryFilter);
+      const previousGroup = queryClient.getQueryData<GroupDetail>(groupDetailKey);
 
-      queryClient.setQueryData(queryKey, (old: any) => {
+      queryClient.setQueriesData<TaskList>(listQueryFilter, (old) => {
         if (!old) return old;
+        return patchTaskCompletion(old, taskListId, taskId, done);
+      });
 
+      /** 사이드바 완료/전체(프로그래스)는 그룹 상세 taskLists 기준이라 함께 맞춤 */
+      queryClient.setQueryData<GroupDetail>(groupDetailKey, (prev) => {
+        if (!prev) return prev;
         return {
-          ...old,
-          tasks: old.tasks.map((task: any) =>
-            task.id === taskId
-              ? {
-                  ...task,
-                  isCompleted: variables.done,
-                  doneAt: task.doneAt ? null : new Date().toISOString(),
-                }
-              : task,
-          ),
+          ...prev,
+          taskLists: prev.taskLists.map((list) => patchTaskCompletion(list, taskListId, taskId, done)),
         };
       });
 
-      return { previousData };
+      return { previousEntries, previousGroup };
     },
 
     onError: (_error, _variables, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(queryKey, context.previousData);
+      context?.previousEntries?.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
+      if (context?.previousGroup !== undefined) {
+        queryClient.setQueryData(groupDetailKey, context.previousGroup);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: TASK_QUERY_KEYS.lists(params.groupId) });
+      queryClient.invalidateQueries({ queryKey: groupDetailKey });
     },
   });
 }

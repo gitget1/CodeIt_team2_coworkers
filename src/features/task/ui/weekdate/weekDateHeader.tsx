@@ -52,7 +52,7 @@ export default function WeekDateHeader({
             className="bg-primary h-4 w-4 rounded-full border border-gray-300 p-0"
             variant="ghost"
             onClick={onPrev}
-            aria-label="PrevWeek-Button"
+            aria-label="이전 달"
           >
             <IconArrowLeft size={12} />
           </Button>
@@ -61,7 +61,7 @@ export default function WeekDateHeader({
             className="bg-primary h-4 w-4 rounded-full border border-gray-300 p-0"
             variant="ghost"
             onClick={onNext}
-            aria-label="NextWeek-Button"
+            aria-label="다음 달"
           >
             <IconArrowRight size={12} />
           </Button>

@@ -8,9 +8,17 @@ type Props = {
   taskId: number;
   title: string;
   onClose: () => void;
+  /** 삭제 API 성공 직후 (모달 닫기 전) */
+  onDeleteSuccess?: () => void;
 };
 
-export default function TaskDeleteModalContent({ params, taskId, title, onClose }: Props) {
+export default function TaskDeleteModalContent({
+  params,
+  taskId,
+  title,
+  onClose,
+  onDeleteSuccess,
+}: Props) {
   const { mutate, isPending } = useDeleteTaskMutation(params);
 
   return (
@@ -25,6 +33,7 @@ export default function TaskDeleteModalContent({ params, taskId, title, onClose 
           mutate(taskId, {
             onSuccess: (result) => {
               if (!result.ok) return;
+              onDeleteSuccess?.();
               onClose();
             },
           });

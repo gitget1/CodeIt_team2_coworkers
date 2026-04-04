@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { GROUP_QUERY_KEYS } from '@/features/group/lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
 import { deleteTask } from '../api/deleteTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
@@ -33,6 +34,9 @@ export function useDeleteTaskMutation(params: TaskCommonParams) {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({
+        queryKey: GROUP_QUERY_KEYS.detail(params.groupId),
+      });
     },
   });
 }

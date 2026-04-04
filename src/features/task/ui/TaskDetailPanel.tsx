@@ -1,5 +1,7 @@
 import { formatDateTime } from '@/shared/lib/date';
 import { Task } from '../model/entities/task.model';
+import { TaskCommonParams } from '../model/params/task.params';
+import { useToggleTaskMutation } from '../hooks/useToggleTaskMutation';
 import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
 import { IconRepeat } from '@/shared/ui/icons/IconRepeat';
 import { Button } from '@/shared/ui/Button';
@@ -7,10 +9,15 @@ import { IconCheck } from '@/shared/ui/icons';
 import { IconCommentBtn } from '@/shared/ui/icons/IconCommentBtn';
 import { Input } from '@/shared/ui/input/Input';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
+import Dropdown from '@/shared/ui/dropdown';
 
 type Props = {
   task: Task | null;
   onClose: () => void;
+  params: TaskCommonParams;
+  onTaskChange?: (task: Task) => void;
+  onEditClick: (task: Task) => void;
+  onDeleteClick: (task: Task) => void;
 };
 
 type MetaItemProps = {
@@ -27,7 +34,38 @@ function MetaItem({ icon, children }: MetaItemProps) {
   );
 }
 
-export default function TaskDetailPanel({ task, onClose }: Props) {
+export default function TaskDetailPanel({
+  task,
+  onClose,
+  params,
+  onTaskChange,
+  onEditClick,
+  onDeleteClick,
+}: Props) {
+  const { mutate, isPending } = useToggleTaskMutation(params);
+
+  const handleToggleComplete = () => {
+    if (!task) return;
+    const nextDone = !task.isCompleted;
+    mutate(
+      {
+        groupId: params.groupId,
+        taskListId: params.taskListId,
+        taskId: task.id,
+        done: nextDone,
+      },
+      {
+        onSuccess: () => {
+          onTaskChange?.({
+            ...task,
+            isCompleted: nextDone,
+            completedAt: nextDone ? new Date().toISOString() : undefined,
+          });
+        },
+      },
+    );
+  };
+
   return (
     <>
       {task && <div className="fixed inset-0 z-40" onClick={onClose} />}
@@ -43,9 +81,38 @@ export default function TaskDetailPanel({ task, onClose }: Props) {
               </button>
             </div>
 
-            <div className="flex items-center justify-between px-10 pt-10">
-              <h2 className="text-xl font-semibold text-gray-900">{task.title}</h2>
-              <button className="text-gray-400">⋮</button>
+            <div className="flex items-center justify-between gap-3 px-10 pt-10">
+              <h2 className="min-w-0 flex-1 text-xl font-semibold text-gray-900">{task.title}</h2>
+              <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
+                <Dropdown>
+                  <Dropdown.Trigger
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-icon-primary hover:text-txt-primary cursor-pointer rounded p-1 text-gray-400"
+                  >
+                    ...
+                  </Dropdown.Trigger>
+                  <Dropdown.Menu className="absolute right-0 z-[100] mt-2 w-28">
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditClick(task);
+                      }}
+                      className="px-3 py-2"
+                    >
+                      수정하기
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteClick(task);
+                      }}
+                      className="px-3 py-2"
+                    >
+                      삭제하기
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
             </div>
 
             <div className="mt-4 flex items-center gap-3 px-7 pb-4">
@@ -68,7 +135,17 @@ export default function TaskDetailPanel({ task, onClose }: Props) {
                   </p>
                 </div>
               </div>
-              <Button leftIcon={<IconCheck />}>완료하기</Button>
+              <Button
+                type="button"
+                leftIcon={<IconCheck />}
+                disabled={isPending}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleComplete();
+                }}
+              >
+                {task.isCompleted ? '완료 취소' : '완료하기'}
+              </Button>
             </div>
 
             <div className="border-background-tertiary mx-7 mt-5 border-t" />

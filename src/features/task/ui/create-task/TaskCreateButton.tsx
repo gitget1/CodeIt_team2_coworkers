@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TaskCreateModal from './TaskCreateModal';
 import type { TaskCommonParams } from '../../model/params/task.params';
+import { Button } from '@/shared/ui/Button';
 
 type Props = {
   params: TaskCommonParams;
@@ -11,16 +12,11 @@ export default function TaskCreateButton({ params }: Props) {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-      >
+      <Button onClick={() => setIsOpen(true)} variant="primary" className="rounded-lg px-4 py-2">
         할 일 생성
-      </button>
+      </Button>
 
       <TaskCreateModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }
-
-// TODO: 임시 생성 버튼
