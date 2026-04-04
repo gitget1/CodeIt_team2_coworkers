@@ -21,15 +21,7 @@ export default function Header({ right, className }: Props) {
 
   const teamHref = teamDashboardPath(String(groupId));
   const taskListTitle = group?.taskLists?.find((l) => l.id === taskListId)?.title ?? '할일 리스트';
-  const breadcrumbItems = [
-    { label: group?.name ?? '', href: teamHref },
-    { label: taskListTitle },
-  ];
-  /**TODO:
-   * BreadcrumbItem의 할일 리스트는
-   * 임시 데이터로 실제 데이터 변경 시
-   * 연결 작업 및 경로 수정 필요
-   */
+  const breadcrumbItems = [{ label: group?.name ?? '', href: teamHref }, { label: taskListTitle }];
 
   return (
     <header

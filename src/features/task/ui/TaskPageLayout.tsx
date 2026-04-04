@@ -1,4 +1,3 @@
-import GroupSettingMenu from '@/features/task/ui/header/groupSettingMenu';
 import Header from '@/features/task/ui/header/header';
 import WeekCalendar from '@/features/task/ui/weekdate/weekDate';
 import { useCallback, useState } from 'react';
@@ -84,7 +83,7 @@ export function TaskPageLayout({ groupId, taskList }: Props) {
   return (
     <>
       <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
-        <Header right={<GroupSettingMenu role="ADMIN" />} />
+        <Header />
         <div className="flex w-full flex-col gap-4 sm:gap-6 lg:flex-row">
           <div className="hidden w-[240px] shrink-0 lg:flex lg:flex-col lg:gap-4">
             <h2 className="text-txt-primary text-lg font-semibold">할 일</h2>
