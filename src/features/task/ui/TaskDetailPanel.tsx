@@ -72,18 +72,27 @@ export default function TaskDetailPanel({
       {task && <div className="fixed inset-0 z-40" onClick={onClose} />}
 
       <aside
-        className={`fixed top-0 right-0 z-50 h-full w-[420px] bg-white shadow-[0_15px_50px_-12px_rgba(0,0,0,0.3)] transition-transform duration-300 ${task ? 'translate-x-0' : 'translate-x-full'} `}
+        className={`fixed top-0 right-0 z-50 h-full w-full max-w-full bg-white shadow-[0_15px_50px_-12px_rgba(0,0,0,0.3)] transition-transform duration-300 sm:max-w-md md:max-w-[420px] ${task ? 'translate-x-0' : 'translate-x-full'} `}
       >
         {task && (
           <div className="flex h-full flex-col">
-            <div className="flex items-center justify-between px-6 py-5">
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
+            <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                className={cn(
+                  '!h-auto !min-h-0 w-auto !rounded-md !border-0 !bg-transparent !px-0 !py-0 text-xl leading-none',
+                  'text-gray-400 hover:!border-0 hover:!bg-transparent hover:text-gray-700',
+                  'active:!border-0 active:!bg-transparent',
+                  'disabled:!border-0',
+                )}
+              >
                 ✕
-              </button>
+              </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-3 px-10 pt-10">
-              <h2 className="min-w-0 flex-1 text-xl font-semibold text-gray-900">{task.title}</h2>
+            <div className="flex items-center justify-between gap-3 px-4 pt-6 md:px-8 lg:px-10 lg:pt-10">
+              <h2 className="min-w-0 flex-1 text-lg font-semibold text-gray-900 md:text-xl">{task.title}</h2>
               <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
                 <Dropdown>
                   <Dropdown.Trigger
@@ -124,20 +133,20 @@ export default function TaskDetailPanel({
               </div>
             </div>
 
-            <div className="mt-4 flex items-center gap-3 px-7 pb-4">
+            <div className="mt-4 flex items-center gap-3 px-4 pb-4 md:px-7">
               <div className="h-8 w-8 rounded-full bg-gray-200" />
               <span className="text-sm text-gray-700">{task.writer?.nickname ?? '작성자'}</span>
             </div>
 
-            <div className="flex items-center justify-between px-6">
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-6">
+            <div className="flex flex-col gap-4 px-4 md:flex-row md:items-start md:justify-between md:gap-3 md:px-6">
+              <div className="flex min-w-0 flex-col gap-2">
+                <div className="flex flex-wrap gap-4 md:gap-6">
                   <MetaItem icon={<IconCalendar size={16} />}>시작 날짜</MetaItem>
                   <p className="font-weight-regular text-txt-primary text-sm">
                     {formatDateTime(task.date)}
                   </p>
                 </div>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-4 md:gap-6">
                   <MetaItem icon={<IconRepeat />}>반복 설정</MetaItem>
                   <p className="font-weight-regular text-txt-primary text-sm">
                     {RECURRENCE_LABEL_MAP[task.recurrence]}
@@ -148,6 +157,7 @@ export default function TaskDetailPanel({
                 type="button"
                 leftIcon={<IconCheck />}
                 disabled={isPending}
+                className="w-full shrink-0 md:w-auto"
                 onClick={(e) => {
                   e.stopPropagation();
                   if (isPending) return;
@@ -158,14 +168,14 @@ export default function TaskDetailPanel({
               </Button>
             </div>
 
-            <div className="border-background-tertiary mx-7 mt-5 border-t" />
+            <div className="border-background-tertiary mx-4 mt-5 border-t md:mx-7" />
 
-            <div className="flex-1 overflow-y-auto px-6 py-5">
+            <div className="flex-1 overflow-y-auto px-4 py-4 md:px-6 md:py-5">
               <p className="font-weight-regular text-txt-primary text-sm leading-relaxed">
                 {task.description}
               </p>
 
-              <div className="mt-14">
+              <div className="mt-8 md:mt-14">
                 <div className="flex items-center gap-1">
                   <p className="text-2lg text-txt-primary font-bold">댓글</p>
                   <p className="text-2lg text-brand-primary font-bold">{task.commentCount}</p>

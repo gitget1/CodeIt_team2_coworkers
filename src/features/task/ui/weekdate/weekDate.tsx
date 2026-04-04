@@ -24,7 +24,7 @@ export default function WeekCalendar({ value, onChange, groupName }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="border-background-tertiary flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm md:gap-4 md:p-5 lg:p-6">
       <WeekDateHeader
         value={value}
         groupName={groupName}

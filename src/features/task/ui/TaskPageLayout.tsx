@@ -12,6 +12,10 @@ import { CreateTaskBoardModal } from '@/features/task-board/ui/CreateTaskBoardMo
 import { EditTaskGroupModal } from '@/features/task-board/ui/EditTaskGroupModal';
 import { DeleteTaskGroupModal } from '@/features/task-board/ui/DeleteTaskGroupModal';
 import { useTaskListActions } from '@/features/task/hooks/useTaskListActions';
+import {
+  TaskListStripSkeleton,
+  TaskPageLayoutSkeleton,
+} from '@/features/task/ui/TaskPageLayoutSkeleton';
 
 type Props = {
   groupId: number;
@@ -35,7 +39,9 @@ function isFiniteNumber(value: number | undefined): value is number {
 export function TaskPageLayout({ groupId, taskList }: Props) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const router = useRouter();
-  const { data: group } = useGroupQuery(groupId, { enabled: router.isReady });
+  const { data: group, isPending: isGroupPending } = useGroupQuery(groupId, {
+    enabled: router.isReady,
+  });
 
   const taskListIdFromUrl = Number(router.query.taskListId);
   const currentId: number | undefined = Number.isFinite(taskListIdFromUrl)
@@ -68,10 +74,13 @@ export function TaskPageLayout({ groupId, taskList }: Props) {
     onSelectTaskList: handleSelectTaskList,
   });
 
-  if (!router.isReady) return null;
-  if (!isFiniteNumber(currentId)) return null;
-
   const taskListSidebarItems = group?.taskLists?.map((l) => toTaskListSidebarItem(l)) ?? [];
+  const groupQueryAllowed = Number.isFinite(groupId) && groupId > 0;
+  const showTaskListSkeleton =
+    groupQueryAllowed && isGroupPending && taskListSidebarItems.length === 0;
+
+  if (!router.isReady) return <TaskPageLayoutSkeleton />;
+  if (!isFiniteNumber(currentId)) return <TaskPageLayoutSkeleton />;
 
   const selectedListFromGroup = group?.taskLists?.find((l) => l.id === currentIdNum);
   const selectedListFromDetail =
@@ -82,34 +91,40 @@ export function TaskPageLayout({ groupId, taskList }: Props) {
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
+      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-3 px-4 py-4 md:gap-5 md:px-6 md:py-5 lg:gap-6 lg:px-8 lg:py-6 xl:max-w-[1200px] xl:px-10">
         <Header />
-        <div className="flex w-full flex-col gap-4 sm:gap-6 lg:flex-row">
-          <div className="hidden w-[240px] shrink-0 lg:flex lg:flex-col lg:gap-4">
-            <h2 className="text-txt-primary text-lg font-semibold">할 일</h2>
+        <div className="flex w-full flex-col gap-4 md:gap-5 lg:flex-row lg:gap-8">
+          {showTaskListSkeleton ? (
+            <TaskListStripSkeleton />
+          ) : (
+            <>
+              <div className="hidden w-[220px] shrink-0 lg:flex lg:w-[240px] lg:flex-col lg:gap-4">
+                <h2 className="text-txt-primary text-base font-semibold md:text-lg">할 일</h2>
 
-            <div className="border-background-tertiary cursor-pointer rounded-2xl bg-white p-4">
-              <TaskListSidebar
-                taskLists={taskListSidebarItems}
-                selectedId={currentIdNum}
-                onSelect={handleSelectTaskList}
-                onCreate={taskListActions.openCreateModal}
-                onEdit={(id) => taskListActions.openEditModal(id)}
-                onDelete={(id) => taskListActions.openDeleteModal(id)}
-              />
-            </div>
-          </div>
-          <div className="lg:hidden">
-            <TaskListHorizontal
-              taskLists={taskListSidebarItems}
-              selectedId={currentIdNum}
-              onSelect={handleSelectTaskList}
-              onCreate={taskListActions.openCreateModal}
-              onEdit={(id) => taskListActions.openEditModal(id)}
-              onDelete={(id) => taskListActions.openDeleteModal(id)}
-            />
-          </div>
-          <div className="flex flex-1 flex-col gap-6">
+                <div className="border-background-tertiary cursor-pointer rounded-2xl bg-white p-3 shadow-sm md:p-4">
+                  <TaskListSidebar
+                    taskLists={taskListSidebarItems}
+                    selectedId={currentIdNum}
+                    onSelect={handleSelectTaskList}
+                    onCreate={taskListActions.openCreateModal}
+                    onEdit={(id) => taskListActions.openEditModal(id)}
+                    onDelete={(id) => taskListActions.openDeleteModal(id)}
+                  />
+                </div>
+              </div>
+              <div className="lg:hidden">
+                <TaskListHorizontal
+                  taskLists={taskListSidebarItems}
+                  selectedId={currentIdNum}
+                  onSelect={handleSelectTaskList}
+                  onCreate={taskListActions.openCreateModal}
+                  onEdit={(id) => taskListActions.openEditModal(id)}
+                  onDelete={(id) => taskListActions.openDeleteModal(id)}
+                />
+              </div>
+            </>
+          )}
+          <div className="flex min-w-0 flex-1 flex-col gap-4 md:gap-5 lg:gap-6">
             <WeekCalendar
               value={selectedDate}
               onChange={setSelectedDate}

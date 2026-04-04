@@ -18,7 +18,7 @@ export default function TaskUpdateModalContent({ params, task, isOpen, onClose }
   return (
     <Modal isOpen={isOpen} open={() => {}} close={onClose}>
       <Modal.Content size="md" className="sm:px-5 sm:py-8">
-        <div className="flex-1 overflow-y-auto">
+        <div className="no-scrollbar flex-1 overflow-y-auto">
           <TaskForm initialValues={initialValues} onSubmit={submit} isPending={isPending} />
         </div>
       </Modal.Content>

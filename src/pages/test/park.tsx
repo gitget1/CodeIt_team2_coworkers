@@ -12,11 +12,15 @@ export default function TestTaskPage() {
       <GlobalLayout>
         <TaskPageLayout
           groupId={groupIdNum}
-          taskLists={[
-            { id: 1, title: '테스트', groupId: 123, completedCount: 3, totalCount: 6 },
-            { id: 2, title: '테스트2', groupId: 123, completedCount: 1, totalCount: 4 },
-            { id: 3, title: '테스트3', groupId: 123, completedCount: 2, totalCount: 5 },
-          ]}
+          taskList={{
+            id: 1,
+            groupId: groupIdNum,
+            title: '테스트',
+            order: 0,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            tasks: [],
+          }}
         />
       </GlobalLayout>
     </>

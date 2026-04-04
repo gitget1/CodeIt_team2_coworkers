@@ -31,7 +31,7 @@ export default function TaskCreateModalContent({ params, isOpen, onClose }: Prop
   return (
     <Modal isOpen={isOpen} open={() => {}} close={onClose}>
       <Modal.Content size="md" className="sm:px-5 sm:py-8">
-        <div className="flex-1 overflow-y-auto">
+        <div className="no-scrollbar flex-1 overflow-y-auto">
           <TaskForm
             initialValues={INITIAL_TASK_FORM_VALUES}
             onSubmit={handleSubmit}

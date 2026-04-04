@@ -8,8 +8,8 @@ type Props = {
 export function TaskListProgress({ completed, total }: Props) {
   const progress = total === 0 ? 0 : completed / total;
   return (
-    <div className="flex items-center gap-2 text-sm text-blue-500">
-      <IconProgress size={16} progress={progress} />
+    <div className="flex items-center gap-1.5 text-[14px] font-normal text-[#5189FA]">
+      <IconProgress size={14} progress={progress} />
       <span>
         {completed}/{total}
       </span>

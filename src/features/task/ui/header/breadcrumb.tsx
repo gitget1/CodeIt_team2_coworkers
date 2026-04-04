@@ -15,7 +15,7 @@ export default function Breadcrumb({ items, className }: Props) {
   return (
     <nav
       className={cn(
-        'text-txt-secondary flex items-center gap-2 text-base sm:text-2xl whitespace-nowrap overflow-hidden',
+        'text-txt-primary flex items-center gap-2 text-[24px] font-bold whitespace-nowrap overflow-hidden',
         className,
       )}
     >
@@ -25,7 +25,7 @@ export default function Breadcrumb({ items, className }: Props) {
         return (
           <div key={index} className="flex items-center gap-2">
             <BreadcrumbItem label={item.label} href={item.href} readonly={isLast} />
-            {!isLast && <span className="text-txt-tertiary">{'>'}</span>}
+            {!isLast && <span className="text-txt-primary">{'>'}</span>}
           </div>
         );
       })}

@@ -16,7 +16,7 @@ export default function Header({ right, className }: Props) {
 
   const { data: group, isLoading: isGroupLoading } = useGroupQuery(groupId);
   if (isGroupLoading) {
-    return <Skeleton className="h-16 w-full rounded-xl" />;
+    return <Skeleton className="h-14 w-full rounded-xl md:h-16" />;
   }
 
   const teamHref = teamDashboardPath(String(groupId));
@@ -26,7 +26,7 @@ export default function Header({ right, className }: Props) {
   return (
     <header
       className={cn(
-        'bg-background-secondary flex w-full items-center justify-between rounded-xl px-4 py-3 text-xl sm:px-6 sm:py-4 sm:text-2xl',
+        'bg-background-secondary flex w-full items-center justify-between rounded-xl px-4 py-3 md:px-6 md:py-4',
         className,
       )}
     >

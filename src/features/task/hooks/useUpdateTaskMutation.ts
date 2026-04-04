@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { updateTask } from '../api/updateTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
@@ -30,6 +31,8 @@ export function useUpdateTaskMutation(params: UseUpdateTaskMutationParams) {
 
     onSuccess: (result) => {
       if (!result.ok) return;
+
+      toast.success('할 일을 수정했습니다.');
 
       queryClient.invalidateQueries({
         queryKey: TASK_QUERY_KEYS.list({

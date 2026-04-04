@@ -47,21 +47,24 @@ export default function TaskItem({ task, onClick, params, onDeleteClick, onEditC
   return (
     <li
       onClick={() => onClick(task)}
-      className="border-background-tertiary relative flex items-start justify-between rounded-lg border bg-white px-3 py-2 hover:cursor-pointer"
+      className="border-background-tertiary relative flex items-start justify-between gap-2 rounded-lg border bg-white px-2.5 py-2 hover:cursor-pointer md:gap-3 md:px-3 md:py-2.5"
     >
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <div
+          className="flex flex-wrap items-center gap-x-2 gap-y-1"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Checkbox id={checkboxId} size="lg" checked={task.isCompleted} onChange={handleToggle} />
           <label
             htmlFor={checkboxId}
-            className={`cursor-pointer text-sm transition-colors ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
+            className={`min-w-0 flex-1 cursor-pointer text-sm transition-colors md:text-sm ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
           >
             {task.title}
           </label>
           <MetaItem icon={<IconComment />}>{task.commentCount}</MetaItem>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 md:mt-0 md:gap-2">
           <MetaItem icon={<IconCalendar />}>{task.date && formatDate(task.date)}</MetaItem>
           <span className="bg-txt-secondary h-3 w-px" />
           <MetaItem icon={<IconRepeat />}>{RECURRENCE_LABEL_MAP[task.recurrence]}</MetaItem>

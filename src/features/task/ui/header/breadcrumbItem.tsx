@@ -8,11 +8,21 @@ interface BreadcrumbItemProps {
 
 export function BreadcrumbItem({ label, href, readonly }: BreadcrumbItemProps) {
   if (readonly || !href) {
-    return <span className="text-txt-primary font-medium">{label}</span>;
+    return (
+      <span
+        className="text-brand-primary shrink-0 font-bold"
+        aria-current="page"
+      >
+        {label}
+      </span>
+    );
   }
 
   return (
-    <Link href={href} className="text-txt-secondary hover:underline">
+    <Link
+      href={href}
+      className="text-txt-primary hover:text-interaction-hover transition-colors hover:underline"
+    >
       {label}
     </Link>
   );

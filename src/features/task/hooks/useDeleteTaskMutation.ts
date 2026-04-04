@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { GROUP_QUERY_KEYS } from '@/features/group/lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
 import { deleteTask } from '../api/deleteTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskList } from '../model/entities/task.model';
 
-/** useTaskListQuery의 date와 동일해야 목록 캐시와 낙관적 삭제가 맞습니다. */
 type Params = TaskCommonParams & {
   date?: string;
 };
@@ -21,6 +21,11 @@ export function useDeleteTaskMutation(params: Params) {
   return useMutation({
     mutationFn: (taskId: number) =>
       deleteTask({ groupId: params.groupId, taskListId: params.taskListId, taskId }),
+
+    onSuccess: (result) => {
+      if (!result.ok) return;
+      toast.success('할 일을 삭제했습니다.');
+    },
 
     onMutate: async (taskId) => {
       await queryClient.cancelQueries({ queryKey: listQueryKey });

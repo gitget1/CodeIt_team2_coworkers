@@ -8,6 +8,7 @@ import TaskDetailPanel from './TaskDetailPanel';
 import TaskDeleteModal from './delete-task/TaskDeleteModal';
 import TaskUpdateModalContent from './update-task/TaskUpdateModalContent';
 import { useTaskModal } from '../hooks/useTaskModal';
+import { TasksSectionLoadingSkeleton } from '@/features/task/ui/TaskPageLayoutSkeleton';
 
 type Props = TaskCommonParams & {
   date?: Date;
@@ -33,21 +34,21 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
     closeDelete,
   } = useTaskModal();
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <TasksSectionLoadingSkeleton />;
   if (isError) return <div>에러 발생</div>;
 
   return (
     <>
-      <section className="flex w-full max-w-[734px] flex-col gap-2">
-        <h2 className="text-txt-primary text-lg font-semibold">
+      <section className="mx-auto flex w-full max-w-full flex-col gap-2 md:max-w-[640px] lg:max-w-[734px]">
+        <h2 className="text-txt-primary text-base font-semibold md:text-lg">
           할 일 목록 <span className="text-txt-secondary">({taskCount}개)</span>
         </h2>
 
-        <ul className="flex w-full flex-col gap-2">
+        <ul className="flex w-full flex-col gap-2 md:gap-2.5">
           <TaskCreateButton params={params} />
           {!data || data.tasks.length === 0 ? (
-            <li className="border-background-tertiary flex w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-10">
-              <div className="relative aspect-square w-48 max-w-full shrink-0">
+            <li className="border-background-tertiary flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed py-8 md:gap-3 md:py-10">
+              <div className="relative aspect-square w-36 max-w-full shrink-0 md:w-48">
                 <Image
                   src={emptyImage}
                   alt=""

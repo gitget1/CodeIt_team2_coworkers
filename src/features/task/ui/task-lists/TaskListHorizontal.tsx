@@ -1,6 +1,7 @@
 import { TaskListSidebarItem } from './taskListSidebar.types';
 import { TaskListMenu } from './TaskListMenu';
-import { IconProgress, IconPlus } from '@/shared/ui/icons';
+import { TaskListProgress } from './TaskListProgress';
+import { IconPlus } from '@/shared/ui/icons';
 import { Button } from '@/shared/ui/Button';
 
 type Props = {
@@ -21,9 +22,9 @@ export function TaskListHorizontal({
   onCreate,
 }: Props) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 md:gap-3">
       <div className="flex min-w-0 flex-1 pb-2">
-        <div className="flex gap-3 overflow-x-auto whitespace-nowrap">
+        <div className="flex gap-3 overflow-x-auto whitespace-nowrap md:gap-3">
           {taskLists.map((list) => {
             const isActive = list.id === selectedId;
 
@@ -31,29 +32,21 @@ export function TaskListHorizontal({
               <div
                 key={list.id}
                 onClick={() => onSelect(list.id)}
-                className={`border-background-tertiary flex min-w-[140px] shrink-0 cursor-pointer items-center justify-between rounded-xl border px-3 py-2 transition ${
-                  isActive ? 'border-blue-500 bg-blue-50' : 'bg-white'
+                className={`border-background-tertiary flex min-w-[240px] shrink-0 cursor-pointer items-center justify-between gap-3 rounded-[20px] border px-4 py-3 transition sm:min-w-[260px] ${
+                  isActive ? 'border-brand-primary bg-blue-50' : 'bg-white'
                 }`}
               >
-                <button
-                  type="button"
-                  onClick={() => onSelect(list.id)}
-                  className="flex flex-1 cursor-pointer flex-col text-left"
-                >
-                  <span className="text-txt-primary text-sm font-medium">{list.title}</span>
-
-                  <div className="mt-1 flex items-center gap-1 text-xs text-blue-500">
-                    <IconProgress
-                      size={14}
-                      progress={list.totalCount === 0 ? 0 : list.completedCount / list.totalCount}
+                <span className="text-md text-txt-primary min-w-0 flex-1 truncate text-left font-semibold">
+                  {list.title}
+                </span>
+                <div className="flex shrink-0 items-center gap-2">
+                  <TaskListProgress completed={list.completedCount} total={list.totalCount} />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <TaskListMenu
+                      onEdit={() => onEdit(list.id)}
+                      onDelete={() => onDelete(list.id)}
                     />
-                    <span>
-                      {list.completedCount}/{list.totalCount}
-                    </span>
                   </div>
-                </button>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <TaskListMenu onEdit={() => onEdit(list.id)} onDelete={() => onDelete(list.id)} />
                 </div>
               </div>
             );
@@ -64,7 +57,7 @@ export function TaskListHorizontal({
       <Button
         variant="outline"
         onClick={onCreate}
-        className="flex shrink-0 items-center justify-center rounded-xl py-2 text-sm"
+        className="flex shrink-0 items-center justify-center rounded-xl px-2 py-2 text-xs md:px-3 md:text-sm"
         leftIcon={<IconPlus size={16} />}
       >
         추가하기
