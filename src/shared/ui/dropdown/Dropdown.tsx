@@ -57,7 +57,7 @@ export default function Dropdown({ children }: { children: ReactNode }) {
 
   return (
     <DropdownContext.Provider value={value}>
-      <div className="relative inline-block">{children}</div>
+      <div className="relative inline-flex items-center leading-none">{children}</div>
     </DropdownContext.Provider>
   );
 }

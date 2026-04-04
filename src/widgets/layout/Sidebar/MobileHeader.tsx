@@ -56,7 +56,7 @@ export function MobileHeader({
       <div className="min-w-0 flex-1" aria-hidden />
       {isLoggedIn ? (
         <Dropdown>
-          <Dropdown.Trigger>
+          <Dropdown.Trigger className="inline-flex h-8 w-8 shrink-0 items-center justify-center p-0 leading-none">
             <Profile
               size="md"
               imageSrc={profileImage ?? defaultProfileImgSrc}
