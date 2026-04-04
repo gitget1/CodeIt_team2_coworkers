@@ -52,9 +52,8 @@ export function Button({
       type={type}
       className={combinedClassName}
       disabled={disabled}
-      whileHover={disabled ? undefined : { scale: 1.02 }}
-      whileTap={disabled ? undefined : { scale: 0.97 }}
-      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+      whileTap={disabled ? undefined : { scale: 0.99 }}
+      transition={{ type: 'tween', ease: 'easeOut', duration: 0.1 }}
       {...props}
     >
       {leftIcon && (
