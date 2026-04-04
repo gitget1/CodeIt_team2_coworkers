@@ -13,7 +13,7 @@ export function UnsavedChangesModal({ isOpen, onClose, onConfirmLeave }: Unsaved
     <Modal isOpen={isOpen} open={() => {}} close={onClose}>
       <Modal.Content size="sm" showCloseButton={false}>
         <Modal.Header className="flex flex-col items-center pt-10 pb-2 text-center">
-          <IconAlert className="text-brand-primary mb-4" />
+          <IconAlert className="text-point-orange mb-4" />
           <Modal.Title className="text-txt-primary w-full text-center text-base leading-4.75 font-medium">
             저장하지 않은 변경사항이 있습니다
           </Modal.Title>
@@ -27,25 +27,25 @@ export function UnsavedChangesModal({ isOpen, onClose, onConfirmLeave }: Unsaved
           </Modal.Description>
         </Modal.Body>
 
-        <Modal.Footer className="flex gap-2 px-6 pt-6 pb-8">
+        <Modal.Footer className="flex gap-2 pt-6 pb-8">
           <Modal.Close asChild>
             <Button
               variant="outline"
               size="lg"
-              className="flex-1 text-base font-semibold whitespace-nowrap"
+              className="active:text-txt-primary text-txt-secondary hover:text-txt-primary hover:border-txt-disabled flex-1 border-slate-200 active:border-slate-200"
               aria-label="저장하지 않은 변경사항 모달 닫기"
               onClick={onClose}
             >
-              계속 작성하기
+              취소
             </Button>
           </Modal.Close>
           <Button
             variant="primary"
             size="lg"
-            className="flex-1 text-base font-semibold whitespace-nowrap"
+            className="border-point-orange bg-point-orange flex-1 text-white hover:border-[#ea580c] hover:bg-[#ea580c]"
             onClick={onConfirmLeave}
           >
-            저장 안 하고 이동
+            저장하기
           </Button>
         </Modal.Footer>
       </Modal.Content>

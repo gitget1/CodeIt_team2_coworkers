@@ -49,7 +49,7 @@ export function AccountDeleteModal() {
             <Button
               variant="outline"
               size="lg"
-              className="text-txt-default border-background-tertiary flex-1 text-base font-semibold"
+              className="text-txt-secondary active:text-txt-primary hover:text-txt-primary hover:border-txt-disabled flex-1 border-slate-200 text-base font-semibold active:border-slate-200"
               aria-label="회원 탈퇴 모달 닫기"
             >
               닫기

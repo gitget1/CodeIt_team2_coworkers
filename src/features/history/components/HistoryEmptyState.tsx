@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import emptyImage from '@/shared/assets/images/empty-my-history.png';
+import emptyImage from '@/shared/assets/images/empty-history.png';
 
 export const HistoryEmptyState = () => {
   return (

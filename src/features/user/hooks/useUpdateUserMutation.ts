@@ -26,6 +26,7 @@ export function useUpdateUserMutation() {
         queryClient.setQueryData<UserProfile>(USER_QUERY_KEYS.me(), {
           ...previousUser,
           name: newUserData.nickname ?? previousUser.name,
+          profileImage: newUserData.image ?? previousUser.profileImage,
         });
       }
 

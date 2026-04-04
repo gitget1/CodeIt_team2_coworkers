@@ -13,6 +13,9 @@ export function ProfileForm() {
   // 중복 실행 막기위한 상태
   const [isUploading, setIsUploading] = useState(false);
 
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const [imageTimestamp, setImageTimestamp] = useState(Date.now());
+
   const lastCallTimeRef = useRef<number>(0);
 
   const { mutate: updateProfile, mutateAsync: updateProfileAsync } = useUpdateUserMutation();
@@ -52,12 +55,15 @@ export function ProfileForm() {
       setIsUploading(false);
       return;
     }
+    const objectUrl = URL.createObjectURL(file);
+    setLocalPreview(objectUrl);
 
     toast.promise(
       (async () => {
         try {
           const { url: uploadedImageUrl } = await uploadImageAsync(file);
           await updateProfileAsync({ image: uploadedImageUrl });
+          setImageTimestamp(Date.now());
         } finally {
           setIsUploading(false);
         }
@@ -72,12 +78,21 @@ export function ProfileForm() {
 
   if (!isClient) return null;
 
+  const getServerImage = () => {
+    if (!user?.profileImage) return undefined;
+    const separator = user.profileImage.includes('?') ? '&' : '?';
+    return `${user.profileImage}${separator}t=${imageTimestamp}`;
+  };
+
+  const displayImage = localPreview || getServerImage();
+
   return (
     <div className="mb-8 flex flex-col items-center justify-center">
       <ProfileEdit
+        key={displayImage || 'empty-profile'}
         size={isMobile ? 'account-mobile' : 'account-pc'}
         alt="내 프로필 이미지"
-        imageSrc={user?.profileImage}
+        imageSrc={displayImage}
         onChange={handleProfileChange}
       />
     </div>
