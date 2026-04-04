@@ -87,6 +87,7 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
           title={deleteTask.title}
           onClose={closeDelete}
           onDeleteSuccess={closeDetail}
+          date={date?.toISOString()}
         />
       )}
       {editTask && (

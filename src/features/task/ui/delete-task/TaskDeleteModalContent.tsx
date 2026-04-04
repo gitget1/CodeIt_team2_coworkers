@@ -5,6 +5,7 @@ import TaskDeleteForm from './TaskDeleteForm';
 
 type Props = {
   params: TaskCommonParams;
+  date?: string;
   taskId: number;
   title: string;
   onClose: () => void;
@@ -13,12 +14,13 @@ type Props = {
 
 export default function TaskDeleteModalContent({
   params,
+  date,
   taskId,
   title,
   onClose,
   onDeleteSuccess,
 }: Props) {
-  const { mutate, isPending } = useDeleteTaskMutation(params);
+  const { mutate, isPending } = useDeleteTaskMutation({ ...params, date });
 
   return (
     <Modal.Content size="md" className="sm:px-5 sm:py-8">
