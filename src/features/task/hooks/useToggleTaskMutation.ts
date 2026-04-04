@@ -55,13 +55,13 @@ export function useToggleTaskMutation(params: TaskCommonParams) {
         if (!old) return old;
         return patchTaskCompletion(old, taskListId, taskId, done);
       });
-
-      /** 사이드바 완료/전체(프로그래스)는 그룹 상세 taskLists 기준이라 함께 맞춤 */
       queryClient.setQueryData<GroupDetail>(groupDetailKey, (prev) => {
         if (!prev) return prev;
         return {
           ...prev,
-          taskLists: prev.taskLists.map((list) => patchTaskCompletion(list, taskListId, taskId, done)),
+          taskLists: prev.taskLists.map((list) =>
+            patchTaskCompletion(list, taskListId, taskId, done),
+          ),
         };
       });
 

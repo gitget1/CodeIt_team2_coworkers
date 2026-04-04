@@ -8,7 +8,6 @@ type Props = {
   taskId: number;
   title: string;
   onClose: () => void;
-  /** 삭제 API 성공 직후 (모달 닫기 전) */
   onDeleteSuccess?: () => void;
 };
 

@@ -22,8 +22,7 @@ export function TaskListHorizontal({
 }: Props) {
   return (
     <div className="flex items-center gap-3">
-      {/* 왼쪽: 가로 스크롤 리스트 */}
-      <div className="flex flex-1 min-w-0 pb-2">
+      <div className="flex min-w-0 flex-1 pb-2">
         <div className="flex gap-3 overflow-x-auto whitespace-nowrap">
           {taskLists.map((list) => {
             const isActive = list.id === selectedId;
@@ -62,7 +61,6 @@ export function TaskListHorizontal({
         </div>
       </div>
 
-      {/* 오른쪽: 추가하기 버튼 고정 */}
       <Button
         variant="outline"
         onClick={onCreate}
