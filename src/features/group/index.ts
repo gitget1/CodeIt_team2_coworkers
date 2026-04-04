@@ -22,7 +22,10 @@ export { useDeleteGroupMutation } from './hooks/useDeleteGroupMutation';
 export { useGroupMemberQuery } from './hooks/useGroupMemberQuery';
 export { useRemoveGroupMemberMutation } from './hooks/useRemoveMemberMutation';
 export { useInvitationTokenQuery } from './hooks/useInvitationTokenQuery';
-export { useAcceptInvitationMutation } from './hooks/useAcceptInvitationMutation';
+export {
+  useAcceptInvitationMutation,
+  type UseAcceptInvitationMutationParams,
+} from './hooks/useAcceptInvitationMutation';
 export { useAddGroupMemberMutation } from './hooks/useAddGroupMemberMutation';
 export { useGroupTasksQuery } from './hooks/useGroupTasksQuery';
 

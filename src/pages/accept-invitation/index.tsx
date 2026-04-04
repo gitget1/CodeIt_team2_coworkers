@@ -2,14 +2,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query';
 import { useAcceptInvitationMutation } from '@/features/group/hooks/useAcceptInvitationMutation';
 import { parseInvitationToken } from '@/features/group/lib/parseInvitationToken';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
-import { isApiError } from '@/shared/api/mapApiError';
 import { teamDashboardPath, ROUTES } from '@/shared/constants/routes';
 import { GlobalLayout } from '@/widgets/layout/GlobalLayout';
-import { USER_QUERY_KEYS } from '@/features/user/lib/queryKeys';
 import { FormField } from '@/shared/ui/formfield';
 import { Input } from '@/shared/ui/input/Input';
 import { Button } from '@/shared/ui/Button';
@@ -17,32 +14,37 @@ import { Button } from '@/shared/ui/Button';
 export default function AcceptInvitationPage() {
   const router = useRouter();
   const { data: user, isLoading: isUserLoading } = useUserQuery();
-  const { mutateAsync, isPending } = useAcceptInvitationMutation();
-  const queryClient = useQueryClient();
   const [teamLink, setTeamLink] = useState('');
 
+  const { mutate, isPending } = useAcceptInvitationMutation({
+    onSuccess: async (data) => {
+      await router.push(teamDashboardPath(String(data.groupId)));
+    },
+    onError: () => {},
+  });
+
   const rawToken = router.query.token;
-  const queryToken =
+  const queryTokenFromRouter =
     typeof rawToken === 'string' ? rawToken : Array.isArray(rawToken) ? rawToken[0] : undefined;
 
   useEffect(() => {
-    if (!router.isReady || !queryToken) return;
+    if (!router.isReady || !queryTokenFromRouter) return;
     setTeamLink(
-      `${window.location.origin}/accept-invitation?token=${encodeURIComponent(queryToken)}`,
+      `${window.location.origin}/accept-invitation?token=${encodeURIComponent(queryTokenFromRouter)}`,
     );
-  }, [router.isReady, queryToken]);
+  }, [router.isReady, queryTokenFromRouter]);
 
   const postLoginRedirectPath = (): string => {
-    const token = queryToken ?? parseInvitationToken(teamLink);
+    const token = queryTokenFromRouter ?? parseInvitationToken(teamLink);
     if (token) {
       return `${ROUTES.ACCEPT_INVITATION}?token=${encodeURIComponent(token)}`;
     }
     return ROUTES.ACCEPT_INVITATION;
   };
 
-  const handleJoin = async () => {
-    const token = parseInvitationToken(teamLink);
-    if (!token) {
+  const handleJoin = () => {
+    const invitationToken = parseInvitationToken(teamLink);
+    if (!invitationToken) {
       toast.error('팀 링크를 확인해 주세요.');
       return;
     }
@@ -55,19 +57,12 @@ export default function AcceptInvitationPage() {
       return;
     }
 
-    try {
-      const result = await mutateAsync({
-        body: {
-          userEmail: user.email,
-          token,
-        },
-      });
-      toast.success('팀에 참여했습니다.');
-      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.groups() });
-      await router.push(teamDashboardPath(String(result.groupId)));
-    } catch (error) {
-      toast.error(isApiError(error) ? error.message : '팀 참여에 실패했습니다.');
-    }
+    mutate({
+      body: {
+        userEmail: user.email,
+        token: invitationToken,
+      },
+    });
   };
 
   return (
@@ -85,7 +80,7 @@ export default function AcceptInvitationPage() {
             className="mt-8 flex flex-col gap-6"
             onSubmit={(e) => {
               e.preventDefault();
-              void handleJoin();
+              handleJoin();
             }}
             noValidate
           >

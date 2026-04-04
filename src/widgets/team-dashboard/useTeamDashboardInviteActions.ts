@@ -16,8 +16,8 @@ export function useTeamDashboardInviteActions({ groupId }: Params) {
   const handleCopyInviteLink = async () => {
     setIsCopyingInviteLink(true);
     try {
-      const token = await getInvitationToken({ groupId });
-      const inviteUrl = `${window.location.origin}/accept-invitation?token=${encodeURIComponent(token)}`;
+      const invitationToken = await getInvitationToken({ groupId });
+      const inviteUrl = `${window.location.origin}/accept-invitation?token=${encodeURIComponent(invitationToken)}`;
 
       const ok = await copyText(inviteUrl, {
         successMessage: '초대 링크가 복사되었습니다.',

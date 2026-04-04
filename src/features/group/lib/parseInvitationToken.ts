@@ -1,31 +1,31 @@
 /**
  * 복사한 초대 URL, 경로+쿼리, 또는 토큰 문자열에서 초대 토큰을 추출합니다.
+ * `new URL(..., base)` / localhost 기준 URL은 사용하지 않습니다(환경에 따라 잘못된 기준이 됨).
  */
+
+/**
+ * `?token=` 또는 `&token=` 뒤의 값만 캡처합니다. 다음 `&` 전까지.
+ * application/x-www-form-urlencoded 에서 공백이 `+`로 온 경우 디코딩 전에 치환합니다.
+ */
+const TOKEN_QUERY_PARAM_PATTERN = /[?&]token=([^&]+)/;
+
+function decodeCapturedTokenValue(rawTokenValue: string): string {
+  return decodeURIComponent(rawTokenValue.replace(/\+/g, ' '));
+}
+
 export function parseInvitationToken(input: string): string | null {
-  const s = input.trim();
-  if (!s) return null;
+  const trimmedInput = input.trim();
+  if (!trimmedInput) return null;
 
-  const fromQueryString = (q: string): string | null => {
-    const m = q.match(/[?&]token=([^&]+)/);
-    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : null;
-  };
-
-  if (s.includes('://') || s.startsWith('/')) {
-    try {
-      const url = /^https?:\/\//i.test(s)
-        ? new URL(s)
-        : new URL(s, typeof window !== 'undefined' ? window.location.origin : 'http://localhost');
-      const t = url.searchParams.get('token');
-      if (t) return t;
-    } catch {
-      /* fall through */
-    }
+  const tokenQueryMatch = trimmedInput.match(TOKEN_QUERY_PARAM_PATTERN);
+  if (tokenQueryMatch) {
+    return decodeCapturedTokenValue(tokenQueryMatch[1]);
   }
 
-  const fromQs = fromQueryString(s);
-  if (fromQs) return fromQs;
-
-  if (!/[/?]/.test(s)) return s;
+  /** `?` `/` 없이 붙여 넣은 순수 토큰 문자열 */
+  if (!/[/?]/.test(trimmedInput)) {
+    return trimmedInput;
+  }
 
   return null;
 }
