@@ -10,6 +10,7 @@ import { IconCommentBtn } from '@/shared/ui/icons/IconCommentBtn';
 import { Input } from '@/shared/ui/input/Input';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
 import Dropdown from '@/shared/ui/dropdown';
+import { cn } from '@/shared/lib/cn';
 
 type Props = {
   task: Task | null;
@@ -45,7 +46,7 @@ export default function TaskDetailPanel({
   const { mutate, isPending } = useToggleTaskMutation(params);
 
   const handleToggleComplete = () => {
-    if (!task) return;
+    if (!task || isPending) return;
     const nextDone = !task.isCompleted;
     mutate(
       {
@@ -86,8 +87,14 @@ export default function TaskDetailPanel({
               <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
                 <Dropdown>
                   <Dropdown.Trigger
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-icon-primary hover:text-txt-primary cursor-pointer rounded p-1 text-gray-400"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isPending) e.preventDefault();
+                    }}
+                    className={cn(
+                      'text-icon-primary hover:text-txt-primary cursor-pointer rounded p-1 text-gray-400',
+                      isPending && 'pointer-events-none opacity-40',
+                    )}
                   >
                     ...
                   </Dropdown.Trigger>
@@ -95,6 +102,7 @@ export default function TaskDetailPanel({
                     <Dropdown.Item
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (isPending) return;
                         onEditClick(task);
                       }}
                       className="px-3 py-2"
@@ -104,6 +112,7 @@ export default function TaskDetailPanel({
                     <Dropdown.Item
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (isPending) return;
                         onDeleteClick(task);
                       }}
                       className="px-3 py-2"
@@ -141,6 +150,7 @@ export default function TaskDetailPanel({
                 disabled={isPending}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (isPending) return;
                   handleToggleComplete();
                 }}
               >
