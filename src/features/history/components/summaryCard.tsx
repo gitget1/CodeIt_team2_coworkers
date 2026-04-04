@@ -14,13 +14,15 @@ export function SummaryCard({ title, count, isActive = false, onClick }: Summary
       onClick={onClick}
       aria-pressed={isActive}
       className={cn(
-        'flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
+        'flex shrink-0 items-center rounded-full border font-medium transition-colors',
+        'gap-1.5 px-3 py-1.5 text-xs',
+        'md:gap-2 md:px-4 md:py-2 md:text-sm',
         isActive
           ? 'bg-brand-primary border-brand-primary text-white'
-          : 'border-border-primary text-txt-primary hover:bg-background-secondary bg-white',
+          : 'text-txt-primary hover:bg-background-secondary border-slate-200 bg-white',
       )}
     >
-      <span aria-hidden="true" className="max-w-25 truncate md:max-w-35">
+      <span aria-hidden="true" className="max-w-20 truncate md:max-w-35">
         {title}
       </span>
       <span className={isActive ? 'text-white' : 'text-brand-primary'}>{count}</span>

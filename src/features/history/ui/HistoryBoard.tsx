@@ -14,9 +14,14 @@ import { Skeleton } from '@/shared/ui/skeleton/Skeleton';
 interface HistoryBoardProps {
   selectedCategory: string | null;
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>; // useState상위로 넘길떄
+  currentGroupId?: string;
 }
 
-export function HistoryBoard({ selectedCategory, setSelectedCategory }: HistoryBoardProps) {
+export function HistoryBoard({
+  selectedCategory,
+  setSelectedCategory,
+  currentGroupId,
+}: HistoryBoardProps) {
   const [isClient, setIsClient] = useState(false);
   const scrollWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +38,7 @@ export function HistoryBoard({ selectedCategory, setSelectedCategory }: HistoryB
   };
 
   const currentMonthString = format(currentDate, 'yyyy년 M월');
-  const { data: historyList, isLoading: isHistoryLoading } = useGetUserHistory();
+  const { data: historyList, isLoading: isHistoryLoading } = useGetUserHistory(currentGroupId);
 
   const filteredHistoryList = useMemo(() => {
     if (!historyList) return [];
