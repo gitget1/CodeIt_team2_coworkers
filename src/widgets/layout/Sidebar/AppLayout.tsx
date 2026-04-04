@@ -1,13 +1,10 @@
-import { useLayoutEffect, useState } from 'react';
-import { LAYOUT_MOBILE_MAX_WIDTH_PX } from '@/shared/constants/layoutBreakpoints';
+import { useEffect, useState } from 'react';
+import { LAYOUT_DESKTOP_MIN_WIDTH_PX } from '@/shared/constants/layoutBreakpoints';
 import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { cn } from '@/shared/lib/cn';
 import { AppSidebar } from './AppSidebar';
 import { MobileHeader } from './MobileHeader';
 import type { AppSidebarProps } from './types';
-
-/** `(max-width: 768px)` — Tailwind `max-[768px]:` · globals `--breakpoint-mobile` 과 동일 */
-const NARROW_VIEWPORT_MEDIA_QUERY = `(max-width: ${LAYOUT_MOBILE_MAX_WIDTH_PX}px)`;
 
 export interface AppLayoutProps {
   children: React.ReactNode;
@@ -18,22 +15,17 @@ export interface AppLayoutProps {
 
 export function AppLayout({ children, sidebarProps, className }: AppLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isNarrowViewport, setIsNarrowViewport] = useState(false);
 
-  const drawerActive = isMobileMenuOpen && isNarrowViewport;
-  useScrollLock(drawerActive);
+  useScrollLock(isMobileMenuOpen);
 
-  useLayoutEffect(() => {
-    const mq = window.matchMedia(NARROW_VIEWPORT_MEDIA_QUERY);
-    const sync = () => {
-      const narrow = mq.matches;
-      setIsNarrowViewport(narrow);
-      if (!narrow) setIsMobileMenuOpen(false);
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const onResize = () => {
+      if (window.innerWidth >= LAYOUT_DESKTOP_MIN_WIDTH_PX) setIsMobileMenuOpen(false);
     };
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [isMobileMenuOpen]);
 
   return (
     <div
@@ -43,21 +35,18 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
       )}
     >
       <MobileHeader
-        className="hidden w-full shrink-0 max-[768px]:flex"
+        className="flex w-full shrink-0 min-[769px]:hidden"
         onMenuClick={() => setIsMobileMenuOpen(true)}
         isLoggedIn={sidebarProps?.isLoggedIn}
         onLoginClick={sidebarProps?.onLoginClick}
       />
-      {/*
-        긴 메인(랜딩)에서 사이드바가 문서 높이만큼 늘지 않도록 뷰포트에 고정 + 레이어 (dev/COW-129)
-      */}
-      <div className="bg-background-primary sticky top-0 z-[9999] hidden h-screen shrink-0 !overflow-visible min-[769px]:block">
+      <div className="bg-background-primary sticky top-0 z-[9999] h-screen max-[768px]:hidden min-[769px]:block shrink-0 !overflow-visible">
         <AppSidebar {...sidebarProps} />
       </div>
       <main className="relative flex min-h-0 min-w-0 flex-1 flex-col">{children}</main>
 
-      {drawerActive && (
-        <>
+      {isMobileMenuOpen ? (
+        <div className="layout-app-drawer-layer">
           <div
             className="fixed inset-0 z-40 bg-black/50"
             aria-hidden
@@ -74,8 +63,8 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
               onClose={() => setIsMobileMenuOpen(false)}
             />
           </aside>
-        </>
-      )}
+        </div>
+      ) : null}
     </div>
   );
 }

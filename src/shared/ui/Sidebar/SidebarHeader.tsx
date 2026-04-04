@@ -42,10 +42,6 @@ function SidebarExpandIcon() {
   );
 }
 
-function DefaultToggleIcon({ isExpanded }: { isExpanded: boolean }) {
-  return isExpanded ? <SidebarCollapseIcon /> : <SidebarExpandIcon />;
-}
-
 export function SidebarHeader({
   logo,
   toggleButton,
@@ -57,6 +53,10 @@ export function SidebarHeader({
   const context = useSidebarContext();
   const isExpanded = isExpandedProp ?? context?.isExpanded ?? true;
   const onToggle = onToggleProp ?? context?.onToggle ?? (() => {});
+  const ariaControls =
+    context?.sidebarId != null && context.sidebarId !== ''
+      ? { 'aria-controls': context.sidebarId }
+      : {};
 
   return (
     <header
@@ -68,18 +68,30 @@ export function SidebarHeader({
       <div className={cn('flex items-center gap-2 min-w-0 flex-1', !showToggle && 'justify-center')}>
         {logo != null && <div className="shrink-0 flex items-center justify-center overflow-hidden">{logo}</div>}
       </div>
-      {showToggle && (
-        <button
-          type="button"
-          onClick={onToggle}
-          className={HEADER_TOGGLE_BUTTON}
-          aria-label={isExpanded ? '사이드바 접기' : '사이드바 열기'}
-          aria-expanded={isExpanded}
-          aria-controls={context?.sidebarId ?? undefined}
-        >
-          {toggleButton ?? <DefaultToggleIcon isExpanded={isExpanded} />}
-        </button>
-      )}
+      {showToggle &&
+        (isExpanded ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            className={HEADER_TOGGLE_BUTTON}
+            aria-label="사이드바 접기"
+            aria-expanded="true"
+            {...ariaControls}
+          >
+            {toggleButton ?? <SidebarCollapseIcon />}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggle}
+            className={HEADER_TOGGLE_BUTTON}
+            aria-label="사이드바 열기"
+            aria-expanded="false"
+            {...ariaControls}
+          >
+            {toggleButton ?? <SidebarExpandIcon />}
+          </button>
+        ))}
     </header>
   );
 }

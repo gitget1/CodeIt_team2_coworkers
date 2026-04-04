@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { memo } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { useSidebarContext } from './SidebarContext';
 import { SR_ONLY, NAV_ITEM_BASE, NAV_ITEM_SELECTED, NAV_ITEM_DEFAULT, NAV_ITEM_ICON_WRAPPER } from './sidebarClasses';
@@ -19,7 +20,7 @@ export interface SidebarNavItemProps {
   className?: string;
 }
 
-export function SidebarNavItem({
+function SidebarNavItemInner({
   label,
   icon,
   isSelected = false,
@@ -68,3 +69,6 @@ export function SidebarNavItem({
     </button>
   );
 }
+
+export const SidebarNavItem = memo(SidebarNavItemInner);
+SidebarNavItem.displayName = 'SidebarNavItem';

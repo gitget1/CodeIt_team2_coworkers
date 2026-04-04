@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -34,6 +34,43 @@ import { useSidebarTeamItems } from './useSidebarTeamItems';
 
 const defaultProfileImgSrc = getImageSrc(userIcon);
 const defaultProfileBgClass = 'rounded-xl bg-[#E2E8F0]';
+
+const drawerToggleNoop = () => {};
+
+type TeamSidebarRowProps = {
+  id: string;
+  label: string;
+  isSelected: boolean;
+  expanded: boolean;
+  onSelect: (id: string) => void;
+};
+
+const TeamSidebarRow = memo(function TeamSidebarRow({
+  id,
+  label,
+  isSelected,
+  expanded,
+  onSelect,
+}: TeamSidebarRowProps) {
+  const handleClick = useCallback(() => {
+    onSelect(id);
+  }, [id, onSelect]);
+
+  const icon = useMemo(
+    () => <TeamIcon className={isSelected ? 'text-brand-primary' : 'text-slate-300'} />,
+    [isSelected],
+  );
+
+  return (
+    <SidebarNavItem
+      label={label}
+      isSelected={isSelected}
+      isExpanded={expanded}
+      onClick={handleClick}
+      icon={icon}
+    />
+  );
+});
 
 function DefaultFooter({
   isExpanded,
@@ -152,15 +189,38 @@ export function AppSidebar({
   const [isTeamListOpen, setIsTeamListOpen] = useState(true);
   const teamItems = useSidebarTeamItems({ teams, isLoggedIn });
 
-  const handleToggle = () => setIsExpanded((v) => !v);
-  const handleTeamListToggle = () => setIsTeamListOpen((v) => !v);
+  const handleToggle = useCallback(() => {
+    setIsExpanded((v) => !v);
+  }, []);
+  const handleTeamListToggle = useCallback(() => {
+    setIsTeamListOpen((v) => !v);
+  }, []);
+  const handleTeamSelect = useCallback(
+    (id: string) => {
+      onTeamSelect?.(id);
+    },
+    [onTeamSelect],
+  );
+
   const expanded = mobileDrawer ? true : isExpanded;
+
+  const iconBoard = useMemo(() => <BoardIcon className="text-slate-300" />, []);
+  const iconTeam = useMemo(() => <TeamIcon className="text-slate-300" />, []);
+  const iconPlus = useMemo(() => <PlusIcon />, []);
+
+  const addTeamClassName = useMemo(
+    () =>
+      expanded
+        ? 'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-13 w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center'
+        : false,
+    [expanded],
+  );
 
   return (
     <div className="border-background-tertiary bg-background-primary relative z-50 h-full shrink-0 overflow-visible border-r">
       <Sidebar
         isExpanded={expanded}
-        onToggle={mobileDrawer ? () => {} : handleToggle}
+        onToggle={mobileDrawer ? drawerToggleNoop : handleToggle}
         footer={
           footer ?? (
             <DefaultFooter
@@ -176,7 +236,7 @@ export function AppSidebar({
         {mobileDrawer ? (
           <SidebarHeader
             isExpanded={true}
-            onToggle={onClose ?? (() => {})}
+            onToggle={onClose ?? drawerToggleNoop}
             showToggle={true}
             toggleButton={<CloseIcon className="text-slate-300" />}
             logo={<span className="flex-1" />}
@@ -195,9 +255,9 @@ export function AppSidebar({
                     alt="COWORKERS"
                     width={180}
                     height={32}
-                    priority
                     sizes="180px"
                     className="h-8 w-auto shrink-0 object-contain object-left"
+                    style={{ width: 'auto', height: '2rem' }}
                   />
                 ) : (
                   <span className="text-brand-primary flex items-center justify-center">
@@ -214,14 +274,14 @@ export function AppSidebar({
               label="자유게시판"
               href="/boards"
               isExpanded={expanded}
-              icon={<BoardIcon className="text-slate-300" />}
+              icon={iconBoard}
             />
             <SidebarNavItem
               label="팀 참여하기"
               href={ROUTES.ACCEPT_INVITATION}
               isExpanded={expanded}
               isSelected={router.pathname === '/accept-invitation'}
-              icon={<TeamIcon className="text-slate-300" />}
+              icon={iconTeam}
             />
             {isLoggedIn && (
               <SidebarNavItem
@@ -229,7 +289,7 @@ export function AppSidebar({
                 href="/myhistory"
                 isExpanded={expanded}
                 isSelected={router.pathname.startsWith('/myhistory')}
-                icon={<BoardIcon className="text-slate-300" />}
+                icon={iconBoard}
               />
             )}
 
@@ -238,11 +298,8 @@ export function AppSidebar({
                 label="팀 추가하기"
                 href={ROUTES.TEAM_CREATE}
                 isExpanded={expanded}
-                icon={<PlusIcon />}
-                className={cn(
-                  expanded &&
-                    'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-13 w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
-                )}
+                icon={iconPlus}
+                className={cn(addTeamClassName)}
               />
             )}
 
@@ -279,23 +336,16 @@ export function AppSidebar({
                 ) : null}
                 {(isTeamListOpen || !expanded) && (
                   <>
-                    {teamItems.map(({ id, label }) => {
-                      const isTeamSelected = selectedTeamId === id;
-                      return (
-                        <SidebarNavItem
-                          key={id}
-                          label={label}
-                          isSelected={isTeamSelected}
-                          isExpanded={expanded}
-                          onClick={() => onTeamSelect?.(id)}
-                          icon={
-                            <TeamIcon
-                              className={isTeamSelected ? 'text-brand-primary' : 'text-slate-300'}
-                            />
-                          }
-                        />
-                      );
-                    })}
+                    {teamItems.map(({ id, label }) => (
+                      <TeamSidebarRow
+                        key={id}
+                        id={id}
+                        label={label}
+                        isSelected={selectedTeamId === id}
+                        expanded={expanded}
+                        onSelect={handleTeamSelect}
+                      />
+                    ))}
                   </>
                 )}
               </>

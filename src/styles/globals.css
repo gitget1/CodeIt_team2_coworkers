@@ -3,7 +3,7 @@
 @theme {
   --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
 
-  /* 반응형 브레이크포인트 (JS matchMedia와 동기화해서 사용). 모바일 전체(폰·소형 태블릿) 커버 */
+  /* 반응형 브레이크포인트 — Tailwind `max-[768px]` / `min-[769px]` · `.layout-app-drawer-layer` 와 동일 */
   --breakpoint-mobile: 768px;
 
   /* Font Weights */
@@ -102,6 +102,16 @@
 
 .animate-icon-enter {
   animation: icon-enter 200ms ease-out both;
+}
+
+/* AppLayout: 모바일 드로어는 ≤768px 에서만 표시 (matchMedia 없음) */
+.layout-app-drawer-layer {
+  display: none;
+}
+@media (max-width: 768px) {
+  .layout-app-drawer-layer {
+    display: block;
+  }
 }
 
 /*스크롤바를 숨기는 클래스 정의 */
