@@ -5,8 +5,8 @@ export interface TaskCommentDto {
   content: string;
   createdAt: string;
   updatedAt: string;
-  taskId?: number;
-  userId?: number;
+  taskId: number;
+  userId: number;
   user: UserDto;
 }
 
