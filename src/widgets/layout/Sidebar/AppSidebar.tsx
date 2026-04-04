@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -56,18 +56,13 @@ const TeamSidebarRow = memo(function TeamSidebarRow({
     onSelect(id);
   }, [id, onSelect]);
 
-  const icon = useMemo(
-    () => <TeamIcon className={isSelected ? 'text-brand-primary' : 'text-slate-300'} />,
-    [isSelected],
-  );
-
   return (
     <SidebarNavItem
       label={label}
       isSelected={isSelected}
       isExpanded={expanded}
       onClick={handleClick}
-      icon={icon}
+      icon={<TeamIcon className={isSelected ? 'text-brand-primary' : 'text-slate-300'} />}
     />
   );
 });
@@ -204,18 +199,6 @@ export function AppSidebar({
 
   const expanded = mobileDrawer ? true : isExpanded;
 
-  const iconBoard = useMemo(() => <BoardIcon className="text-slate-300" />, []);
-  const iconTeam = useMemo(() => <TeamIcon className="text-slate-300" />, []);
-  const iconPlus = useMemo(() => <PlusIcon />, []);
-
-  const addTeamClassName = useMemo(
-    () =>
-      expanded
-        ? 'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-13 w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center'
-        : false,
-    [expanded],
-  );
-
   return (
     <div className="border-background-tertiary bg-background-primary relative z-50 h-full shrink-0 overflow-visible border-r">
       <Sidebar
@@ -274,14 +257,14 @@ export function AppSidebar({
               label="자유게시판"
               href="/boards"
               isExpanded={expanded}
-              icon={iconBoard}
+              icon={<BoardIcon className="text-slate-300" />}
             />
             <SidebarNavItem
               label="팀 참여하기"
               href={ROUTES.ACCEPT_INVITATION}
               isExpanded={expanded}
               isSelected={router.pathname === '/accept-invitation'}
-              icon={iconTeam}
+              icon={<TeamIcon className="text-slate-300" />}
             />
             {isLoggedIn && (
               <SidebarNavItem
@@ -289,7 +272,7 @@ export function AppSidebar({
                 href="/myhistory"
                 isExpanded={expanded}
                 isSelected={router.pathname.startsWith('/myhistory')}
-                icon={iconBoard}
+                icon={<BoardIcon className="text-slate-300" />}
               />
             )}
 
@@ -298,8 +281,11 @@ export function AppSidebar({
                 label="팀 추가하기"
                 href={ROUTES.TEAM_CREATE}
                 isExpanded={expanded}
-                icon={iconPlus}
-                className={cn(addTeamClassName)}
+                icon={<PlusIcon />}
+                className={cn(
+                  expanded &&
+                    'border-brand-primary bg-background-primary text-brand-primary hover:bg-brand-secondary hover:text-brand-primary min-h-13 w-full justify-center gap-1 rounded-lg border px-3 py-2 text-center',
+                )}
               />
             )}
 
