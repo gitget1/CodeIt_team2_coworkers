@@ -200,7 +200,7 @@ export function AppSidebar({
   const expanded = mobileDrawer ? true : isExpanded;
 
   return (
-    <div className="border-background-tertiary bg-background-primary relative z-50 h-full shrink-0 overflow-visible border-r">
+    <div className="border-background-tertiary bg-background-primary relative z-50 h-full shrink-0 overflow-visible border-r [&_a]:cursor-pointer [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
       <Sidebar
         isExpanded={expanded}
         onToggle={mobileDrawer ? drawerToggleNoop : handleToggle}

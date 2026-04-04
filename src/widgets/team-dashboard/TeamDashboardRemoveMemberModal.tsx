@@ -20,7 +20,7 @@ export function TeamDashboardRemoveMemberModal({
 }: Props) {
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
-      <Modal.Content size="sm">
+      <Modal.Content size="sm" className="[&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
         <Modal.Header className="pb-4">
           <Modal.Title>멤버를 탈퇴시키시겠어요?</Modal.Title>
           <Modal.Description className="text-sm">

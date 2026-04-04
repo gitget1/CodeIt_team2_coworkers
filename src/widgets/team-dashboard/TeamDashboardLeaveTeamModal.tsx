@@ -22,7 +22,7 @@ export function TeamDashboardLeaveTeamModal({
 }: Props) {
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
-      <Modal.Content size="sm">
+      <Modal.Content size="sm" className="[&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
         <Modal.Header className="pb-4">
           <Modal.Title className="text-xl font-medium text-txt-primary">팀에서 나가시겠어요?</Modal.Title>
           <Modal.Description className="text-base font-medium text-txt-secondary">

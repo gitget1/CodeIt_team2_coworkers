@@ -22,7 +22,7 @@ export function TeamDashboardDeleteTeamModal({
 }: Props) {
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
-      <Modal.Content size="sm">
+      <Modal.Content size="sm" className="[&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
         <Modal.Header className="pb-4">
           <Modal.Title className="text-lg font-medium text-txt-primary">팀을 삭제하시겠어요?</Modal.Title>
           <Modal.Description className="text-sm font-medium text-txt-secondary">

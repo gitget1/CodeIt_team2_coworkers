@@ -28,5 +28,11 @@ export function TeamDashboardLayout({ children }: Props) {
             isLoggedIn: true,
           };
 
-  return <AppLayout sidebarProps={sidebarProps}>{children}</AppLayout>;
+  return (
+    <AppLayout sidebarProps={sidebarProps}>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
+        {children}
+      </div>
+    </AppLayout>
+  );
 }
