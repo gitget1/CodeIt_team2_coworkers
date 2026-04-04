@@ -7,7 +7,7 @@ type Params = {
 
 export function useUpdateTaskListMutation(params: Params) {
   return useMutation({
-    mutationFn: ({ taskListId, body }: { taskListId: string; body: { name?: string } }) =>
+    mutationFn: ({ taskListId, body }: { taskListId: number | string; body: { name?: string } }) =>
       updateTaskList({ groupId: params.groupId, taskListId }, body),
   });
 }

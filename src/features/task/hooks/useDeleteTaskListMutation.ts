@@ -7,7 +7,7 @@ type Params = {
 
 export function useDeleteTaskListMutation(params: Params) {
   return useMutation({
-    mutationFn: ({ taskListId }: { taskListId: string }) =>
+    mutationFn: ({ taskListId }: { taskListId: number | string }) =>
       deleteTaskList({ groupId: params.groupId, taskListId }),
   });
 }

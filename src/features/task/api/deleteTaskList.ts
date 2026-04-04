@@ -4,13 +4,13 @@ import { mapTaskErrorToFailure } from './mapTaskErrorToFailure';
 
 type DeleteTaskListPath = {
   groupId: number;
-  taskListId: string;
+  taskListId: number | string;
 };
 
 export async function deleteTaskList(path: DeleteTaskListPath): Promise<Result<void>> {
   const { groupId, taskListId } = path;
   try {
-    await clientFetcher.delete(`/groups/${groupId}/task-lists/${taskListId}`);
+    await clientFetcher.delete(`/groups/${groupId}/task-lists/${String(taskListId)}`);
     return { ok: true, data: undefined };
   } catch (error: unknown) {
     return mapTaskErrorToFailure(error);

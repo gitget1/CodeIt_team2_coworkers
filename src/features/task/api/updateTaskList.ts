@@ -5,7 +5,7 @@ import { mapTaskErrorToFailure } from './mapTaskErrorToFailure';
 
 type UpdateTaskListPath = {
   groupId: number;
-  taskListId: string;
+  taskListId: number | string;
 };
 
 type UpdateTaskListBody = {
@@ -19,7 +19,7 @@ export async function updateTaskList(
   const { groupId, taskListId } = path;
   try {
     const res = await clientFetcher.patch<TaskListDto>(
-      `/groups/${groupId}/task-lists/${taskListId}`,
+      `/groups/${groupId}/task-lists/${String(taskListId)}`,
       body,
     );
     return { ok: true, data: res.data };

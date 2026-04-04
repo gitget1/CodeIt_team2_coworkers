@@ -33,7 +33,7 @@ export function useTaskListActions({
   const { mutateAsync: deleteTaskList } = useDeleteTaskListMutation({ groupId });
 
   const openEditModal = (id: number) => {
-    const list = taskLists?.find((l) => l.id === id);
+    const list = taskLists?.find((l) => Number(l.id) === Number(id));
     setEditing(list ? { taskListId: list.id, title: list.title } : { taskListId: id, title: '' });
     setEditedTitle(list?.title ?? '');
   };
@@ -78,7 +78,7 @@ export function useTaskListActions({
     }
 
     const result = await updateTaskList({
-      taskListId: String(editing.taskListId),
+      taskListId: editing.taskListId,
       body: { name: trimmed },
     });
 
@@ -92,7 +92,7 @@ export function useTaskListActions({
       return {
         ...prev,
         taskLists: prev.taskLists.map((item) =>
-          item.id === editing.taskListId ? toTaskList(result.data) : item,
+          Number(item.id) === Number(editing.taskListId) ? toTaskList(result.data) : item,
         ),
       };
     });
@@ -105,7 +105,7 @@ export function useTaskListActions({
     if (deletingId == null) return;
 
     const deletedId = deletingId;
-    const result = await deleteTaskList({ taskListId: String(deletedId) });
+    const result = await deleteTaskList({ taskListId: deletedId });
     if (!result.ok) {
       toast.error(result.error.message);
       return;
@@ -114,7 +114,7 @@ export function useTaskListActions({
     let nextId: number | null = null;
     queryClient.setQueryData<GroupDetail>(GROUP_QUERY_KEYS.detail(groupId), (prev) => {
       if (!prev) return prev;
-      const filtered = prev.taskLists.filter((item) => item.id !== deletedId);
+      const filtered = prev.taskLists.filter((item) => Number(item.id) !== Number(deletedId));
       nextId = filtered[0]?.id ?? null;
       return { ...prev, taskLists: filtered };
     });
@@ -122,7 +122,7 @@ export function useTaskListActions({
     toast.success('할 일 목록을 삭제했습니다.');
     setDeletingId(null);
 
-    if (currentTaskListId === deletedId && nextId != null) {
+    if (Number(currentTaskListId) === Number(deletedId) && nextId != null) {
       onSelectTaskList(nextId);
     }
   };
