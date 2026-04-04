@@ -40,7 +40,7 @@ export function IconProgress({
         cx="10"
         cy="10"
         r={r}
-        stroke="#5189FA"
+        stroke="#74A1FB"
         strokeWidth="2.641"
         fill="none"
         strokeLinecap="round"
