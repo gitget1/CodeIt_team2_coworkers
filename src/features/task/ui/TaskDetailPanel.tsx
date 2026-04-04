@@ -5,7 +5,7 @@ import { useToggleTaskMutation } from '../hooks/useToggleTaskMutation';
 import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
 import { IconRepeat } from '@/shared/ui/icons/IconRepeat';
 import { Button } from '@/shared/ui/Button';
-import { IconCheck } from '@/shared/ui/icons';
+import { IconCheck, IconClose } from '@/shared/ui/icons';
 import { IconCommentBtn } from '@/shared/ui/icons/IconCommentBtn';
 import { Input } from '@/shared/ui/input/Input';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
@@ -78,21 +78,19 @@ export default function TaskDetailPanel({
           <div className="flex h-full flex-col">
             <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
               <Button
+                type="button"
                 variant="ghost"
                 onClick={onClose}
-                className={cn(
-                  '!h-auto !min-h-0 w-auto !rounded-md !border-0 !bg-transparent !px-0 !py-0 text-xl leading-none',
-                  'text-gray-400 hover:!border-0 hover:!bg-transparent hover:text-gray-700',
-                  'active:!border-0 active:!bg-transparent',
-                  'disabled:!border-0',
-                )}
-              >
-                ✕
-              </Button>
+                aria-label="닫기"
+                leftIcon={<IconClose size={24} />}
+                className="border-none p-0 text-gray-400 hover:text-gray-600"
+              />
             </div>
 
             <div className="flex items-center justify-between gap-3 px-4 pt-6 md:px-8 lg:px-10 lg:pt-10">
-              <h2 className="min-w-0 flex-1 text-lg font-semibold text-gray-900 md:text-xl">{task.title}</h2>
+              <h2 className="min-w-0 flex-1 text-lg font-semibold text-gray-900 md:text-xl">
+                {task.title}
+              </h2>
               <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
                 <Dropdown>
                   <Dropdown.Trigger
