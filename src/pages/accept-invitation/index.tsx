@@ -50,7 +50,10 @@ export default function AcceptInvitationPage() {
     if (!user?.email) {
       return;
     }
-    const invitationToken = parseInvitationToken(teamLink);
+    const invitationToken =
+      (typeof queryTokenFromRouter === 'string' && queryTokenFromRouter.trim() !== ''
+        ? queryTokenFromRouter.trim()
+        : null) ?? parseInvitationToken(teamLink);
     if (!invitationToken) {
       toast.error('팀 링크를 확인해 주세요.');
       return;
