@@ -1,11 +1,8 @@
 import { useRouter } from 'next/router';
 import type { GroupDetail } from '../model/entities/group.model';
 import { useGroupQuery } from './useGroupQuery';
-import {
-  groupMembersToMemberCardItems,
-  groupMembersToMemberImagePreview,
-} from '../lib/mappers/groupMembersToMemberCardItems';
-import type { ImageAsset, MemberCardItem } from '@/shared/ui/profile';
+import { groupMembersToMemberCardItems } from '../lib/mappers/groupMembersToMemberCardItems';
+import type { MemberCardItem } from '@/shared/ui/profile';
 import { parseTeamIdFromQuery } from '../lib/parseTeamRoute';
 
 export type TeamDashboardViewModel =
@@ -18,7 +15,6 @@ export type TeamDashboardViewModel =
       groupIdStr: string;
       group: GroupDetail;
       memberCardItems: MemberCardItem[];
-      memberImagesPreview: ImageAsset[];
       /** 백그라운드 재검증(refetch) 중 */
       isFetching: boolean;
     };
@@ -38,7 +34,12 @@ export function useTeamDashboard(): TeamDashboardViewModel {
 
   const shouldFetchGroup = router.isReady && isValidGroupId;
   const safeGroupId = isValidGroupId ? groupIdNum : 0;
-  const { data: group, isPending, isFetching, isError } = useGroupQuery(safeGroupId, {
+  const {
+    data: group,
+    isPending,
+    isFetching,
+    isError,
+  } = useGroupQuery(safeGroupId, {
     enabled: shouldFetchGroup,
   });
 
@@ -63,7 +64,6 @@ export function useTeamDashboard(): TeamDashboardViewModel {
     groupIdStr,
     group,
     memberCardItems: groupMembersToMemberCardItems(group.members),
-    memberImagesPreview: groupMembersToMemberImagePreview(group.members, 3),
     isFetching,
   };
 }

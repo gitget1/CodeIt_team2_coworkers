@@ -28,7 +28,7 @@ type Props = {
 
 export function TeamDashboardReadyView({ vm }: Props) {
   const router = useRouter();
-  const { groupIdStr, group, memberCardItems, memberImagesPreview, isFetching } = vm;
+  const { groupIdStr, group, memberCardItems, isFetching } = vm;
   const { data: groupTasks = [] } = useGroupTasksQuery(group.id);
   const { data: me } = useUserQuery();
   const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup, handleToggleTask, handleCompleteTaskGroupByDrop } =
@@ -115,7 +115,6 @@ export function TeamDashboardReadyView({ vm }: Props) {
           progressPercent={progressPercent}
           todayTaskCount={todayTaskCount}
           completedTaskCount={completedTaskCount}
-          memberImages={memberImagesPreview}
           members={memberCardItems}
           memberCount={group.members.length}
           className="w-full max-w-full"

@@ -1,5 +1,5 @@
 import type { GroupMember } from '../../model/entities/group.model';
-import type { ImageAsset, MemberCardItem } from '@/shared/ui/profile';
+import type { MemberCardItem } from '@/shared/ui/profile';
 
 export function groupMembersToMemberCardItems(members: GroupMember[]): MemberCardItem[] {
   return members.map((m) => ({
@@ -9,15 +9,5 @@ export function groupMembersToMemberCardItems(members: GroupMember[]): MemberCar
     imageSrc: m.userImage ?? undefined,
     isAdmin: m.role === 'ADMIN',
   }));
-}
-
-export function groupMembersToMemberImagePreview(
-  members: GroupMember[],
-  maxVisibleCount = 3,
-): ImageAsset[] {
-  return members
-    .slice(0, maxVisibleCount)
-    .map((m) => m.userImage)
-    .filter((url): url is string => url != null && url.length > 0);
 }
 

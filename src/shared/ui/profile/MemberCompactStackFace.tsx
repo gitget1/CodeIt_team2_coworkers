@@ -20,7 +20,7 @@ export function MemberCompactStackFace({ imageSrc, zIndex, overlap }: Props) {
 
   return (
     <div
-      className={cn(MEMBER_COMPACT_STACK_AVATAR, overlap && '-ml-1.5 md:-ml-2')}
+      className={cn(MEMBER_COMPACT_STACK_AVATAR, overlap && '-ml-2 md:-ml-2.5')}
       style={{ zIndex }}
       aria-hidden
     >
@@ -33,8 +33,8 @@ export function MemberCompactStackFace({ imageSrc, zIndex, overlap }: Props) {
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center">
-          <IconUser size={10} className="text-icon-inverse md:hidden" />
-          <IconUser size={12} className="hidden text-icon-inverse md:block" />
+          <IconUser size={12} className="text-icon-inverse md:hidden" />
+          <IconUser size={14} className="hidden text-icon-inverse md:block" />
         </span>
       )}
     </div>
