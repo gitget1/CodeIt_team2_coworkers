@@ -7,7 +7,7 @@ import {
 } from '../api/acceptGroupInvitation';
 import type { ApiError } from '@/shared/types/apiError';
 import type { AcceptInvitationResponse } from '../model/dto/group.dto';
-import { isApiError } from '@/shared/api/mapApiError';
+import { mapApiError } from '@/shared/api/mapApiError';
 import { USER_QUERY_KEYS } from '@/features/user/lib/queryKeys';
 
 /**
@@ -26,13 +26,14 @@ export function useAcceptInvitationMutation(params: UseAcceptInvitationMutationP
 
   return useMutation<AcceptInvitationResponse, ApiError, AcceptGroupInvitationParams>({
     mutationFn: acceptGroupInvitation,
+    meta: { disableGlobalError: true },
     onSuccess: async (data) => {
       toast.success('팀에 참여했습니다.');
       await queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.groups() });
       await paramsRef.current.onSuccess(data);
     },
     onError: (error) => {
-      toast.error(isApiError(error) ? error.message : '팀 참여에 실패했습니다.');
+      toast.error(mapApiError(error).message);
       paramsRef.current.onError();
     },
   });

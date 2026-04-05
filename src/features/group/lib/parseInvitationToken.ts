@@ -4,6 +4,12 @@
  */
 
 /**
+ * 스킴이 있는 절대 URL은 `https:`만 허용합니다(`http:`, `javascript:` 등 차단).
+ * 경로·쿼리만 있는 문자열(`/accept-invitation?token=`)은 스킴이 없으므로 허용합니다.
+ */
+const URL_SCHEME_PATTERN = /^([a-z][a-z0-9+.-]*):/i;
+
+/**
  * `?token=` 또는 `&token=` 뒤의 값만 캡처합니다. 다음 `&` 전까지.
  * application/x-www-form-urlencoded 에서 공백이 `+`로 온 경우 디코딩 전에 치환합니다.
  */
@@ -16,6 +22,11 @@ function decodeCapturedTokenValue(rawTokenValue: string): string {
 export function parseInvitationToken(input: string): string | null {
   const trimmedInput = input.trim();
   if (!trimmedInput) return null;
+
+  const schemeMatch = trimmedInput.match(URL_SCHEME_PATTERN);
+  if (schemeMatch && schemeMatch[1].toLowerCase() !== 'https') {
+    return null;
+  }
 
   const tokenQueryMatch = trimmedInput.match(TOKEN_QUERY_PARAM_PATTERN);
   if (tokenQueryMatch) {

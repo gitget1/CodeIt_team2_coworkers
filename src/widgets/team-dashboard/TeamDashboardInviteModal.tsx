@@ -18,9 +18,11 @@ export function TeamDashboardInviteModal({
   return (
     <Modal isOpen={isOpen} open={open} close={close}>
       <Modal.Content size="sm">
-        <Modal.Header className="pb-4">
-          <Modal.Title className="text-lg font-medium text-txt-primary">멤버 초대</Modal.Title>
-          <Modal.Description className="text-sm font-medium text-txt-secondary">
+        <Modal.Header className="w-full min-w-0 items-stretch pb-4">
+          <Modal.Title className="break-words text-center text-lg font-medium text-txt-primary">
+            멤버 초대
+          </Modal.Title>
+          <Modal.Description className="break-words text-center text-sm font-medium text-txt-secondary">
             그룹에 참여할 수 있는 링크를 복사합니다.
           </Modal.Description>
         </Modal.Header>
