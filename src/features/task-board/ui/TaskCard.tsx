@@ -52,7 +52,13 @@ export function TaskCard({
   };
 
   return (
-    <TaskCardShell collapsed={collapsed} onClick={onOpenTaskList ? () => onOpenTaskList(taskGroup) : undefined}>
+    <TaskCardShell
+      collapsed={collapsed}
+      onClick={onOpenTaskList ? () => onOpenTaskList(taskGroup) : undefined}
+      dragActivatorRef={setActivatorNodeRef}
+      dragAttributes={dragAttributes}
+      dragListeners={dragListeners}
+    >
       <TaskCardHeader
         cardName={taskGroup.name}
         collapsed={collapsed}
@@ -60,9 +66,6 @@ export function TaskCard({
         checkedTaskCount={checkedTaskCount}
         cardTaskCount={cardTaskCount}
         onToggleCollapsed={toggleCollapsed}
-        activatorRef={setActivatorNodeRef}
-        dragAttributes={dragAttributes}
-        dragListeners={dragListeners}
         onEditCard={() => onEditCard?.(taskGroup)}
         onDeleteCard={() => onDeleteCard?.(taskGroup)}
       />

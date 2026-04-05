@@ -15,6 +15,7 @@ export function TaskRow({ task, onToggle }: TaskRowProps) {
       <span
         onClick={(event) => event.stopPropagation()}
         onMouseDown={(event) => event.stopPropagation()}
+        onPointerDown={(event) => event.stopPropagation()}
       >
         <Checkbox
           size="sm"

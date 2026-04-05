@@ -1,3 +1,4 @@
+import type { DraggableAttributes, DraggableSyntheticListeners } from '@dnd-kit/core';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { cn } from '@/shared/lib/cn';
 
@@ -5,9 +6,20 @@ type TaskCardShellProps = {
   collapsed: boolean;
   children: ReactNode;
   onClick?: () => void;
+  /** dnd-kit: 드래그 활성 영역(카드 전체) */
+  dragActivatorRef?: (node: HTMLElement | null) => void;
+  dragAttributes?: DraggableAttributes;
+  dragListeners?: DraggableSyntheticListeners;
 };
 
-export function TaskCardShell({ collapsed, children, onClick }: TaskCardShellProps) {
+export function TaskCardShell({
+  collapsed,
+  children,
+  onClick,
+  dragActivatorRef,
+  dragAttributes,
+  dragListeners,
+}: TaskCardShellProps) {
   const expandedAria =
     collapsed === true
       ? ({ 'aria-expanded': false as const } as const)
@@ -15,7 +27,7 @@ export function TaskCardShell({ collapsed, children, onClick }: TaskCardShellPro
 
   return (
     <div
-      onClick={onClick}
+      ref={dragActivatorRef}
       {...(onClick
         ? {
             role: 'button' as const,
@@ -32,10 +44,14 @@ export function TaskCardShell({ collapsed, children, onClick }: TaskCardShellPro
             role: 'group' as const,
             ...expandedAria,
           })}
+      {...dragAttributes}
+      {...dragListeners}
+      onClick={onClick}
       className={cn(
-        'w-[270px] rounded-[12px] border border-background-tertiary bg-background-primary flex flex-col',
+        'flex w-[270px] flex-col rounded-[12px] border border-background-tertiary bg-background-primary',
         'max-[767px]:w-[343px] min-[768px]:w-[620px] lg:w-[270px]',
-        onClick && 'cursor-pointer',
+        dragListeners && 'cursor-grab touch-manipulation active:cursor-grabbing',
+        onClick && !dragListeners && 'cursor-pointer',
         collapsed
           ? 'h-[54px] gap-0 px-5 pt-4 pb-0'
           : 'min-h-[151px] gap-[10px] px-5 pt-4 pb-6',
