@@ -122,6 +122,8 @@ export function TeamDashboardReadyView({ vm }: Props) {
           onEditTeam={handleEditTeam}
           onDeleteTeam={handleOpenDeleteTeam}
           onLeaveTeam={handleOpenLeaveTeam}
+          onInvite={openInviteModal}
+          canManageMembers={canManageMembers}
         />
 
         <section className="flex min-w-0 flex-col gap-4" aria-labelledby="team-task-board-heading">

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Profile } from '@/shared/ui/profile';
 import type { ImageAsset } from '@/shared/ui/profile';
@@ -42,6 +42,9 @@ export type TeamCardProps = {
   className?: string;
   /** 통계 블록(오늘의 할 일·완료) 래퍼 커스텀 */
   statsClassName?: string;
+  /** 관리자만. 모바일·태블릿 전체 멤버 모달에서 초대 링크 모달로 이어질 때 사용 */
+  onInvite?: () => void;
+  canManageMembers?: boolean;
 };
 
 export function TeamCard({
@@ -58,6 +61,8 @@ export function TeamCard({
   memberCount,
   className,
   statsClassName,
+  onInvite,
+  canManageMembers = false,
 }: TeamCardProps) {
   const normalizedMembers = useMemo<MemberCardItem[]>(
     () =>
@@ -87,6 +92,11 @@ export function TeamCard({
     onMoreClick,
     onModalClose,
   } = useMemberCardModalState({ defaultModeOnClose: 'all' });
+
+  const handleInviteFromMemberModal = useCallback(() => {
+    onModalClose();
+    onInvite?.();
+  }, [onModalClose, onInvite]);
 
   const displayMemberCount =
     typeof memberCount === 'number' ? memberCount : sortedMembers.length;
@@ -207,6 +217,7 @@ export function TeamCard({
         members={sortedMembers}
         onMemberClickInList={onMemberClickInList}
         onBackToList={memberDetailFromAllList ? onBackToList : undefined}
+        onInvite={canManageMembers && onInvite ? handleInviteFromMemberModal : undefined}
       />
     </article>
   );

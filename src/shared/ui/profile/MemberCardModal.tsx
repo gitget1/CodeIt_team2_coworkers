@@ -18,6 +18,11 @@ type Props = {
   onMemberClickInList?: (member: MemberCardItem) => void;
   /** 상세에서 목록으로 (목록에서 들어온 경우만) */
   onBackToList?: () => void;
+  /**
+   * 전체 멤버 목록 헤더에 `초대하기 +` 표시(멤버카드와 동일 스타일).
+   * 보통 부모에서 멤버 모달을 닫은 뒤 초대 모달을 열도록 연결합니다.
+   */
+  onInvite?: () => void;
 };
 
 export function MemberCardModal({
@@ -29,10 +34,17 @@ export function MemberCardModal({
   members,
   onMemberClickInList,
   onBackToList,
+  onInvite,
 }: Props) {
   return (
     <Modal isOpen={isOpen} open={open} close={onClose}>
-      <Modal.Content size="sm" className={modalMode === 'member' ? 'pb-0' : 'pb-4'}>
+      <Modal.Content
+        size="sm"
+        className={cn(
+          '[&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed',
+          modalMode === 'member' ? 'pb-0' : 'pb-4',
+        )}
+      >
         {modalMode === 'member' ? (
           <>
             <Modal.Header className="sr-only">
@@ -46,8 +58,20 @@ export function MemberCardModal({
           </>
         ) : (
           <>
-            <Modal.Header>
-              <Modal.Title>전체 멤버</Modal.Title>
+            <Modal.Header className="w-full min-w-0 flex-row items-center justify-between gap-3 px-8 pt-10 pb-0">
+              <Modal.Title className="min-w-0 flex-1 truncate text-left text-base font-bold text-txt-primary">
+                전체 멤버{' '}
+                <span className="font-bold text-txt-default">({members.length}명)</span>
+              </Modal.Title>
+              {onInvite != null ? (
+                <button
+                  type="button"
+                  onClick={onInvite}
+                  className="shrink-0 touch-manipulation py-2 text-sm font-semibold text-brand-primary hover:underline sm:py-0"
+                >
+                  초대하기 +
+                </button>
+              ) : null}
             </Modal.Header>
             <Modal.Body className="flex min-h-0 min-w-0 flex-1 flex-col !overflow-hidden px-8 py-2">
               <div
