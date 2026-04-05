@@ -30,8 +30,10 @@ export function TeamDashboardLayout({ children }: Props) {
 
   return (
     <AppLayout sidebarProps={sidebarProps}>
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
-        {children}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-background-secondary [&_button]:cursor-pointer [&_button:disabled]:cursor-not-allowed">
+        <div className="mx-auto flex w-full max-w-screen-2xl min-h-0 flex-1 flex-col px-4 py-6 md:px-6">
+          {children}
+        </div>
       </div>
     </AppLayout>
   );

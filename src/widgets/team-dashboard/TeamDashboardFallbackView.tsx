@@ -43,7 +43,7 @@ export function TeamDashboardFallbackView({ vm }: Props) {
         <title>팀 | Coworkers</title>
         <meta name="description" content="팀 대시보드" />
       </Head>
-      <div className="flex min-h-full flex-1 items-center justify-center bg-background-secondary p-4 text-sm text-txt-secondary md:p-6">
+      <div className="flex min-h-full flex-1 items-center justify-center text-sm text-txt-secondary">
         팀 정보를 불러오지 못했습니다.
       </div>
     </>

@@ -41,7 +41,7 @@ export type TeamCardProps = {
   members?: MemberCardItem[];
   /** 전체 팀원 수(숫자). 없으면 `members`·폴백 목록 길이로 표기 */
   memberCount?: number;
-  /** 기본: 모바일 375x196, 태블릿 620x239, 데스크톱 1120x239 */
+  /** 기본: 모바일·태블릿은 컨테이너 너비에 맞춤, 데스크톱(lg+) 1120×239 */
   className?: string;
   /** 통계 블록(오늘의 할 일·완료) 래퍼 커스텀 */
   statsClassName?: string;
@@ -123,7 +123,8 @@ export function TeamCard({
   return (
     <article
       className={cn(
-        'relative box-border flex h-[196px] w-[375px] max-w-full flex-col rounded-[20px] border border-background-tertiary/60 bg-background-primary p-5 shadow-[0_4px_24px_rgba(15,23,42,0.06)] md:h-[239px] md:w-[620px] lg:w-[1120px]',
+        'relative box-border flex h-[196px] w-full max-w-full flex-col rounded-[20px] border border-background-tertiary/60 bg-background-primary p-5 shadow-[0_4px_24px_rgba(15,23,42,0.06)]',
+        'md:h-[239px] lg:h-[239px] lg:w-[1120px] lg:max-w-[1120px] lg:shrink-0',
         className,
       )}
     >

@@ -200,7 +200,12 @@ export function TaskBoardView({
         }}
       >
         {activeTaskGroup ? (
-          <div className="scale-[1.02] drop-shadow-[0_14px_26px_rgba(15,23,42,0.18)]">
+          <div
+            className={cn(
+              'box-border w-[calc(100vw-2rem)] max-w-[42rem] scale-[1.02] drop-shadow-[0_14px_26px_rgba(15,23,42,0.18)]',
+              'lg:w-[270px] lg:max-w-[270px]',
+            )}
+          >
             <TaskCard taskGroup={activeTaskGroup} />
           </div>
         ) : null}

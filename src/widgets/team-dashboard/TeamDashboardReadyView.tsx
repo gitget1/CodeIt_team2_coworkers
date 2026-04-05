@@ -164,7 +164,7 @@ export function TeamDashboardReadyView({ vm }: Props) {
       </Head>
 
       <div
-        className="relative flex min-h-full flex-1 flex-col gap-6 bg-background-secondary p-4 md:p-6"
+        className="relative flex min-h-full flex-1 flex-col gap-6"
         {...(isFetching ? { 'aria-busy': true as const } : {})}
       >
         {isFetching ? (

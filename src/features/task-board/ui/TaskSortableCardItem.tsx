@@ -84,7 +84,7 @@ export function TaskSortableCardItem({
     <div
       ref={setRef}
       className={cn(
-        'relative will-change-transform transition-[opacity,transform] duration-200 ease-out',
+        'relative w-full max-w-full will-change-transform transition-[opacity,transform] duration-200 ease-out',
         isDragging && 'opacity-60 scale-[1.01]',
       )}
     >
