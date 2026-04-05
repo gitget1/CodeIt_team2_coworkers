@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib/cn';
 import { BreadcrumbItem } from './breadcrumbItem';
+import { IconArrowRight } from '@/shared/ui/icons/IconArrowRight';
 
 type BreadcrumbData = {
   label: string;
@@ -25,7 +26,7 @@ export default function Breadcrumb({ items, className }: Props) {
         return (
           <div key={index} className="flex items-center gap-2">
             <BreadcrumbItem label={item.label} href={item.href} readonly={isLast} />
-            {!isLast && <span className="text-txt-primary">{'>'}</span>}
+            {!isLast && <span className="text-txt-primary"><IconArrowRight /></span>}
           </div>
         );
       })}
