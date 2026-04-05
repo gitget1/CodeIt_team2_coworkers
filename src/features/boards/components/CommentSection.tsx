@@ -11,15 +11,16 @@ import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import { IconHeart } from '@/shared/ui/icons/IconHeart';
 import { IconHeartEmpty } from '@/shared/ui/icons/IconHeartEmpty';
 import { useToggleLikeArticle } from '../hooks/useToggleLikeArticle';
-
+import { cn } from '@/shared/lib/cn';
 interface Props {
   article: ArticleDetail;
   comments: Comment[];
 }
 
 export default function CommentSection({ article, comments }: Props) {
-  const { data: currentUser } = useUserQuery();
+  const { data: currentUser, isLoading } = useUserQuery();
   const { toggleLike } = useToggleLikeArticle();
+  const isLoggedIn = isLoading ? undefined : !!currentUser;
   const {
     commentInput,
     setCommentInput,
@@ -43,9 +44,13 @@ export default function CommentSection({ article, comments }: Props) {
         <h2 className="mb-2 flex gap-1 font-semibold">
           댓글 <span className="text-brand-primary">{article.commentCount}</span>
         </h2>
-        <div className="flex mb-2">
+        <div className="mb-2 flex">
           <div className="flex items-center gap-1">
-            <button onClick={() => toggleLike(article.id, article.isLiked)}>
+            <button
+              onClick={() => isLoggedIn && toggleLike(article.id, article.isLiked)}
+              disabled={!isLoggedIn}
+              className={!isLoggedIn ? 'cursor-not-allowed opacity-50' : ''}
+            >
               {article.isLiked ? <IconHeart /> : <IconHeartEmpty />}
             </button>
             <div>{article.likeCount}</div>
@@ -57,7 +62,8 @@ export default function CommentSection({ article, comments }: Props) {
         <IconUser size={32} className="rounded-[6px] bg-slate-200 text-white" />
 
         <Input
-          placeholder="댓글을 달아주세요"
+          placeholder={isLoggedIn ? '댓글을 달아주세요' : '로그인 후 사용 가능해요'}
+          disabled={!isLoggedIn}
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
           onKeyDown={(e) => {
@@ -67,10 +73,13 @@ export default function CommentSection({ article, comments }: Props) {
           }}
           className="rounded-none border-0 border-y !border-slate-200 shadow-none"
           rightElement={
-            <button onClick={handleCreateComment} disabled={!isActive}>
+            <button onClick={handleCreateComment} disabled={!isActive || !isLoggedIn}>
               <IconCommentBtn
                 size={24}
-                className={`rounded-full text-white transition ${isActive ? 'bg-icon-primary' : 'cursor-not-allowed bg-slate-300'} `}
+                className={cn(
+                  'rounded-full text-white transition',
+                  isActive && isLoggedIn ? 'bg-icon-primary' : 'cursor-not-allowed bg-slate-300',
+                )}
               />
             </button>
           }

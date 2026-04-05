@@ -19,31 +19,48 @@ type BestArticleCarouselProps = {
 export function BestArticleCarousel({ best, onPrev, onNext, onSwipe }: BestArticleCarouselProps) {
   const [startX, setStartX] = useState<number | null>(null);
 
-  const handleMouseDown = (e: React.MouseEvent) => setStartX(e.clientX);
+  const THRESHOLD = 50;
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setStartX(e.clientX);
+  };
+
   const handleMouseUp = (e: React.MouseEvent) => {
-    if (startX !== null) {
-      onSwipe(e.clientX - startX);
-      setStartX(null);
+    if (startX === null) return;
+
+    const diff = e.clientX - startX;
+
+    if (Math.abs(diff) > THRESHOLD) {
+      onSwipe(diff);
     }
+
+    setStartX(null);
   };
 
   return (
-    <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} className="mx-auto">
+    <div onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} className="mx-auto select-none">
       <h2 className="px-4 text-xl font-bold md:px-2 lg:px-6">베스트 게시글</h2>
       <div className="flex justify-center gap-4 pt-6">
         {best.visibleBest.map((article) => (
           <ArticleCard key={article.id} article={article} variant="best" />
         ))}
       </div>
-
       <div className="mt-5 grid grid-cols-3 items-center">
         <div />
         <div className="flex justify-center gap-2">
+          
           {Array.from({ length: best.total }).map((_, i) => (
-            <span
+            <button
               key={i}
-              className={`h-2 w-2 rounded-full ${best.current === i ? 'w-4 bg-slate-400' : 'bg-slate-300'}`}
-            />
+              onClick={() => best.setCurrent(i)}
+              className="flex items-center justify-center rounded-full hover:bg-slate-100"
+            >
+              <span
+                className={`h-2 w-2 rounded-full transition-all ${
+                  best.current === i ? 'w-4 bg-slate-400' : 'bg-slate-300'
+                }`}
+              />
+            </button>
           ))}
         </div>
         <div className="flex justify-end gap-2 pr-6">

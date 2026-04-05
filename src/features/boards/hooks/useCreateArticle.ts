@@ -21,7 +21,7 @@ export function useCreateArticle() {
           queryClient.invalidateQueries({
             queryKey: ['articles', 'list'],
           });
-
+          queryClient.removeQueries({ queryKey: ['articles'] });
           toast.success('게시글이 등록되었습니다.');
         },
       },

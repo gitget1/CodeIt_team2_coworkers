@@ -19,6 +19,8 @@ export default function BoardsListPage() {
     handlers,
     isLoading,
     error,
+    loadMoreRef,
+    isFetchingNextPage,
   } = useBoardsPage();
 
   return (
@@ -54,7 +56,10 @@ export default function BoardsListPage() {
             게시글을 가져오는 중 오류 발생
           </div>
         ) : (
-          <ArticleList articles={filteredList} />
+          <>
+            <ArticleList articles={filteredList}  isFetchingNextPage={isFetchingNextPage} />
+            <div ref={loadMoreRef} className="h-20" />
+          </>
         )}
       </section>
     </main>

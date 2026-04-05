@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useArticleListQuery } from '@/features/boards/hooks/useArticleListQuery';
 import { useBestArticles } from '@/features/boards/hooks/useBestArticle';
 import { debounce } from '../utils/debounce';
+import { useBestArticleQuery } from './useBestArticleQuery';
 
 export function useBoardsPage() {
-  const { data: allData, isLoading, error } = useArticleListQuery({ orderBy: 'recent' });
+  const { data: allData, isLoading, error } = useBestArticleQuery({ orderBy: 'like' ,pageSize:15});
   const allList = allData?.list || [];
   const best = useBestArticles(allList);
 
@@ -22,11 +23,11 @@ export function useBoardsPage() {
     return () => debouncedSetSearch.cancel();
   }, [search, debouncedSetSearch]);
 
-  const { data: filteredData } = useArticleListQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useArticleListQuery({
     orderBy: sortOption,
     keyword: debouncedSearch,
   });
-  const filteredList = filteredData?.list || [];
+  const filteredList = data?.pages.flatMap((page) => page.list) ?? [];
 
   const handlers = {
     onNext: () => {
@@ -40,6 +41,20 @@ export function useBoardsPage() {
       if (diff < -50) handlers.onNext();
     },
   };
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   return {
     best,
@@ -51,5 +66,8 @@ export function useBoardsPage() {
     handlers,
     isLoading,
     error,
+    loadMoreRef,
+    hasNextPage,
+    isFetchingNextPage,
   };
 }

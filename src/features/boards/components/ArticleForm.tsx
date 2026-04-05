@@ -32,6 +32,7 @@ export function ArticleForm({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -62,6 +63,12 @@ export function ArticleForm({
       ...data,
       images,
     });
+    reset({
+      title: '',
+      content: '',
+    });
+
+    setImages([]);
   };
 
   return (

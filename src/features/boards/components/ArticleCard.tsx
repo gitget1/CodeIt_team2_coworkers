@@ -49,6 +49,7 @@ export function ArticleCard({ article, variant }: Props) {
             {!isError ? (
               <img
                 src={article.image}
+                loading="lazy"
                 alt={article.title}
                 className="h-full w-full object-cover"
                 onError={() => setIsError(true)}

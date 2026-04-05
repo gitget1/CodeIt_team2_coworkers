@@ -9,7 +9,7 @@ interface SortDropdownProps {
 
 const OPTIONS: { label: string; value: SortOption }[] = [
   { label: '최신순', value: 'recent' },
-  { label: '좋아요 많은순', value: 'like' },
+  { label: '인기순', value: 'like' },
 ];
 export default function ArticleDropDown({ value, onChange }: SortDropdownProps) {
   const selectedLabel = OPTIONS.find((opt) => opt.value === value)?.label ?? '';
