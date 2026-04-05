@@ -6,9 +6,8 @@ import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
 import { IconRepeat } from '@/shared/ui/icons/IconRepeat';
 import { Button } from '@/shared/ui/Button';
 import { IconCheck, IconClose } from '@/shared/ui/icons';
-import { IconCommentBtn } from '@/shared/ui/icons/IconCommentBtn';
-import { Input } from '@/shared/ui/input/Input';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
+import { TaskDetailComments } from './task-comments/TaskDetailComments';
 import Dropdown from '@/shared/ui/dropdown';
 import { cn } from '@/shared/lib/cn';
 
@@ -16,6 +15,7 @@ type Props = {
   task: Task | null;
   onClose: () => void;
   params: TaskCommonParams;
+  listDateIso?: string;
   onTaskChange?: (task: Task) => void;
   onEditClick: (task: Task) => void;
   onDeleteClick: (task: Task) => void;
@@ -39,6 +39,7 @@ export default function TaskDetailPanel({
   task,
   onClose,
   params,
+  listDateIso,
   onTaskChange,
   onEditClick,
   onDeleteClick,
@@ -173,31 +174,12 @@ export default function TaskDetailPanel({
                 {task.description}
               </p>
 
-              <div className="mt-8 md:mt-14">
-                <div className="flex items-center gap-1">
-                  <p className="text-2lg text-txt-primary font-bold">댓글</p>
-                  <p className="text-2lg text-brand-primary font-bold">{task.commentCount}</p>
-                </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-gray-200" />
-
-                  <Input
-                    placeholder="댓글을 달아주세요"
-                    className="text-txt-default text-md font-weight-regular border-background-tertiary rounded-none border-x-0 border-t border-b"
-                    rightElement={
-                      <Button
-                        variant="ghost"
-                        className="bg-primary h-6 w-6 cursor-pointer rounded-full p-0"
-                      >
-                        <IconCommentBtn
-                          className="bg-icon-primary rounded-full text-white"
-                          size={24}
-                        />
-                      </Button>
-                    }
-                  />
-                </div>
-              </div>
+              <TaskDetailComments
+                task={task}
+                params={params}
+                listDateIso={listDateIso}
+                onTaskChange={onTaskChange}
+              />
             </div>
           </div>
         )}

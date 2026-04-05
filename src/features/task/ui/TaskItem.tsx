@@ -51,17 +51,23 @@ export default function TaskItem({ task, onClick, params, onDeleteClick, onEditC
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <div
-          className="flex flex-wrap items-center gap-x-2 gap-y-1"
+          className="flex min-w-0 items-center gap-2"
           onClick={(e) => e.stopPropagation()}
         >
           <Checkbox id={checkboxId} size="lg" checked={task.isCompleted} onChange={handleToggle} />
-          <label
-            htmlFor={checkboxId}
-            className={`min-w-0 flex-1 cursor-pointer text-sm transition-colors md:text-sm ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
-          >
-            {task.title}
-          </label>
-          <MetaItem icon={<IconComment />}>{task.commentCount}</MetaItem>
+          <div className="flex min-w-0 flex-1 overflow-hidden">
+            <div className="inline-flex min-w-0 max-w-full items-center gap-1.5">
+              <label
+                htmlFor={checkboxId}
+                className={`min-w-0 cursor-pointer truncate text-sm transition-colors md:text-sm ${task.isCompleted ? 'text-gray-400 line-through' : 'text-txt-primary'}`}
+              >
+                {task.title}
+              </label>
+              <div className="shrink-0">
+                <MetaItem icon={<IconComment />}>{task.commentCount}</MetaItem>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 md:mt-0 md:gap-2">

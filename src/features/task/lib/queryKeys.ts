@@ -9,4 +9,5 @@ export const TASK_QUERY_KEYS = {
   lists: (groupId: number) => [...TASK_QUERY_KEYS.all, groupId, 'list'] as const,
   list: (params: TaskListQueryKeyParams) =>
     [...TASK_QUERY_KEYS.lists(params.groupId), params.taskListId, params.date] as const,
+  comments: (taskId: number) => [...TASK_QUERY_KEYS.all, 'comments', taskId] as const,
 };

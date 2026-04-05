@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import emptyImage from '@/shared/assets/images/empty-my-history.png';
+import emptyImage from '@/shared/assets/images/empty-task.png';
 import { useTaskListQuery } from '../hooks/useTaskListQuery';
 import { TaskCommonParams } from '../model/params/task.params';
 import TaskCreateButton from './create-task/TaskCreateButton';
@@ -58,7 +58,10 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
                   unoptimized
                 />
               </div>
-              <p className="text-txt-secondary text-sm">할일이 없습니다</p>
+              <p className="text-txt-default text-center text-sm">
+                오늘의 할 일 목록이 없네요. <br />
+                편안하게 쉬어볼까요?
+              </p>
             </li>
           ) : (
             data.tasks.map((task) => (
@@ -78,6 +81,7 @@ export default function TasksSection({ groupId, taskListId, date }: Props) {
         task={detailTask}
         onClose={closeDetail}
         params={params}
+        listDateIso={date?.toISOString()}
         onTaskChange={setDetailTask}
         onEditClick={openEdit}
         onDeleteClick={openDelete}
