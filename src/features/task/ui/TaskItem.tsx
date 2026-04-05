@@ -4,6 +4,7 @@ import { IconCalendar } from '@/shared/ui/icons/IconCalendar';
 import { IconRepeat } from '@/shared/ui/icons/IconRepeat';
 import { formatDate } from '@/shared/lib/date';
 import { IconComment } from '@/shared/ui/icons/IconComment';
+import { IconKebab } from '@/shared/ui/icons/IconKebab';
 import { useToggleTaskMutation } from '../hooks/useToggleTaskMutation';
 import { TaskCommonParams } from '../model/params/task.params';
 import Dropdown from '@/shared/ui/dropdown';
@@ -80,8 +81,9 @@ export default function TaskItem({ task, onClick, params, onDeleteClick, onEditC
         <Dropdown.Trigger
           onClick={(e) => e.stopPropagation()}
           className="text-icon-primary cursor-pointer rounded p-1"
+          aria-label="할 일 메뉴"
         >
-          ...
+          <IconKebab size={20} />
         </Dropdown.Trigger>
         <Dropdown.Menu className="absolute right-0 z-50 mt-2 w-28">
           <Dropdown.Item

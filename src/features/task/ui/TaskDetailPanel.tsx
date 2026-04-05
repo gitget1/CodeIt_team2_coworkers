@@ -9,6 +9,7 @@ import { IconCheck, IconClose } from '@/shared/ui/icons';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
 import { TaskDetailComments } from './task-comments/TaskDetailComments';
 import Dropdown from '@/shared/ui/dropdown';
+import { IconKebab } from '@/shared/ui/icons/IconKebab';
 import { Profile } from '@/shared/ui/profile';
 import { cn } from '@/shared/lib/cn';
 
@@ -104,8 +105,9 @@ export default function TaskDetailPanel({
                       'text-icon-primary hover:text-txt-primary cursor-pointer rounded p-1 text-gray-400',
                       isPending && 'pointer-events-none opacity-40',
                     )}
+                    aria-label="할 일 메뉴"
                   >
-                    ...
+                    <IconKebab size={20} />
                   </Dropdown.Trigger>
                   <Dropdown.Menu className="absolute right-0 z-[100] mt-2 w-28">
                     <Dropdown.Item
