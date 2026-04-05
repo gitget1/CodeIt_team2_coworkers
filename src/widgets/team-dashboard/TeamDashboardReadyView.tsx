@@ -1,10 +1,12 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { TeamCard } from '@/shared/ui/team/TeamCard';
 import { MemberCard } from '@/shared/ui/profile';
 import { TaskBoardView } from '@/features/task-board/ui';
+import type { TaskListOrderPersistPayload } from '@/features/task-board/lib/useTaskBoardDnd';
+import type { TaskBoardColumnStatus } from '@/features/task-board/model/taskBoard.types';
 import type { TeamDashboardViewModel } from '@/features/group/hooks/useTeamDashboard';
 import { useGroupTasksQuery } from '@/features/group/hooks/useGroupTasksQuery';
 import { useUserQuery } from '@/features/user/hooks/useUserQuery';
@@ -19,6 +21,12 @@ import { TeamDashboardDeleteTeamModal } from './TeamDashboardDeleteTeamModal';
 import { TeamDashboardLeaveTeamModal } from './TeamDashboardLeaveTeamModal';
 import { useTeamDashboardGroupActions } from './useTeamDashboardGroupActions';
 import { toTaskBoard } from './taskBoardAdapter';
+import {
+  loadTaskBoardColumnOverrides,
+  mergeColumnOverrideAfterDrag,
+  pruneColumnOverridesForTodoComputed,
+  saveTaskBoardColumnOverrides,
+} from './taskBoardColumnOverrides';
 
 const ENABLE_TASK_BOARD_CARD_NAV_TO_LIST = true;
 
@@ -33,8 +41,34 @@ export function TeamDashboardReadyView({ vm }: Props) {
   const { groupIdStr, group, memberCardItems, isFetching } = vm;
   const { data: groupTasks = [] } = useGroupTasksQuery(group.id);
   const { data: me } = useUserQuery();
-  const { handleCreateTaskGroup, handleUpdateTaskGroup, handleDeleteTaskGroup, handleToggleTask, handleCompleteTaskGroupByDrop } =
-    useTeamDashboardTaskListActions({ groupId: group.id });
+
+  const [columnOverrides, setColumnOverrides] = useState<Map<string, TaskBoardColumnStatus>>(() => new Map());
+
+  const clearColumnOverrideWhenListFullyCompleted = useCallback(
+    (taskListIdStr: string) => {
+      setColumnOverrides((prev) => {
+        if (!prev.has(taskListIdStr)) return prev;
+        const next = new Map(prev);
+        next.delete(taskListIdStr);
+        saveTaskBoardColumnOverrides(group.id, next);
+        return next;
+      });
+    },
+    [group.id],
+  );
+
+  const {
+    handleCreateTaskGroup,
+    handleUpdateTaskGroup,
+    handleDeleteTaskGroup,
+    handleToggleTask,
+    handleCompleteTaskGroupByDrop,
+    handleUncheckTaskGroupByDrop,
+    handlePersistTaskListOrderFromBoard,
+  } = useTeamDashboardTaskListActions({
+    groupId: group.id,
+    onTaskListBecameFullyCompleted: clearColumnOverrideWhenListFullyCompleted,
+  });
   const {
     isInviteModalOpen,
     openInviteModal,
@@ -72,7 +106,30 @@ export function TeamDashboardReadyView({ vm }: Props) {
       })),
     [group.taskLists, taskListQueries],
   );
-  const initialBoard = useMemo(() => toTaskBoard(boardTaskLists), [boardTaskLists]);
+
+  useLayoutEffect(() => {
+    setColumnOverrides(loadTaskBoardColumnOverrides(group.id));
+  }, [group.id]);
+
+  useLayoutEffect(() => {
+    setColumnOverrides((prev) => pruneColumnOverridesForTodoComputed(prev, group.id, boardTaskLists));
+  }, [group.id, boardTaskLists]);
+
+  const initialBoard = useMemo(
+    () => toTaskBoard(boardTaskLists, undefined, columnOverrides),
+    [boardTaskLists, columnOverrides],
+  );
+
+  const handleTaskListOrderPersist = useCallback(
+    (payload: TaskListOrderPersistPayload) => {
+      setColumnOverrides((prev) =>
+        mergeColumnOverrideAfterDrag(prev, group.id, payload.nextBoard, payload.movedTaskListId),
+      );
+      return handlePersistTaskListOrderFromBoard(payload);
+    },
+    [group.id, handlePersistTaskListOrderFromBoard],
+  );
+
   const handleOpenTaskList = ENABLE_TASK_BOARD_CARD_NAV_TO_LIST
     ? (taskGroupId: string) => {
         void router.push(
@@ -142,9 +199,11 @@ export function TeamDashboardReadyView({ vm }: Props) {
               onCreateTaskGroup={handleCreateTaskGroup}
               onToggleTask={handleToggleTask}
               onCompleteTaskGroupByDrop={handleCompleteTaskGroupByDrop}
+              onUncheckTaskGroupByDrop={handleUncheckTaskGroupByDrop}
               onUpdateTaskGroup={handleUpdateTaskGroup}
               onDeleteTaskGroup={handleDeleteTaskGroup}
               onOpenTaskList={handleOpenTaskList}
+              onTaskListOrderPersist={handleTaskListOrderPersist}
               trailingPanel={
                 <MemberCard
                   members={memberCardItems}

@@ -18,8 +18,16 @@ export function applyTaskToggleToBoard(
   const { status: fromStatus } = loc;
   const updatedTasks = loc.taskGroup.tasks.map((t) => (t.id === taskId ? { ...t, completed: checked } : t));
   const nextGroup: TaskBoardTaskGroup = { ...loc.taskGroup, tasks: updatedTasks };
-  const allCompleted = nextGroup.tasks.length > 0 && nextGroup.tasks.every((t) => t.completed);
-  const derivedStatus: TaskBoardColumnStatus = allCompleted ? 'DONE' : 'IN_PROGRESS';
+  const taskCount = updatedTasks.length;
+  const completedCount = updatedTasks.filter((t) => t.completed).length;
+  let derivedStatus: TaskBoardColumnStatus;
+  if (taskCount > 0 && completedCount === taskCount) {
+    derivedStatus = 'DONE';
+  } else if (completedCount > 0) {
+    derivedStatus = 'IN_PROGRESS';
+  } else {
+    derivedStatus = 'TODO';
+  }
 
   for (const col of columns) {
     col.taskGroups = col.taskGroups.filter((g) => g.id !== taskGroupId);

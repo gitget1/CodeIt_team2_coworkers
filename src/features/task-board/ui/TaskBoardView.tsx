@@ -1,10 +1,5 @@
 import { useRef, useState } from 'react';
-import {
-  DndContext,
-  DragOverlay,
-  closestCorners,
-  defaultDropAnimationSideEffects,
-} from '@dnd-kit/core';
+import { DndContext, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core';
 import { cn } from '@/shared/lib/cn';
 import type {
   TaskBoard,
@@ -14,7 +9,8 @@ import type {
 } from '../model/taskBoard.types';
 import { MOCK_TASK_BOARD } from '../lib/mockData';
 import { applyTaskToggleToBoard } from '../lib/applyTaskToggleToBoard';
-import { useTaskBoardDnd } from '../lib/useTaskBoardDnd';
+import { taskBoardCollisionDetection } from '../lib/taskBoardCollisionDetection';
+import { useTaskBoardDnd, type TaskListOrderPersistPayload } from '../lib/useTaskBoardDnd';
 import { useTaskBoardSensors } from '../lib/useTaskBoardSensors';
 import type { ReactNode } from 'react';
 import { TaskColumn } from './TaskColumn';
@@ -38,10 +34,17 @@ type Props = {
     taskGroupId: string;
     taskIds: string[];
   }) => Promise<boolean | void> | boolean | void;
+  /** 완료→할 일 드롭 시 체크 해제를 서버에 반영 */
+  onUncheckTaskGroupByDrop?: (params: {
+    taskGroupId: string;
+    taskIds: string[];
+  }) => Promise<boolean | void> | boolean | void;
   /** true면 캐시/프롭이 곧 반영되므로 보드 로컬 갱신 생략. false 실패. undefined·void면 로컬 갱신. */
   onUpdateTaskGroup?: (params: { taskGroupId: string; title: string }) => Promise<boolean | void> | boolean | void;
   onDeleteTaskGroup?: (params: { taskGroupId: string }) => Promise<boolean | void> | boolean | void;
   onOpenTaskList?: (taskGroupId: string) => void;
+  /** 드래그 후 할 일 목록 순서를 서버 `displayIndex`에 반영 */
+  onTaskListOrderPersist?: (payload: TaskListOrderPersistPayload) => Promise<void> | void;
 };
 
 const INITIAL_CARD_INDEX: Record<TaskBoardColumnStatus, number> = {
@@ -61,9 +64,11 @@ export function TaskBoardView({
   onCreateTaskGroup,
   onToggleTask,
   onCompleteTaskGroupByDrop,
+  onUncheckTaskGroupByDrop,
   onUpdateTaskGroup,
   onDeleteTaskGroup,
   onOpenTaskList,
+  onTaskListOrderPersist,
 }: Props) {
   const { board, setBoard, setCardNameLocal, removeCardLocal } = useTaskBoardBoard(initialBoard);
   const [creatingStatus, setCreatingStatus] = useState<TaskBoardColumnStatus | null>(null);
@@ -73,9 +78,14 @@ export function TaskBoardView({
     useTaskBoardDnd({
       board,
       setBoard,
-      onTaskGroupDropped: ({ taskGroupId, targetStatus, taskIdsToComplete }) => {
-        if (targetStatus !== 'DONE' || taskIdsToComplete.length === 0) return;
-        void onCompleteTaskGroupByDrop?.({ taskGroupId, taskIds: taskIdsToComplete });
+      onTaskListOrderPersist,
+      onTaskGroupDropped: ({ taskGroupId, targetStatus, taskIdsToComplete, taskIdsToUncheck }) => {
+        if (targetStatus === 'DONE' && taskIdsToComplete.length > 0) {
+          void onCompleteTaskGroupByDrop?.({ taskGroupId, taskIds: taskIdsToComplete });
+        }
+        if (targetStatus === 'TODO' && taskIdsToUncheck.length > 0) {
+          void onUncheckTaskGroupByDrop?.({ taskGroupId, taskIds: taskIdsToUncheck });
+        }
       },
     });
 
@@ -140,7 +150,7 @@ export function TaskBoardView({
 
   return (
     <DndContext
-      collisionDetection={closestCorners}
+      collisionDetection={taskBoardCollisionDetection}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}

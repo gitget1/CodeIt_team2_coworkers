@@ -1,26 +1,83 @@
+import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { GROUP_QUERY_KEYS } from '@/features/group/lib/queryKeys';
+import { TASK_QUERY_KEYS } from '@/features/task/lib/queryKeys';
+import type { TaskList } from '@/features/task/model/entities/task.model';
 import { toTaskList } from '@/features/task/lib/mappers/task.mapper';
 import type { GroupDetail } from '@/features/group/model/entities/group.model';
 import { useCreateTaskListMutation } from '@/features/task/hooks/useCreateTaskListMutation';
 import { useUpdateTaskListMutation } from '@/features/task/hooks/useUpdateTaskListMutation';
 import { useDeleteTaskListMutation } from '@/features/task/hooks/useDeleteTaskListMutation';
 import { updateTask } from '@/features/task/api/updateTask';
+import { updateTaskListOrder } from '@/features/task/api/updateTaskListOrder';
+import { flattenTaskBoardTaskListIds } from '@/features/task-board/lib/flattenTaskBoardOrder';
+import type { TaskListOrderPersistPayload } from '@/features/task-board/lib/useTaskBoardDnd';
 import type { TaskBoardColumnStatus } from '@/features/task-board/model/taskBoard.types';
 import type { Result } from '@/shared/types/result';
 import { invalidateTeamTaskQueries, toNumberId, toNumberIds } from './taskListActionHelpers';
 
 type Params = {
   groupId: number;
+  onTaskListBecameFullyCompleted?: (taskListIdStr: string) => void;
 };
 
-export function useTeamDashboardTaskListActions({ groupId }: Params) {
+function applyOrderedTaskListIdsToGroupDetail(prev: GroupDetail, orderedIds: string[]): GroupDetail | null {
+  if (orderedIds.length === 0) return null;
+  const mapById = new Map(prev.taskLists.map((tl) => [String(tl.id), tl]));
+  const seen = new Set<string>();
+  const nextLists = orderedIds
+    .map((id, index) => {
+      const tl = mapById.get(id);
+      if (!tl) return null;
+      seen.add(id);
+      return { ...tl, order: index };
+    })
+    .filter((x): x is NonNullable<typeof x> => x != null);
+  if (nextLists.length !== orderedIds.length) return null;
+  const orphans = prev.taskLists.filter((tl) => !seen.has(String(tl.id)));
+  return { ...prev, taskLists: [...nextLists, ...orphans] };
+}
+
+export function useTeamDashboardTaskListActions({
+  groupId,
+  onTaskListBecameFullyCompleted,
+}: Params) {
   const queryClient = useQueryClient();
   const detailQueryKey = GROUP_QUERY_KEYS.detail(groupId);
   const { mutateAsync: createTaskList } = useCreateTaskListMutation({ groupId });
   const { mutateAsync: updateTaskList } = useUpdateTaskListMutation({ groupId });
   const { mutateAsync: deleteTaskList } = useDeleteTaskListMutation({ groupId });
+
+  const handlePersistTaskListOrderFromBoard = useCallback(
+    (payload: TaskListOrderPersistPayload): Promise<void> => {
+      const { nextBoard, movedTaskListId } = payload;
+      const prev = queryClient.getQueryData<GroupDetail>(detailQueryKey);
+      if (!prev) return Promise.resolve();
+
+      const orderedIds = flattenTaskBoardTaskListIds(nextBoard);
+      if (orderedIds.length === 0) return Promise.resolve();
+
+      const displayIndex = orderedIds.indexOf(movedTaskListId);
+      if (displayIndex < 0) return Promise.resolve();
+
+      const optimistic = applyOrderedTaskListIdsToGroupDetail(prev, orderedIds);
+      if (!optimistic) return Promise.resolve();
+      queryClient.setQueryData(detailQueryKey, optimistic);
+
+      const taskListIdNum = toNumberId(movedTaskListId);
+      if (taskListIdNum === null) return Promise.resolve();
+
+      return (async () => {
+        const result = await updateTaskListOrder({ groupId, taskListId: taskListIdNum }, { displayIndex });
+        if (!result.ok) {
+          toast.error(result.error.message);
+          await queryClient.invalidateQueries({ queryKey: detailQueryKey });
+        }
+      })();
+    },
+    [detailQueryKey, groupId, queryClient],
+  );
 
   const handleCreateTaskGroup = async ({
     title,
@@ -126,6 +183,20 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
       return false;
     }
 
+    if (checked) {
+      const listQueryKey = TASK_QUERY_KEYS.list({ groupId, taskListId });
+      const listBefore = queryClient.getQueryData<TaskList>(listQueryKey);
+      if (listBefore) {
+        const nextTasks = listBefore.tasks.map((t) =>
+          t.id === taskIdNum ? { ...t, isCompleted: true } : t,
+        );
+        const allDone = nextTasks.length > 0 && nextTasks.every((t) => t.isCompleted);
+        if (allDone) {
+          onTaskListBecameFullyCompleted?.(String(taskListId));
+        }
+      }
+    }
+
     await invalidateTeamTaskQueries(queryClient, groupId);
     return true;
   };
@@ -161,11 +232,44 @@ export function useTeamDashboardTaskListActions({ groupId }: Params) {
     return true;
   };
 
+  const handleUncheckTaskGroupByDrop = async ({
+    taskGroupId,
+    taskIds,
+  }: {
+    taskGroupId: string;
+    taskIds: string[];
+  }) => {
+    const taskListId = toNumberId(taskGroupId);
+    if (taskListId === null) {
+      toast.error('할 일 목록 정보를 확인할 수 없습니다.');
+      return false;
+    }
+
+    const numericTaskIds = toNumberIds(taskIds);
+    if (numericTaskIds.length === 0) return true;
+
+    const results = await Promise.all(
+      numericTaskIds.map((taskId) => updateTask({ groupId, taskListId, taskId }, { done: false })),
+    );
+    const failed = results.find(
+      (result): result is Extract<Result<void>, { ok: false }> => !result.ok,
+    );
+    if (failed) {
+      toast.error(failed.error.message);
+      return false;
+    }
+
+    await invalidateTeamTaskQueries(queryClient, groupId);
+    return true;
+  };
+
   return {
     handleCreateTaskGroup,
     handleUpdateTaskGroup,
     handleDeleteTaskGroup,
     handleToggleTask,
     handleCompleteTaskGroupByDrop,
+    handleUncheckTaskGroupByDrop,
+    handlePersistTaskListOrderFromBoard,
   };
 }

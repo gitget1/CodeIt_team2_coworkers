@@ -40,6 +40,17 @@ export function TaskColumn({
   const lastTaskGroupId = taskGroups.length > 0 ? taskGroups[taskGroups.length - 1].id : null;
   const showBottomDropIndicator =
     isColumnDropTarget && taskGroups.length > 0 && activeTaskGroupId !== lastTaskGroupId;
+  /** 카드가 없을 때도 컬럼 droppable 위에 있으면 삽입 위치를 선으로 표시 */
+  const showEmptyColumnDropIndicator =
+    isColumnDropTarget && taskGroups.length === 0 && activeTaskGroupId != null;
+
+  const firstGroupId = taskGroups[0]?.id;
+  /** 정렬 전략이 첫 카드를 아래로 밀 때 카드에 붙은 before 선이 헤더에서 멀어지므로, 컬럼 상단에 고정 */
+  const showInsertLineBeforeFirst =
+    firstGroupId != null &&
+    dropIndicatorId === `before:${firstGroupId}` &&
+    activeTaskGroupId != null &&
+    activeTaskGroupId !== firstGroupId;
 
   const itemIds = taskGroups.map((g) => g.id);
 
@@ -51,23 +62,53 @@ export function TaskColumn({
         ref={setNodeRef}
         className={cn(
           'flex flex-col gap-[12px] rounded-[12px] transition-colors duration-200',
+          taskGroups.length === 0 && 'min-h-[120px]',
           isColumnDropTarget && 'bg-brand-secondary/60 p-[6px]',
         )}
       >
-        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
-          {taskGroups.map((group) => (
-            <TaskSortableCardItem
-              key={group.id}
-              taskGroup={group}
-              onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
-              onEditCard={onEditCard}
-              onDeleteCard={onDeleteCard}
-              onOpenTaskList={onOpenTaskList}
-              activeTaskGroupId={activeTaskGroupId}
-              dropIndicatorId={dropIndicatorId}
+        {showInsertLineBeforeFirst ? (
+          <div className="flex flex-col gap-1">
+            <div
+              className="pointer-events-none h-[3px] w-full shrink-0 rounded-full bg-brand-primary"
+              aria-hidden
             />
-          ))}
-        </SortableContext>
+            <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+              {taskGroups.map((group, index) => (
+                <TaskSortableCardItem
+                  key={group.id}
+                  taskGroup={group}
+                  onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
+                  onEditCard={onEditCard}
+                  onDeleteCard={onDeleteCard}
+                  onOpenTaskList={onOpenTaskList}
+                  activeTaskGroupId={activeTaskGroupId}
+                  dropIndicatorId={dropIndicatorId}
+                  suppressDropIndicatorBefore={index === 0}
+                />
+              ))}
+            </SortableContext>
+          </div>
+        ) : (
+          <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+            {taskGroups.map((group) => (
+              <TaskSortableCardItem
+                key={group.id}
+                taskGroup={group}
+                onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
+                onEditCard={onEditCard}
+                onDeleteCard={onDeleteCard}
+                onOpenTaskList={onOpenTaskList}
+                activeTaskGroupId={activeTaskGroupId}
+                dropIndicatorId={dropIndicatorId}
+              />
+            ))}
+          </SortableContext>
+        )}
+        {showEmptyColumnDropIndicator && (
+          <div className="pointer-events-none px-0.5 pt-1" aria-hidden>
+            <div className="h-[3px] w-full shrink-0 rounded-full bg-brand-primary" />
+          </div>
+        )}
         {showBottomDropIndicator && (
           <div className="pointer-events-none h-[3px] rounded-full bg-brand-primary" />
         )}

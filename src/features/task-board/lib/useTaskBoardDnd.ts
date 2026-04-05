@@ -1,20 +1,32 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import type { TaskBoard, TaskBoardColumnStatus } from '../model/taskBoard.types';
+import type { TaskBoard } from '../model/taskBoard.types';
+import { applyTaskBoardDragEnd, type TaskBoardDragDroppedPayload } from './applyTaskBoardDragEnd';
 import { findTaskGroupLocation, parseStatusFromDroppableId } from './taskBoardDnd.utils';
+
+export type TaskListOrderPersistPayload = {
+  nextBoard: TaskBoard;
+  movedTaskListId: string;
+};
 
 type UseTaskBoardDndParams = {
   board: TaskBoard;
   setBoard: Dispatch<SetStateAction<TaskBoard>>;
-  onTaskGroupDropped?: (params: {
-    taskGroupId: string;
-    targetStatus: TaskBoardColumnStatus;
-    taskIdsToComplete: string[];
-  }) => void;
+  onTaskGroupDropped?: (params: TaskBoardDragDroppedPayload) => void;
+  /** 드래그로 옮긴 목록의 순서를 서버 displayIndex에 반영 */
+  onTaskListOrderPersist?: (payload: TaskListOrderPersistPayload) => Promise<void> | void;
 };
 
-export function useTaskBoardDnd({ board, setBoard, onTaskGroupDropped }: UseTaskBoardDndParams) {
+export function useTaskBoardDnd({
+  board,
+  setBoard,
+  onTaskGroupDropped,
+  onTaskListOrderPersist,
+}: UseTaskBoardDndParams) {
+  const boardRef = useRef(board);
+  boardRef.current = board;
+
   const [activeTaskGroupId, setActiveTaskGroupId] = useState<string | null>(null);
   const [dropIndicatorId, setDropIndicatorId] = useState<string | null>(null);
 
@@ -45,79 +57,23 @@ export function useTaskBoardDnd({ board, setBoard, onTaskGroupDropped }: UseTask
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
     setActiveTaskGroupId(null);
     setDropIndicatorId(null);
+
+    const { over } = event;
     if (!over) return;
 
-    const activeId = String(active.id);
-    const overId = String(over.id);
-    if (activeId === overId) return;
+    const result = applyTaskBoardDragEnd(boardRef.current, event);
+    if (!result) return;
 
-    let droppedPayload: {
-      taskGroupId: string;
-      targetStatus: TaskBoardColumnStatus;
-      taskIdsToComplete: string[];
-    } | null = null;
+    setBoard(result.nextBoard);
 
-    setBoard((prev) => {
-      const columns = prev.columns.map((col) => ({ ...col, taskGroups: [...col.taskGroups] }));
-      const loc = findTaskGroupLocation(columns, activeId);
-      if (!loc) return prev;
-
-      const activeGroup = loc.taskGroup;
-      const overStatusFromId = parseStatusFromDroppableId(overId);
-      const overIsColumn = overStatusFromId !== null;
-
-      let overCardStatus: TaskBoardColumnStatus | null = null;
-      if (!overIsColumn) {
-        const overLoc = findTaskGroupLocation(columns, overId);
-        overCardStatus = overLoc?.status ?? null;
-      }
-
-      const dropTargetStatus = overIsColumn ? overStatusFromId : overCardStatus;
-      if (!dropTargetStatus) return prev;
-
-      const taskIdsToComplete =
-        dropTargetStatus === 'DONE'
-          ? activeGroup.tasks.filter((task) => !task.completed).map((task) => task.id)
-          : [];
-
-      const nextTasks =
-        dropTargetStatus === 'DONE' ? activeGroup.tasks.map((t) => ({ ...t, completed: true })) : activeGroup.tasks;
-
-      for (const col of columns) {
-        col.taskGroups = col.taskGroups.filter((g) => g.id !== activeId);
-      }
-
-      const destination = columns.find((c) => c.status === dropTargetStatus);
-      if (!destination) return prev;
-
-      let insertIndex = destination.taskGroups.length;
-      if (!overIsColumn && overCardStatus === dropTargetStatus) {
-        const overIndex = destination.taskGroups.findIndex((g) => g.id === overId);
-        if (overIndex !== -1) {
-          const translated = active.rect.current.translated;
-          const overRect = over.rect;
-          const activeCenterY = translated ? translated.top + translated.height / 2 : 0;
-          const overMiddleY = overRect.top + overRect.height / 2;
-          const isBelowHalf = activeCenterY > overMiddleY;
-          insertIndex = overIndex + (isBelowHalf ? 1 : 0);
-        }
-      }
-
-      destination.taskGroups.splice(insertIndex, 0, { ...activeGroup, tasks: nextTasks });
-      droppedPayload = {
-        taskGroupId: activeId,
-        targetStatus: dropTargetStatus,
-        taskIdsToComplete,
-      };
-      return { ...prev, columns };
+    void onTaskListOrderPersist?.({
+      nextBoard: result.nextBoard,
+      movedTaskListId: result.movedTaskListId,
     });
 
-    if (droppedPayload) {
-      onTaskGroupDropped?.(droppedPayload);
-    }
+    void onTaskGroupDropped?.(result.droppedPayload);
   };
 
   const handleDragCancel = () => {

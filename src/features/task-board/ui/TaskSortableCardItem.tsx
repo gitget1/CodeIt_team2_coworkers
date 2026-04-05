@@ -14,6 +14,8 @@ type TaskSortableCardItemProps = {
   onOpenTaskList?: (taskGroupId: string) => void;
   activeTaskGroupId?: string | null;
   dropIndicatorId?: string | null;
+  /** 첫 카드 `before` 삽입선을 컬럼 상단에서 그릴 때 중복 방지 */
+  suppressDropIndicatorBefore?: boolean;
 };
 
 function DropIndicatorLine({ edge }: { edge: 'top' | 'bottom' }) {
@@ -36,6 +38,7 @@ export function TaskSortableCardItem({
   onOpenTaskList,
   activeTaskGroupId,
   dropIndicatorId,
+  suppressDropIndicatorBefore = false,
 }: TaskSortableCardItemProps) {
   const id: UniqueIdentifier = taskGroup.id;
   const {
@@ -71,7 +74,9 @@ export function TaskSortableCardItem({
   }, [transform, transition]);
 
   const showDropIndicatorBefore =
-    dropIndicatorId === `before:${taskGroup.id}` && activeTaskGroupId !== taskGroup.id;
+    !suppressDropIndicatorBefore &&
+    dropIndicatorId === `before:${taskGroup.id}` &&
+    activeTaskGroupId !== taskGroup.id;
   const showDropIndicatorAfter =
     dropIndicatorId === `after:${taskGroup.id}` && activeTaskGroupId !== taskGroup.id;
 
