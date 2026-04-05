@@ -9,6 +9,7 @@ import { IconCheck, IconClose } from '@/shared/ui/icons';
 import { RECURRENCE_LABEL_MAP } from '../model/constants/recurrenceLabel';
 import { TaskDetailComments } from './task-comments/TaskDetailComments';
 import Dropdown from '@/shared/ui/dropdown';
+import { Profile } from '@/shared/ui/profile';
 import { cn } from '@/shared/lib/cn';
 
 type Props = {
@@ -133,7 +134,12 @@ export default function TaskDetailPanel({
             </div>
 
             <div className="mt-4 flex items-center gap-3 px-4 pb-4 md:px-7">
-              <div className="h-8 w-8 rounded-full bg-gray-200" />
+              <Profile
+                size="md"
+                imageSrc={task.writer?.imageUrl}
+                decorative
+                alt={`${task.writer?.nickname ?? '작성자'} 프로필`}
+              />
               <span className="text-sm text-gray-700">{task.writer?.nickname ?? '작성자'}</span>
             </div>
 
