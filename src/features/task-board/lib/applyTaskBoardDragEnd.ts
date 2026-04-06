@@ -1,6 +1,10 @@
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { TaskBoard, TaskBoardColumnStatus, TaskBoardTaskGroup } from '../model/taskBoard.types';
-import { findTaskGroupLocation, parseStatusFromDroppableId } from './taskBoardDnd.utils';
+import {
+  findTaskGroupLocation,
+  isPointerInAfterHalfOfOverRect,
+  parseStatusFromDroppableId,
+} from './taskBoardDnd.utils';
 
 export type TaskBoardDragDroppedPayload = {
   taskGroupId: string;
@@ -103,15 +107,13 @@ export function applyTaskBoardDragEnd(
         const translated = active.rect.current.translated;
         const initial = active.rect.current.initial;
         const overRect = over.rect;
-        const h = Math.max(overRect.height, 1);
         const deltaY = event.delta?.y ?? 0;
         const activeCenterY = translated
           ? translated.top + translated.height / 2
           : initial
             ? initial.top + initial.height / 2 + deltaY
             : overRect.top + overRect.height / 2;
-        const t = (activeCenterY - overRect.top) / h;
-        const placeAfter = t > 0.5;
+        const placeAfter = isPointerInAfterHalfOfOverRect(activeCenterY, overRect);
         insertIndex = overIndex + (placeAfter ? 1 : 0);
       }
     }

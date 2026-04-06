@@ -51,7 +51,7 @@ export function TaskCardShell({
         'flex w-full min-w-0 max-w-full flex-col rounded-[12px] border border-background-tertiary bg-background-primary',
         'max-[767px]:max-w-[343px]',
         'lg:max-w-[270px]',
-        dragListeners && 'cursor-grab touch-manipulation active:cursor-grabbing',
+        dragListeners && 'cursor-grab touch-none active:cursor-grabbing',
         onClick && !dragListeners && 'cursor-pointer',
         collapsed
           ? 'h-[54px] gap-0 px-5 pt-4 pb-0'

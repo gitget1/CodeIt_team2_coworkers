@@ -3,7 +3,11 @@ import type { Dispatch, SetStateAction } from 'react';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import type { TaskBoard } from '../model/taskBoard.types';
 import { applyTaskBoardDragEnd, type TaskBoardDragDroppedPayload } from './applyTaskBoardDragEnd';
-import { findTaskGroupLocation, parseStatusFromDroppableId } from './taskBoardDnd.utils';
+import {
+  findTaskGroupLocation,
+  isPointerInAfterHalfOfOverRect,
+  parseStatusFromDroppableId,
+} from './taskBoardDnd.utils';
 
 export type TaskListOrderPersistPayload = {
   nextBoard: TaskBoard;
@@ -60,8 +64,7 @@ export function useTaskBoardDnd({
       : initial
         ? initial.top + initial.height / 2 + deltaY
         : overRect.top + overRect.height / 2;
-    const overMiddleY = overRect.top + overRect.height / 2;
-    const isBelowHalf = activeCenterY > overMiddleY;
+    const isBelowHalf = isPointerInAfterHalfOfOverRect(activeCenterY, overRect);
 
     const next = `${isBelowHalf ? 'after' : 'before'}:${overId}`;
     dropHintRef.current = next;

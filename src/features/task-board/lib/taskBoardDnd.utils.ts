@@ -18,3 +18,13 @@ export function findTaskGroupLocation(columns: TaskBoardColumn[], taskGroupId: s
   }
   return null;
 }
+
+/** 포인터 Y가 over 카드 중심보다 아래이면 true (after 삽입) */
+export function isPointerInAfterHalfOfOverRect(
+  y: number,
+  overRect: { top: number; height: number },
+): boolean {
+  const h = Math.max(overRect.height, 1);
+  const t = (y - overRect.top) / h;
+  return t > 0.5;
+}

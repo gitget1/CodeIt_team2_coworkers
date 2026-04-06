@@ -135,7 +135,7 @@ export function TeamCard({
             type="button"
             onClick={onMoreClick}
             aria-label="전체 멤버 보기"
-            className="inline-flex h-7 items-center rounded-[8px] border border-[var(--Border-Primary,#E2E8F0)] px-1 md:h-[40px] md:rounded-[12px] md:px-[10px] lg:hidden"
+            className="inline-flex h-7 items-center rounded-[8px] border border-[var(--Border-Primary,#E2E8F0)] px-1 md:translate-y-[8px] md:h-[40px] md:rounded-[12px] md:px-[10px] lg:translate-y-0 lg:hidden"
           >
             <div className="flex items-center">
               {visibleMembers.map((member, idx) => (

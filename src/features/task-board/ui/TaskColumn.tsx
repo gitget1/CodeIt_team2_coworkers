@@ -35,7 +35,7 @@ export function TaskColumn({
 }: TaskColumnProps) {
   const label = TASK_BOARD_COLUMN_STATUS_LABEL[status];
   const droppableId = useMemo(() => getColumnDroppableId(status), [status]);
-  const { setNodeRef } = useDroppable({ id: droppableId });
+  const { setNodeRef } = useDroppable({ id: droppableId, data: { type: 'column', columnStatus: status } });
   const isColumnDropTarget = dropIndicatorId === `column:${droppableId}`;
   const lastTaskGroupId = taskGroups.length > 0 ? taskGroups[taskGroups.length - 1].id : null;
   const showBottomDropIndicator =
@@ -43,6 +43,9 @@ export function TaskColumn({
   /** 카드가 없을 때도 컬럼 droppable 위에 있으면 삽입 위치를 선으로 표시 */
   const showEmptyColumnDropIndicator =
     isColumnDropTarget && taskGroups.length === 0 && activeTaskGroupId != null;
+
+  const isActiveInThisColumn =
+    activeTaskGroupId != null && taskGroups.some((g) => g.id === activeTaskGroupId);
 
   const firstGroupId = taskGroups[0]?.id;
   /** 정렬 전략이 첫 카드를 아래로 밀 때 카드에 붙은 before 선이 헤더에서 멀어지므로, 컬럼 상단에 고정 */
@@ -77,6 +80,8 @@ export function TaskColumn({
                 <TaskSortableCardItem
                   key={group.id}
                   taskGroup={group}
+                  columnStatus={status}
+                  isActiveInThisColumn={isActiveInThisColumn}
                   onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
                   onEditCard={onEditCard}
                   onDeleteCard={onDeleteCard}
@@ -94,6 +99,8 @@ export function TaskColumn({
               <TaskSortableCardItem
                 key={group.id}
                 taskGroup={group}
+                columnStatus={status}
+                isActiveInThisColumn={isActiveInThisColumn}
                 onTaskToggle={onTaskToggle ? (taskId, checked) => onTaskToggle(group.id, taskId, checked) : undefined}
                 onEditCard={onEditCard}
                 onDeleteCard={onDeleteCard}

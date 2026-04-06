@@ -8,6 +8,9 @@ import { TaskCard } from './TaskCard';
 
 type TaskSortableCardItemProps = {
   taskGroup: TaskBoardTaskGroup;
+  columnStatus: string;
+  /** 현재 드래그 중인 카드가 이 컬럼에 속하는지 여부 */
+  isActiveInThisColumn: boolean;
   onTaskToggle?: (taskId: string, checked: boolean) => void;
   onEditCard?: (taskGroupId: string, currentTitle: string) => void;
   onDeleteCard?: (taskGroupId: string) => void;
@@ -32,6 +35,8 @@ function DropIndicatorLine({ edge }: { edge: 'top' | 'bottom' }) {
 
 export function TaskSortableCardItem({
   taskGroup,
+  columnStatus,
+  isActiveInThisColumn,
   onTaskToggle,
   onEditCard,
   onDeleteCard,
@@ -51,6 +56,7 @@ export function TaskSortableCardItem({
     isDragging,
   } = useSortable({
     id,
+    data: { columnStatus },
     transition: {
       duration: 260,
       easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -66,12 +72,19 @@ export function TaskSortableCardItem({
     [setNodeRef],
   );
 
+  const shouldApplyTransform = isActiveInThisColumn || !activeTaskGroupId;
+
   useLayoutEffect(() => {
     const el = nodeRef.current;
     if (!el) return;
+    if (!shouldApplyTransform) {
+      el.style.transform = '';
+      el.style.transition = '';
+      return;
+    }
     el.style.transform = CSS.Transform.toString(transform) ?? '';
     el.style.transition = isDragging ? 'none' : (transition ?? '');
-  }, [transform, transition, isDragging]);
+  }, [transform, transition, isDragging, shouldApplyTransform]);
 
   const showDropIndicatorBefore =
     !suppressDropIndicatorBefore &&
