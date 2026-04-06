@@ -17,13 +17,13 @@ export function MonthSelector({
   onToggleViewAll,
 }: MonthSelectorProps) {
   const arrowButtonClasses = cn(
-    'flex items-center justify-center shrink-0',
+    'flex items-center justify-center shrink-0 cursor-pointer',
     'h-[16px] w-[16px] rounded-full transition-all',
     'border border-background-tertiary bg-white text-txt-secondary',
     'hover:bg-background-secondary shadow-[0px_15px_50px_-12px_rgba(0,0,0,0.05)]',
   );
   return (
-    <div className="flex items-center gap-[13px] py-4">
+    <div className="flex items-center gap-3.25 py-4">
       <button
         type="button"
         onClick={onPrevious}
@@ -37,7 +37,7 @@ export function MonthSelector({
         type="button"
         onClick={onToggleViewAll}
         className={cn(
-          'min-w-30 rounded-lg px-3 py-1.5 text-center text-lg font-bold transition-all',
+          'min-w-30 cursor-pointer rounded-lg px-3 py-1.5 text-center text-lg font-bold transition-all',
           'text-txt-primary hover:bg-background-secondary',
           'active:text-brand-primary active:bg-brand-secondary active:scale-105',
         )}

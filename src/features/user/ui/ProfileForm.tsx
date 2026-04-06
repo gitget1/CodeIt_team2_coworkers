@@ -4,6 +4,7 @@ import { useUserQuery } from '../hooks/useUserQuery';
 import { useUpdateUserMutation } from '../hooks/useUpdateUserMutation';
 import { useUploadImageMutation } from '../hooks/useUploadImageMutation';
 import { toast } from 'sonner';
+import { Skeleton } from '@/shared/ui/skeleton/Skeleton';
 
 const UPLOAD_COOLDOWN_TIME = 1000;
 
@@ -21,7 +22,7 @@ export function ProfileForm() {
   const { mutate: updateProfile, mutateAsync: updateProfileAsync } = useUpdateUserMutation();
   const { mutateAsync: uploadImageAsync } = useUploadImageMutation();
 
-  const { data: user } = useUserQuery();
+  const { data: user, isLoading } = useUserQuery();
 
   useEffect(() => {
     setIsClient(true);
@@ -75,8 +76,13 @@ export function ProfileForm() {
       },
     );
   };
-
-  if (!isClient) return null;
+  if (!isClient || isLoading) {
+    return (
+      <div className="mb-8 flex flex-col items-center justify-center">
+        <Skeleton className="h-16 w-16 rounded-3xl md:h-25 md:w-25" />
+      </div>
+    );
+  }
 
   const getServerImage = () => {
     if (!user?.profileImage) return undefined;

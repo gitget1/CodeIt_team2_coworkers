@@ -5,6 +5,7 @@ import { toggleTask } from '../api/toggleTask';
 import { TASK_QUERY_KEYS } from '../lib/queryKeys';
 import { TaskCommonParams } from '../model/params/task.params';
 import type { TaskList } from '../model/entities/task.model';
+import { USER_QUERY_KEYS } from '@/features/user/lib/queryKeys';
 
 type ToggleTaskParams = TaskCommonParams & {
   taskId: number;
@@ -80,6 +81,7 @@ export function useToggleTaskMutation(params: TaskCommonParams) {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: TASK_QUERY_KEYS.lists(params.groupId) });
       queryClient.invalidateQueries({ queryKey: groupDetailKey });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.history() });
     },
   });
 }

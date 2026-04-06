@@ -14,7 +14,7 @@ export function SummaryCard({ title, count, isActive = false, onClick }: Summary
       onClick={onClick}
       aria-pressed={isActive}
       className={cn(
-        'flex shrink-0 items-center rounded-full border font-medium transition-colors',
+        'flex shrink-0 cursor-pointer items-center rounded-full border font-medium transition-colors',
         'gap-1.5 px-3 py-1.5 text-xs',
         'md:gap-2 md:px-4 md:py-2 md:text-sm',
         isActive

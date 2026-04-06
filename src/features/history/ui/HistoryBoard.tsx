@@ -65,11 +65,11 @@ export function HistoryBoard({
   return (
     <div
       className={cn(
-        'bg-background-primary flex min-h-[600px] flex-col rounded-[20px]',
-        'min-h-[662px] md:min-h-[920px] xl:min-h-[768px]',
-        'w-full max-w-[343px] md:max-w-[620px] xl:max-w-[1120px]',
+        'bg-background-primary flex min-h-150 flex-col rounded-[20px]',
+        'min-h-165.5 md:min-h-230 xl:min-h-192',
+        'w-full max-w-85.75 md:max-w-155 xl:max-w-280',
         'mx-auto xl:mx-0',
-        'px-4 py-8 md:px-[37px] md:pt-[33px] md:pb-[52px]',
+        'px-4 py-8 md:px-9.25 md:pt-8.25 md:pb-13',
       )}
     >
       <div className="mb-6 flex items-center justify-center">
@@ -82,22 +82,34 @@ export function HistoryBoard({
         />
       </div>
       {!isClient || isHistoryLoading ? (
-        <div className="mt-4 flex w-full flex-col">
-          <div className="mb-12 flex gap-3 overflow-hidden pb-2">
-            {[1, 2].map((item) => (
-              <Skeleton key={item} className="h-8 w-25 shrink-0 rounded-full md:h-10 md:w-32.5" />
-            ))}
+        <div className="flex w-full flex-col">
+          <div className="mb-12 overflow-hidden">
+            <div className="flex gap-3 pb-2">
+              {[1, 2, 3, 4].map((item) => (
+                <Skeleton key={item} className="h-7 w-20 shrink-0 rounded-full md:h-9 md:w-30" />
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-col gap-8">
             {[1, 2].map((group) => (
               <div key={group} className="flex flex-col gap-4">
-                {/* 카테고리*/}
-                <Skeleton className="h-8 w-24 rounded-md md:h-10 md:w-30" />
-                <ul className="flex flex-col gap-4">
-                  {[1, 2, 3].map((item) => (
-                    <Skeleton key={item} className="h-12 w-full rounded-xl md:h-16" />
-                  ))}
+                <div className="flex items-center py-2">
+                  <div className="border-brand-secondary grow border-t-2 opacity-30"></div>
+                  <Skeleton className="mx-4 h-5 w-28 rounded-md md:h-6 md:w-32" />
+                  <div className="border-brand-secondary grow border-t-2 opacity-30"></div>
+                </div>
+
+                <ul className="flex flex-col gap-2">
+                  <li className="flex flex-col gap-4">
+                    <Skeleton className="mt-2 h-5 w-20 rounded-md md:h-6 md:w-24" />
+
+                    <ul className="flex flex-col gap-2">
+                      {[1, 2].map((item) => (
+                        <Skeleton key={item} className="h-15 w-full rounded-lg md:h-16" />
+                      ))}
+                    </ul>
+                  </li>
                 </ul>
               </div>
             ))}
