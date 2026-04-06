@@ -20,6 +20,8 @@ import { invalidateTeamTaskQueries, toNumberId, toNumberIds } from './taskListAc
 type Params = {
   groupId: number;
   onTaskListBecameFullyCompleted?: (taskListIdStr: string) => void;
+  /** +로 특정 칸에서 목록 생성 완료 시 해당 칸에 보이도록 오버라이드 저장용 */
+  onTaskListCreatedInColumn?: (taskListIdStr: string, status: TaskBoardColumnStatus) => void;
 };
 
 function applyOrderedTaskListIdsToGroupDetail(prev: GroupDetail, orderedIds: string[]): GroupDetail | null {
@@ -42,6 +44,7 @@ function applyOrderedTaskListIdsToGroupDetail(prev: GroupDetail, orderedIds: str
 export function useTeamDashboardTaskListActions({
   groupId,
   onTaskListBecameFullyCompleted,
+  onTaskListCreatedInColumn,
 }: Params) {
   const queryClient = useQueryClient();
   const detailQueryKey = GROUP_QUERY_KEYS.detail(groupId);
@@ -82,6 +85,7 @@ export function useTeamDashboardTaskListActions({
   );
 
   const handleCreateTaskGroup = async ({
+    status,
     title,
   }: {
     status: TaskBoardColumnStatus;
@@ -93,6 +97,8 @@ export function useTeamDashboardTaskListActions({
       return false;
     }
 
+    const newIdStr = String(result.data.id);
+
     queryClient.setQueryData<GroupDetail>(detailQueryKey, (prev) => {
       if (!prev) return prev;
       return {
@@ -100,6 +106,11 @@ export function useTeamDashboardTaskListActions({
         taskLists: [toTaskList(result.data), ...prev.taskLists],
       };
     });
+
+    /** 빈 목록은 보드상 항상 TODO로 계산되므로, 진행 중/완료 칸에서 만든 경우 칼럼 오버라이드로 위치 맞춤 */
+    if (status === 'IN_PROGRESS' || status === 'DONE') {
+      onTaskListCreatedInColumn?.(newIdStr, status);
+    }
 
     // true: 생성 성공. TaskBoardView에서 콜백 존재 시 로컬 생성을 건너뛴다.
     return true;

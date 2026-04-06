@@ -29,6 +29,7 @@ export function useTaskBoardDnd({
 
   const [activeTaskGroupId, setActiveTaskGroupId] = useState<string | null>(null);
   const [dropIndicatorId, setDropIndicatorId] = useState<string | null>(null);
+  const dropHintRef = useRef<string | null>(null);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveTaskGroupId(String(event.active.id));
@@ -36,6 +37,7 @@ export function useTaskBoardDnd({
 
   const handleDragOver = (event: DragOverEvent) => {
     if (!event.over) {
+      dropHintRef.current = null;
       setDropIndicatorId(null);
       return;
     }
@@ -43,27 +45,39 @@ export function useTaskBoardDnd({
     const overId = String(event.over.id);
     const overStatusFromId = parseStatusFromDroppableId(overId);
     if (overStatusFromId) {
-      setDropIndicatorId(`column:${overId}`);
+      const next = `column:${overId}`;
+      dropHintRef.current = next;
+      setDropIndicatorId(next);
       return;
     }
 
     const translated = event.active.rect.current.translated;
+    const initial = event.active.rect.current.initial;
     const overRect = event.over.rect;
-    const activeCenterY = translated ? translated.top + translated.height / 2 : 0;
+    const deltaY = event.delta?.y ?? 0;
+    const activeCenterY = translated
+      ? translated.top + translated.height / 2
+      : initial
+        ? initial.top + initial.height / 2 + deltaY
+        : overRect.top + overRect.height / 2;
     const overMiddleY = overRect.top + overRect.height / 2;
     const isBelowHalf = activeCenterY > overMiddleY;
 
-    setDropIndicatorId(`${isBelowHalf ? 'after' : 'before'}:${overId}`);
+    const next = `${isBelowHalf ? 'after' : 'before'}:${overId}`;
+    dropHintRef.current = next;
+    setDropIndicatorId(next);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    const dropHint = dropHintRef.current;
+    dropHintRef.current = null;
     setActiveTaskGroupId(null);
     setDropIndicatorId(null);
 
     const { over } = event;
     if (!over) return;
 
-    const result = applyTaskBoardDragEnd(boardRef.current, event);
+    const result = applyTaskBoardDragEnd(boardRef.current, event, { dropHint });
     if (!result) return;
 
     setBoard(result.nextBoard);
@@ -77,6 +91,7 @@ export function useTaskBoardDnd({
   };
 
   const handleDragCancel = () => {
+    dropHintRef.current = null;
     setActiveTaskGroupId(null);
     setDropIndicatorId(null);
   };

@@ -70,8 +70,8 @@ export function TaskSortableCardItem({
     const el = nodeRef.current;
     if (!el) return;
     el.style.transform = CSS.Transform.toString(transform) ?? '';
-    el.style.transition = transition ?? '';
-  }, [transform, transition]);
+    el.style.transition = isDragging ? 'none' : (transition ?? '');
+  }, [transform, transition, isDragging]);
 
   const showDropIndicatorBefore =
     !suppressDropIndicatorBefore &&
@@ -84,8 +84,9 @@ export function TaskSortableCardItem({
     <div
       ref={setRef}
       className={cn(
-        'relative w-full max-w-full will-change-transform transition-[opacity,transform] duration-200 ease-out',
-        isDragging && 'opacity-60 scale-[1.01]',
+        'relative w-full max-w-full will-change-transform',
+        !isDragging && 'transition-opacity duration-200 ease-out',
+        isDragging && 'opacity-60',
       )}
     >
       {showDropIndicatorBefore && <DropIndicatorLine edge="top" />}

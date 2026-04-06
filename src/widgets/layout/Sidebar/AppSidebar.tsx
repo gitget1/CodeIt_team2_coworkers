@@ -331,6 +331,22 @@ export function AppSidebar({
                   ))}
               </>
             )}
+
+            {isLoggedIn && !expanded && teamItems.length > 0 ? (
+              <>
+                <div className="border-background-tertiary my-2 border-t" role="separator" />
+                {teamItems.map(({ id, label }) => (
+                  <TeamSidebarRow
+                    key={id}
+                    id={id}
+                    label={label}
+                    isSelected={selectedTeamId === id}
+                    expanded={false}
+                    onSelect={handleTeamSelect}
+                  />
+                ))}
+              </>
+            ) : null}
           </nav>
         </SidebarContent>
       </Sidebar>

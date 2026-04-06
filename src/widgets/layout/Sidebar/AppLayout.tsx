@@ -30,20 +30,22 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
   return (
     <div
       className={cn(
-        'bg-background-primary flex min-h-screen flex-col lg:flex-row',
+        'bg-background-primary flex min-h-screen flex-col md:flex-row',
         className,
       )}
     >
       <MobileHeader
-        className="flex w-full shrink-0 lg:hidden"
+        className="flex w-full shrink-0 md:hidden"
         onMenuClick={() => setIsMobileMenuOpen(true)}
         isLoggedIn={sidebarProps?.isLoggedIn}
         onLoginClick={sidebarProps?.onLoginClick}
       />
-      <div className="bg-background-primary sticky top-0 z-[9999] h-screen hidden shrink-0 !overflow-visible lg:block">
+      <div className="bg-background-primary sticky top-0 z-[9999] hidden h-screen shrink-0 self-start !overflow-visible md:block">
         <AppSidebar {...sidebarProps} />
       </div>
-      <main className="relative flex min-h-0 min-w-0 flex-1 flex-col">{children}</main>
+      <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
+        {children}
+      </main>
 
       {isMobileMenuOpen ? (
         <div className="layout-app-drawer-layer">

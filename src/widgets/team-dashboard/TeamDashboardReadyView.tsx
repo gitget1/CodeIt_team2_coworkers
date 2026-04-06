@@ -68,6 +68,14 @@ export function TeamDashboardReadyView({ vm }: Props) {
   } = useTeamDashboardTaskListActions({
     groupId: group.id,
     onTaskListBecameFullyCompleted: clearColumnOverrideWhenListFullyCompleted,
+    onTaskListCreatedInColumn: (taskListIdStr, status) => {
+      setColumnOverrides((prev) => {
+        const next = new Map(prev);
+        next.set(taskListIdStr, status);
+        saveTaskBoardColumnOverrides(group.id, next);
+        return next;
+      });
+    },
   });
   const {
     isInviteModalOpen,

@@ -3,7 +3,7 @@
 @theme {
   --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
 
-  /* 모바일·일부 컴포넌트용. App 고정 사이드 레일은 Tailwind `lg`(1024px). */
+  /* 모바일·일부 컴포넌트용. App 고정 사이드 레일은 Tailwind `md`(768px). */
   --breakpoint-mobile: 768px;
 
   /* Font Weights */

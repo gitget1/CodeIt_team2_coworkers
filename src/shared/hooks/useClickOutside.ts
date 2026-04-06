@@ -14,19 +14,18 @@ export default function useClickOutside({
   useEffect(() => {
     if (!enabled) return;
 
-    const handleClickOutside = (e: MouseEvent) => {
+    /** 터치·펜·마우스 공통. 캡처 단계에서 잡아 모바일/태블릿에서도 바깥 탭 시 안정적으로 닫힘 */
+    const handlePointerDown = (e: PointerEvent) => {
       const target = e.target as Node;
-      const isInsideSomeRef = refs.some((ref) => {
-        return ref.current?.contains(target);
-      });
+      const isInsideSomeRef = refs.some((ref) => ref.current?.contains(target));
       if (!isInsideSomeRef) {
         onClickOutside();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('pointerdown', handlePointerDown, true);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handlePointerDown, true);
     };
   }, [refs, enabled, onClickOutside]);
 }

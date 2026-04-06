@@ -86,9 +86,8 @@ export default function DropdownMenu({ children, className, align = 'right', ...
       id={menuId}
       ref={menuRef}
       className={cn(
-        baseClass,
-        !useFixedMenu && 'absolute mt-2',
-        !useFixedMenu && alignStyles[align],
+        'absolute mt-2 rounded-2xl border border-gray-200 bg-white shadow-md',
+        alignStyles[align],
         className,
       )}
       style={useFixedMenu ? fixedStyle : undefined}

@@ -97,6 +97,10 @@ export function pruneColumnOverridesForTodoComputed(
     if (!tl) continue;
     const computed = computeColumnFromTasks(tl.tasks);
     if (computed === 'TODO') {
+      const keep =
+        next.get(idStr) === 'IN_PROGRESS' || next.get(idStr) === 'DONE';
+      /** 빈(또는 미완료만 있는) 목록을 진행 중·완료 칸에 둔 경우 오버라이드 유지 */
+      if (keep) continue;
       next.delete(idStr);
       changed = true;
     } else if (computed === 'IN_PROGRESS' && next.get(idStr) === 'TODO') {

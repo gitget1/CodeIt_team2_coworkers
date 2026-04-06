@@ -128,7 +128,7 @@ export function TeamCard({
         className,
       )}
     >
-      <header className="flex shrink-0 items-center gap-3">
+      <header className="flex shrink-0 items-end gap-3">
         <h3 className="text-center text-[20px] font-bold leading-[24px] text-txt-tertiary">{teamName}</h3>
         {showMemberSummary && (
           <button

@@ -1,5 +1,5 @@
 import type { DragEndEvent } from '@dnd-kit/core';
-import type { TaskBoard, TaskBoardColumnStatus } from '../model/taskBoard.types';
+import type { TaskBoard, TaskBoardColumnStatus, TaskBoardTaskGroup } from '../model/taskBoard.types';
 import { findTaskGroupLocation, parseStatusFromDroppableId } from './taskBoardDnd.utils';
 
 export type TaskBoardDragDroppedPayload = {
@@ -17,7 +17,34 @@ export type TaskBoardDragEndResult = {
   movedTaskListId: string;
 };
 
-export function applyTaskBoardDragEnd(prev: TaskBoard, event: DragEndEvent): TaskBoardDragEndResult | null {
+export type ApplyTaskBoardDragEndOptions = {
+  /** `handleDragOver`에서 계산한 삽입 힌트(드롭 순간 `translated` rect가 비는 경우 대비) */
+  dropHint?: string | null;
+};
+
+function insertIndexFromDropHint(
+  destinationGroups: TaskBoardTaskGroup[],
+  dropHint: string | null | undefined,
+): number | null {
+  if (!dropHint) return null;
+  if (dropHint.startsWith('before:')) {
+    const id = dropHint.slice('before:'.length);
+    const idx = destinationGroups.findIndex((g) => g.id === id);
+    return idx === -1 ? null : idx;
+  }
+  if (dropHint.startsWith('after:')) {
+    const id = dropHint.slice('after:'.length);
+    const idx = destinationGroups.findIndex((g) => g.id === id);
+    return idx === -1 ? null : idx + 1;
+  }
+  return null;
+}
+
+export function applyTaskBoardDragEnd(
+  prev: TaskBoard,
+  event: DragEndEvent,
+  options?: ApplyTaskBoardDragEndOptions,
+): TaskBoardDragEndResult | null {
   const { active, over } = event;
   if (!over) return null;
 
@@ -67,15 +94,26 @@ export function applyTaskBoardDragEnd(prev: TaskBoard, event: DragEndEvent): Tas
 
   let insertIndex = destination.taskGroups.length;
   if (!overIsColumn && overCardStatus === dropTargetStatus) {
-    const overIndex = destination.taskGroups.findIndex((g) => g.id === overId);
-    if (overIndex !== -1) {
-      const translated = active.rect.current.translated;
-      const overRect = over.rect;
-      const h = Math.max(overRect.height, 1);
-      const activeCenterY = translated ? translated.top + translated.height / 2 : overRect.top;
-      const t = (activeCenterY - overRect.top) / h;
-      const placeAfter = t > 0.5;
-      insertIndex = overIndex + (placeAfter ? 1 : 0);
+    const fromHint = insertIndexFromDropHint(destination.taskGroups, options?.dropHint);
+    if (fromHint !== null) {
+      insertIndex = Math.min(fromHint, destination.taskGroups.length);
+    } else {
+      const overIndex = destination.taskGroups.findIndex((g) => g.id === overId);
+      if (overIndex !== -1) {
+        const translated = active.rect.current.translated;
+        const initial = active.rect.current.initial;
+        const overRect = over.rect;
+        const h = Math.max(overRect.height, 1);
+        const deltaY = event.delta?.y ?? 0;
+        const activeCenterY = translated
+          ? translated.top + translated.height / 2
+          : initial
+            ? initial.top + initial.height / 2 + deltaY
+            : overRect.top + overRect.height / 2;
+        const t = (activeCenterY - overRect.top) / h;
+        const placeAfter = t > 0.5;
+        insertIndex = overIndex + (placeAfter ? 1 : 0);
+      }
     }
   }
 

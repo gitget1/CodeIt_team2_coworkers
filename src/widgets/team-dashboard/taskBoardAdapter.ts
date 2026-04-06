@@ -70,7 +70,12 @@ export function toTaskBoard(
         effective = 'DONE';
       }
     } else if (computed === 'TODO') {
-      effective = 'TODO';
+      /** 빈 목록은 computed가 항상 TODO라서, +로 진행 중/완료 칸에서 만든 경우 columnOverrides로 칸을 맞춘다. */
+      if (o === 'IN_PROGRESS' || o === 'DONE') {
+        effective = o;
+      } else {
+        effective = 'TODO';
+      }
     } else if (computed === 'IN_PROGRESS') {
       /**
        * 전부 완료 + 할 일 오버라이드였다가 하나만 해제하면 computed는 진행 중인데
