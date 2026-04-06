@@ -29,7 +29,7 @@ export default function TestPage() {
       <div className="p-6 space-y-10">
         <h1 className="text-2xl font-bold text-txt-primary mb-2">테스트 페이지</h1>
         <p className="text-txt-secondary mb-6">
-          사이드바·레이아웃·드롭다운 동작을 확인할 수 있습니다. 768px 이하(모바일)에서는 상단 메뉴 버튼으로 사이드바가 열립니다.
+          사이드바·레이아웃·드롭다운 동작을 확인할 수 있습니다. 1023px 이하(모바일·태블릿)에서는 상단 메뉴 버튼으로 사이드바가 열립니다.
         </p>
 
         <div className="flex flex-wrap items-center gap-4">

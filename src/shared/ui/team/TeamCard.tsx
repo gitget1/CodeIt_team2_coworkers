@@ -19,7 +19,7 @@ import {
 } from './teamCard.constants';
 
 /** `memberImages` 미전달 시 기본값. 매 렌더 `[]`를 쓰면 참조가 매번 바뀌어 `useMemo`가 불필요하게 무효화됨 */
-const EMPTY_MEMBER_IMAGES: ImageAsset[] = [];
+const EMPTY_MEMBER_IMAGES: Array<ImageAsset | undefined> = [];
 
 export type TeamCardTeamMenuMode = 'admin' | 'member';
 
@@ -35,8 +35,8 @@ export type TeamCardProps = {
   onDeleteTeam?: () => void;
   /** `teamMenuMode === 'member'`일 때 */
   onLeaveTeam?: () => void;
-  /** `members`가 없을 때만 사용하는 폴백 이미지 목록(최대 3명 분량 권장) */
-  memberImages?: ImageAsset[];
+  /** `members`가 없을 때만 사용하는 폴백 이미지 목록(최대 3명 분량 권장). 없으면 플레이스홀더 */
+  memberImages?: Array<ImageAsset | undefined>;
   /** 모바일/태블릿에서 열리는 전체 멤버 목록 */
   members?: MemberCardItem[];
   /** 전체 팀원 수(숫자). 없으면 `members`·폴백 목록 길이로 표기 */
@@ -135,13 +135,16 @@ export function TeamCard({
             type="button"
             onClick={onMoreClick}
             aria-label="전체 멤버 보기"
-            className="inline-flex h-[40px] items-center rounded-[12px] border border-[var(--Border-Primary,#E2E8F0)] px-[10px] lg:hidden"
+            className="inline-flex h-7 items-center rounded-[8px] border border-[var(--Border-Primary,#E2E8F0)] px-1 md:h-[40px] md:rounded-[12px] md:px-[10px] lg:hidden"
           >
             <div className="flex items-center">
               {visibleMembers.map((member, idx) => (
-                <span key={member.id} className={cn('inline-flex', idx > 0 && '-ml-1')}>
+                <span
+                  key={member.id}
+                  className={cn('inline-flex', idx > 0 && '-ml-px md:-ml-1')}
+                >
                   <Profile
-                    size="sm"
+                    size="xs"
                     imageSrc={member.imageSrc}
                     decorative
                     className="md:hidden"
@@ -157,7 +160,7 @@ export function TeamCard({
                 </span>
               ))}
             </div>
-            <span className="ml-2 text-lg font-medium leading-none text-txt-default tabular-nums">
+            <span className="ml-1.5 text-sm font-medium leading-none text-txt-default tabular-nums md:ml-2 md:text-lg">
               {displayMemberCount}
             </span>
           </button>

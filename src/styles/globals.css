@@ -3,7 +3,7 @@
 @theme {
   --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
 
-  /* 반응형 브레이크포인트 — Tailwind `max-[768px]` / `min-[769px]` · `.layout-app-drawer-layer` 와 동일 */
+  /* 모바일·일부 컴포넌트용. App 고정 사이드 레일은 Tailwind `lg`(1024px). */
   --breakpoint-mobile: 768px;
 
   /* Font Weights */
@@ -104,11 +104,11 @@
   animation: icon-enter 200ms ease-out both;
 }
 
-/* AppLayout: 모바일 드로어는 ≤768px 에서만 표시 (matchMedia 없음) */
+/* AppLayout: 태블릿·모바일(<lg)에서 드로어 레이어 표시 — Tailwind lg 와 동일 */
 .layout-app-drawer-layer {
   display: none;
 }
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .layout-app-drawer-layer {
     display: block;
   }

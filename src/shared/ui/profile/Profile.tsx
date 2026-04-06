@@ -7,6 +7,7 @@ import type { ProfileProps, ProfileSize } from './Profile.types';
 
 /** Edge/a11y 린터·인라인 스타일 경고 회피 — profileConstants 와 동일 px */
 const PROFILE_LAYOUT_CLASS: Record<ProfileSize, string> = {
+  xs: 'size-5 rounded-[5px]',
   sm: 'w-6 h-6 rounded-[6px]',
   md: 'w-8 h-8 rounded-[8px]',
   lg: 'w-10 h-10 rounded-[12px]',

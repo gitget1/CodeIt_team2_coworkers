@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LAYOUT_DESKTOP_MIN_WIDTH_PX } from '@/shared/constants/layoutBreakpoints';
+import { LAYOUT_SIDEBAR_RAIL_MIN_WIDTH_PX } from '@/shared/constants/layoutBreakpoints';
 import { useScrollLock } from '@/shared/hooks/useScrollLock';
 import { cn } from '@/shared/lib/cn';
 import { AppSidebar } from './AppSidebar';
@@ -21,7 +21,7 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
   useEffect(() => {
     if (!isMobileMenuOpen) return;
     const onResize = () => {
-      if (window.innerWidth >= LAYOUT_DESKTOP_MIN_WIDTH_PX) setIsMobileMenuOpen(false);
+      if (window.innerWidth >= LAYOUT_SIDEBAR_RAIL_MIN_WIDTH_PX) setIsMobileMenuOpen(false);
     };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
@@ -30,17 +30,17 @@ export function AppLayout({ children, sidebarProps, className }: AppLayoutProps)
   return (
     <div
       className={cn(
-        'bg-background-primary flex min-h-screen flex-col min-[769px]:flex-row',
+        'bg-background-primary flex min-h-screen flex-col lg:flex-row',
         className,
       )}
     >
       <MobileHeader
-        className="flex w-full shrink-0 min-[769px]:hidden"
+        className="flex w-full shrink-0 lg:hidden"
         onMenuClick={() => setIsMobileMenuOpen(true)}
         isLoggedIn={sidebarProps?.isLoggedIn}
         onLoginClick={sidebarProps?.onLoginClick}
       />
-      <div className="bg-background-primary sticky top-0 z-[9999] h-screen max-[768px]:hidden min-[769px]:block shrink-0 !overflow-visible">
+      <div className="bg-background-primary sticky top-0 z-[9999] h-screen hidden shrink-0 !overflow-visible lg:block">
         <AppSidebar {...sidebarProps} />
       </div>
       <main className="relative flex min-h-0 min-w-0 flex-1 flex-col">{children}</main>

@@ -2,11 +2,12 @@ import type { StaticImageData } from 'next/image';
 
 export type ImageAsset = string | StaticImageData;
 
-export type ProfileSize = 'sm' | 'md' | 'lg';
+export type ProfileSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface ProfileProps {
   /**
    * 표시 크기
+   * - xs: 20px (모바일 밀집 UI 등)
    * - sm: 24px
    * - md: 32px
    * - lg: 40px

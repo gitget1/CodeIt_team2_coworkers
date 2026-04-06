@@ -10,4 +10,3 @@ export function groupMembersToMemberCardItems(members: GroupMember[]): MemberCar
     isAdmin: m.role === 'ADMIN',
   }));
 }
-

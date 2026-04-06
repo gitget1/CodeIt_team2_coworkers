@@ -289,57 +289,52 @@ export function AppSidebar({
               />
             )}
 
-            {isLoggedIn && (
+            {isLoggedIn && expanded && (
               <>
                 <div className="border-background-tertiary my-2 border-t" role="separator" />
-                {expanded ? (
-                  <button
-                    type="button"
-                    onClick={handleTeamListToggle}
+                <button
+                  type="button"
+                  onClick={handleTeamListToggle}
+                  className={cn(
+                    'text-txt-default flex min-h-13 w-full items-center gap-2 rounded-lg px-3 text-left text-base font-medium',
+                    'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
+                    'focus-visible:ring-brand-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                  )}
+                  {...(isTeamListOpen
+                    ? { 'aria-expanded': true as const }
+                    : { 'aria-expanded': false as const })}
+                  aria-label={isTeamListOpen ? '팀 목록 접기' : '팀 목록 펼치기'}
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center text-slate-300 [&>svg]:h-5 [&>svg]:w-5">
+                    <TeamIcon className="text-slate-300" />
+                  </span>
+                  <span className="flex-1 truncate">팀 선택</span>
+                  <span
                     className={cn(
-                      'text-txt-default flex min-h-13 w-full items-center gap-2 rounded-lg px-3 text-left text-base font-medium',
-                      'hover:bg-background-tertiary hover:text-txt-primary transition-colors',
-                      'focus-visible:ring-brand-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                      'shrink-0 transition-transform duration-200',
+                      !isTeamListOpen && 'rotate-180',
                     )}
-                    {...(isTeamListOpen
-                      ? { 'aria-expanded': true as const }
-                      : { 'aria-expanded': false as const })}
-                    aria-label={isTeamListOpen ? '팀 목록 접기' : '팀 목록 펼치기'}
                   >
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center text-slate-300 [&>svg]:h-5 [&>svg]:w-5">
-                      <TeamIcon className="text-slate-300" />
-                    </span>
-                    <span className="flex-1 truncate">팀 선택</span>
-                    <span
-                      className={cn(
-                        'shrink-0 transition-transform duration-200',
-                        !isTeamListOpen && 'rotate-180',
-                      )}
-                    >
-                      <ArrowDownIcon />
-                    </span>
-                  </button>
-                ) : null}
-                {(isTeamListOpen || !expanded) && (
-                  <>
-                    {teamItems.map(({ id, label }) => (
-                      <TeamSidebarRow
-                        key={id}
-                        id={id}
-                        label={label}
-                        isSelected={selectedTeamId === id}
-                        expanded={expanded}
-                        onSelect={handleTeamSelect}
-                      />
-                    ))}
-                  </>
-                )}
+                    <ArrowDownIcon />
+                  </span>
+                </button>
+                {isTeamListOpen &&
+                  teamItems.map(({ id, label }) => (
+                    <TeamSidebarRow
+                      key={id}
+                      id={id}
+                      label={label}
+                      isSelected={selectedTeamId === id}
+                      expanded={expanded}
+                      onSelect={handleTeamSelect}
+                    />
+                  ))}
               </>
             )}
           </nav>
         </SidebarContent>
       </Sidebar>
-      {!mobileDrawer && !expanded && (
+      {!mobileDrawer && !isExpanded && (
         <button
           type="button"
           onClick={handleToggle}
