@@ -12,6 +12,7 @@ import { IconHeart } from '@/shared/ui/icons/IconHeart';
 import { IconHeartEmpty } from '@/shared/ui/icons/IconHeartEmpty';
 import { useToggleLikeArticle } from '../hooks/useToggleLikeArticle';
 import { cn } from '@/shared/lib/cn';
+import { useState } from 'react';
 interface Props {
   article: ArticleDetail;
   comments: Comment[];
@@ -20,6 +21,7 @@ interface Props {
 export default function CommentSection({ article, comments }: Props) {
   const { data: currentUser, isLoading } = useUserQuery();
   const { toggleLike } = useToggleLikeArticle();
+  const [isComposing, setIsComposing] = useState(false);
   const isLoggedIn = isLoading ? undefined : !!currentUser;
   const {
     commentInput,
@@ -59,15 +61,25 @@ export default function CommentSection({ article, comments }: Props) {
       </div>
 
       <div className="mt-2 flex items-center gap-4">
-        <IconUser size={32} className="rounded-[6px] bg-slate-200 text-white" />
+        {currentUser?.profileImage ? (
+          <img
+            src={currentUser.profileImage}
+            alt="프로필"
+            className="h-8 w-8 rounded-[6px] object-cover"
+          />
+        ) : (
+          <IconUser size={32} className="rounded-[6px] bg-slate-200 text-white" />
+        )}
 
         <Input
           placeholder={isLoggedIn ? '댓글을 달아주세요' : '로그인 후 사용 가능해요'}
           disabled={!isLoggedIn}
           value={commentInput}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
           onChange={(e) => setCommentInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && !isCreating) {
+            if (e.key === 'Enter' && !isCreating && !isComposing) {
               handleCreateComment();
             }
           }}
@@ -93,7 +105,15 @@ export default function CommentSection({ article, comments }: Props) {
 
           return (
             <div key={c.id} className="flex items-center gap-3">
-              <IconUser size={32} className="rounded-[6px] bg-slate-200 text-white" />
+              {c.writer.image ? (
+                <img
+                  src={c.writer.image}
+                  alt="프로필"
+                  className="h-8 w-8 rounded-[6px] object-cover"
+                />
+              ) : (
+                <IconUser size={32} className="rounded-[6px] bg-slate-200 text-white" />
+              )}
 
               <div className="flex-1">
                 <div className="border-t border-slate-200 pt-3">

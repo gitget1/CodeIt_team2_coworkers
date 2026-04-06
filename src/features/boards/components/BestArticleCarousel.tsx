@@ -48,12 +48,11 @@ export function BestArticleCarousel({ best, onPrev, onNext, onSwipe }: BestArtic
       <div className="mt-5 grid grid-cols-3 items-center">
         <div />
         <div className="flex justify-center gap-2">
-          
           {Array.from({ length: best.total }).map((_, i) => (
             <button
               key={i}
               onClick={() => best.setCurrent(i)}
-              className="flex items-center justify-center rounded-full hover:bg-slate-100"
+              className="flex cursor-pointer items-center justify-center rounded-full"
             >
               <span
                 className={`h-2 w-2 rounded-full transition-all ${
@@ -65,13 +64,13 @@ export function BestArticleCarousel({ best, onPrev, onNext, onSwipe }: BestArtic
         </div>
         <div className="flex justify-end gap-2 pr-6">
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-white"
             onClick={onPrev}
           >
             <IconArrowLeft size={16} />
           </button>
           <button
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 bg-white"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-white"
             onClick={onNext}
           >
             <IconArrowRight size={16} />

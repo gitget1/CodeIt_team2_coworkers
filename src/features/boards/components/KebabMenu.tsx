@@ -16,9 +16,9 @@ export default function KebabMenu({ onEdit, onDelete, showEdit = true, showDelet
       </Dropdown.Trigger>
 
       <Dropdown.Menu align="right" className="-mt-2 w-30">
-        {showEdit && <Dropdown.Item onClick={onEdit}>수정</Dropdown.Item>}
+        {showEdit && <Dropdown.Item onClick={onEdit} className='hover:rounded-t-2xl'>수정하기</Dropdown.Item>}
 
-        {showDelete && <Dropdown.Item onClick={onDelete}>삭제</Dropdown.Item>}
+        {showDelete && <Dropdown.Item onClick={onDelete} className='hover:rounded-b-2xl'>삭제하기</Dropdown.Item>}
       </Dropdown.Menu>
     </Dropdown>
   );

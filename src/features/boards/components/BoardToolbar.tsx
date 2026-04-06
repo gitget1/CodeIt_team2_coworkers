@@ -17,7 +17,7 @@ export function BoardToolbar({ sortOption, onChangeSort }: BoardToolbarProps) {
       <ArticleDropDown value={sortOption} onChange={onChangeSort} />
       {isLoggedIn ? (
         <button
-          className="flex h-14 w-14 items-center justify-center rounded-full border border-blue-500 bg-blue-500"
+          className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-blue-500 bg-blue-500"
           onClick={() => router.push('/boards/createArticle')}
         >
           <IconPencil size={24} className="text-white" />

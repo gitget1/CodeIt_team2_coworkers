@@ -37,6 +37,7 @@ export default function ArticleContent({ article }: Props) {
 
       <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
         <IconUser size={24} className="rounded-[6px] bg-slate-200 text-white" />
+
         <div className="text-md font-medium">{article.writer.nickname}</div>
         <div>|</div>
         <div className="text-slate-400">{formatDate(article.createdAt)}</div>

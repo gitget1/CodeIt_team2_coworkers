@@ -24,7 +24,7 @@ export default function BoardsListPage() {
   } = useBoardsPage();
 
   return (
-    <main className="mx-auto mt-22 max-w-[1120px] px-2 md:px-4 lg:px-0">
+    <main className="mx-auto mt-6  md:mt-22 max-w-[1120px] px-2 md:px-4 lg:px-0">
       <BoardHeader search={search} onChangeSearch={setSearch} />
 
       <section className="mt-8 h-92.5 rounded-xl border border-slate-100 bg-slate-100 px-2 pt-10">
