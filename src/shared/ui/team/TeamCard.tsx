@@ -3,7 +3,7 @@ import { cn } from '@/shared/lib/cn';
 import { Profile } from '@/shared/ui/profile';
 import type { ImageAsset } from '@/shared/ui/profile';
 import type { MemberCardItem } from '@/shared/ui/profile';
-import { MemberCardModal } from '@/shared/ui/profile/MemberCardModal';
+import { MemberCardModal, type MemberCardModalProps } from '@/shared/ui/profile/MemberCardModal';
 import { sortMembersAdminsFirst } from '@/shared/ui/profile/lib/memberCard.utils';
 import { useMemberCardModalState } from '@/shared/ui/profile/useMemberCardModalState';
 import { IconGear } from '@/shared/ui/icons/IconGear';
@@ -17,6 +17,9 @@ import {
   TEAM_CARD_DROPDOWN_PANEL_CLASS_MEMBER,
   TEAM_CARD_MENU_ITEM_CLASS,
 } from './teamCard.constants';
+
+/** `memberImages` 미전달 시 기본값. 매 렌더 `[]`를 쓰면 참조가 매번 바뀌어 `useMemo`가 불필요하게 무효화됨 */
+const EMPTY_MEMBER_IMAGES: ImageAsset[] = [];
 
 export type TeamCardTeamMenuMode = 'admin' | 'member';
 
@@ -56,7 +59,7 @@ export function TeamCard({
   onEditTeam,
   onDeleteTeam,
   onLeaveTeam,
-  memberImages = [],
+  memberImages = EMPTY_MEMBER_IMAGES,
   members,
   memberCount,
   className,
@@ -104,6 +107,18 @@ export function TeamCard({
   const visibleFaceCount = Math.min(3, displayMemberCount, sortedMembers.length);
   const visibleMembers = sortedMembers.slice(0, visibleFaceCount);
   const showMemberSummary = displayMemberCount > 0;
+
+  const memberCardModalProps: MemberCardModalProps = {
+    isOpen: isMemberModalOpen,
+    open: openMemberModal,
+    onClose: onModalClose,
+    modalMode: memberModalMode,
+    selectedMember: memberModalSelected,
+    members: sortedMembers,
+    onMemberClickInList,
+    onBackToList: memberDetailFromAllList ? onBackToList : undefined,
+    onInvite: canManageMembers && onInvite ? handleInviteFromMemberModal : undefined,
+  };
 
   return (
     <article
@@ -208,17 +223,7 @@ export function TeamCard({
           }
         />
       </div>
-      <MemberCardModal
-        isOpen={isMemberModalOpen}
-        open={openMemberModal}
-        onClose={onModalClose}
-        modalMode={memberModalMode}
-        selectedMember={memberModalSelected}
-        members={sortedMembers}
-        onMemberClickInList={onMemberClickInList}
-        onBackToList={memberDetailFromAllList ? onBackToList : undefined}
-        onInvite={canManageMembers && onInvite ? handleInviteFromMemberModal : undefined}
-      />
+      <MemberCardModal {...memberCardModalProps} />
     </article>
   );
 }

@@ -7,7 +7,7 @@ import { MemberCardModalMembersList } from './MemberCardModalMembersList';
 /** 전체 멤버 목록 스크롤 영역 상한 (50명+도 모달 안에서만 스크롤) */
 const MEMBER_CARD_MODAL_LIST_MAX_H = 'max-h-[min(75dvh,40rem)]';
 
-type Props = {
+export type MemberCardModalProps = {
   isOpen: boolean;
   open: () => void;
   onClose: () => void;
@@ -35,7 +35,7 @@ export function MemberCardModal({
   onMemberClickInList,
   onBackToList,
   onInvite,
-}: Props) {
+}: MemberCardModalProps) {
   return (
     <Modal isOpen={isOpen} open={open} close={onClose}>
       <Modal.Content
