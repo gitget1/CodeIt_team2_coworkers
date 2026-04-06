@@ -1,5 +1,5 @@
 import type { CSSProperties, HTMLAttributes } from 'react';
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/shared/lib/cn';
 import { useDropdown } from './Dropdown';
@@ -51,16 +51,31 @@ export default function DropdownMenu({ children, className, align = 'right', ...
     }
   }, [align, triggerRef]);
 
+  const rafScrollRef = useRef<number | null>(null);
+  const schedulePositionUpdate = useCallback(() => {
+    if (rafScrollRef.current != null) return;
+    rafScrollRef.current = requestAnimationFrame(() => {
+      rafScrollRef.current = null;
+      updateFixedPosition();
+    });
+  }, [updateFixedPosition]);
+
+  const scrollListenerOptions = { capture: true, passive: true } as const;
+
   useLayoutEffect(() => {
     if (!isOpen || !useFixedMenu) return;
     updateFixedPosition();
-    window.addEventListener('scroll', updateFixedPosition, true);
-    window.addEventListener('resize', updateFixedPosition);
+    window.addEventListener('scroll', schedulePositionUpdate, scrollListenerOptions);
+    window.addEventListener('resize', schedulePositionUpdate);
     return () => {
-      window.removeEventListener('scroll', updateFixedPosition, true);
-      window.removeEventListener('resize', updateFixedPosition);
+      if (rafScrollRef.current != null) {
+        cancelAnimationFrame(rafScrollRef.current);
+        rafScrollRef.current = null;
+      }
+      window.removeEventListener('scroll', schedulePositionUpdate, scrollListenerOptions);
+      window.removeEventListener('resize', schedulePositionUpdate);
     };
-  }, [isOpen, useFixedMenu, updateFixedPosition]);
+  }, [isOpen, useFixedMenu, schedulePositionUpdate, updateFixedPosition]);
 
   if (!isOpen) return null;
 
