@@ -20,9 +20,16 @@ import { cn } from '@/shared/lib/cn';
 
 export interface InputBoxProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   ref?: React.Ref<HTMLTextAreaElement>;
+  isInvalid?: boolean;
 }
 
-export const InputBox = ({ className, ref, id, ...props }: InputBoxProps) => {
+export const InputBox = ({
+  className,
+  ref,
+  id,
+  isInvalid: _isInvalid,
+  ...props
+}: InputBoxProps) => {
   const generatedId = useId();
   const textareaId = id || generatedId;
   return (

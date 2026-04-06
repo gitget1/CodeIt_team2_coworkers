@@ -1,4 +1,6 @@
-import type { HTMLAttributes } from 'react';
+import type { CSSProperties, HTMLAttributes } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/shared/lib/cn';
 import { useDropdown } from './Dropdown';
 
@@ -16,23 +18,75 @@ interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'align'> {
   align?: MenuAlign;
 }
 
+const MENU_GAP_PX = 8;
+
 export default function DropdownMenu({ children, className, align = 'right', ...props }: Props) {
-  const { isOpen, menuRef, menuId } = useDropdown();
+  const { isOpen, menuRef, menuId, triggerRef, useFixedMenu } = useDropdown();
+  const [mounted, setMounted] = useState(false);
+  const [fixedStyle, setFixedStyle] = useState<CSSProperties>({});
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const updateFixedPosition = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const r = trigger.getBoundingClientRect();
+    if (align === 'right') {
+      setFixedStyle({
+        position: 'fixed',
+        top: r.bottom + MENU_GAP_PX,
+        left: r.right,
+        transform: 'translateX(-100%)',
+        zIndex: 100,
+      });
+    } else {
+      setFixedStyle({
+        position: 'fixed',
+        top: r.bottom + MENU_GAP_PX,
+        left: r.left,
+        zIndex: 100,
+      });
+    }
+  }, [align, triggerRef]);
+
+  useLayoutEffect(() => {
+    if (!isOpen || !useFixedMenu) return;
+    updateFixedPosition();
+    window.addEventListener('scroll', updateFixedPosition, true);
+    window.addEventListener('resize', updateFixedPosition);
+    return () => {
+      window.removeEventListener('scroll', updateFixedPosition, true);
+      window.removeEventListener('resize', updateFixedPosition);
+    };
+  }, [isOpen, useFixedMenu, updateFixedPosition]);
 
   if (!isOpen) return null;
 
-  return (
+  const baseClass = 'overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md';
+
+  const menu = (
     <div
       id={menuId}
       ref={menuRef}
       className={cn(
-        'absolute mt-2 rounded-2xl border border-gray-200 bg-white shadow-md',
-        alignStyles[align],
+        baseClass,
+        !useFixedMenu && 'absolute mt-2',
+        !useFixedMenu && alignStyles[align],
         className,
       )}
+      style={useFixedMenu ? fixedStyle : undefined}
       {...props}
     >
       {children}
     </div>
   );
+
+  if (useFixedMenu) {
+    if (!mounted || typeof document === 'undefined') return null;
+    return createPortal(menu, document.body);
+  }
+
+  return menu;
 }

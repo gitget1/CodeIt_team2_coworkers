@@ -20,7 +20,7 @@ export default function WeekDateSelector({ value, onChange }: Props) {
   const weekDates = getWeekDatesAroundSelected(value);
 
   return (
-    <div className="-mx-1 flex items-stretch justify-start gap-1.5 overflow-x-auto px-1 py-1 md:justify-center md:gap-2 md:py-1.5 lg:gap-2">
+    <div className="no-scrollbar -mx-1 flex items-stretch justify-start gap-1.5 overflow-x-auto px-1 py-1 md:justify-center md:gap-2 md:py-1.5 lg:gap-2">
       {weekDates.map((date) => {
         const isSelected = date.toDateString() === value.toDateString();
         return (

@@ -26,7 +26,7 @@ export function TaskListStripSkeleton() {
       </div>
       <div className="flex items-center gap-2 md:gap-3 lg:hidden">
         <div className="flex min-w-0 flex-1 pb-2">
-          <div className="flex gap-2 overflow-x-auto whitespace-nowrap md:gap-3">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto whitespace-nowrap md:gap-3">
             {[0, 1, 2].map((i) => (
               <Skeleton
                 key={i}

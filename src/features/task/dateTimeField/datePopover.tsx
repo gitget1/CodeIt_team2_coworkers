@@ -20,7 +20,6 @@ export default function DatePopover({ selected, onSelect }: CalendarProps) {
       locale={ko}
       showOutsideDays
       navLayout="around"
-      animate
       classNames={{
         months: 'flex justify-center',
         month: 'space-y-6',

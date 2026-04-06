@@ -16,6 +16,7 @@ interface DropdownContextType {
   triggerRef: React.RefObject<HTMLButtonElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
   menuId: string;
+  useFixedMenu: boolean;
 }
 
 const DropdownContext = createContext<DropdownContextType | null>(null);
@@ -26,7 +27,13 @@ export const useDropdown = () => {
   return context;
 };
 
-export default function Dropdown({ children }: { children: ReactNode }) {
+export default function Dropdown({
+  children,
+  useFixedMenu = false,
+}: {
+  children: ReactNode;
+  useFixedMenu?: boolean;
+}) {
   const [isOpen, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -51,8 +58,9 @@ export default function Dropdown({ children }: { children: ReactNode }) {
       triggerRef,
       menuRef,
       menuId: `dropdown-menu-${id}`,
+      useFixedMenu,
     }),
-    [id, isOpen],
+    [id, isOpen, useFixedMenu],
   );
 
   return (

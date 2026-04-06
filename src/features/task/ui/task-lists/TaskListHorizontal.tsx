@@ -24,7 +24,7 @@ export function TaskListHorizontal({
   return (
     <div className="flex items-center gap-2 md:gap-3">
       <div className="flex min-w-0 flex-1 pb-2">
-        <div className="flex gap-3 overflow-x-auto whitespace-nowrap md:gap-3">
+        <div className="no-scrollbar flex gap-3 overflow-x-auto whitespace-nowrap md:gap-3">
           {taskLists.map((list) => {
             const isActive = list.id === selectedId;
 
