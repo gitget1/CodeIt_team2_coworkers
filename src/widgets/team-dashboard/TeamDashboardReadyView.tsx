@@ -20,6 +20,8 @@ import { TeamDashboardLeaveTeamModal } from './TeamDashboardLeaveTeamModal';
 import { useTeamDashboardGroupActions } from './useTeamDashboardGroupActions';
 import { toTaskBoard } from './taskBoardAdapter';
 
+const ENABLE_TASK_BOARD_CARD_NAV_TO_LIST = true;
+
 type ReadyVm = Extract<TeamDashboardViewModel, { phase: 'ready' }>;
 
 type Props = {
@@ -71,9 +73,13 @@ export function TeamDashboardReadyView({ vm }: Props) {
     [group.taskLists, taskListQueries],
   );
   const initialBoard = useMemo(() => toTaskBoard(boardTaskLists), [boardTaskLists]);
-  const handleOpenTaskList = (taskGroupId: string) => {
-    void router.push(`/${encodeURIComponent(groupIdStr)}/task-lists/${encodeURIComponent(taskGroupId)}`);
-  };
+  const handleOpenTaskList = ENABLE_TASK_BOARD_CARD_NAV_TO_LIST
+    ? (taskGroupId: string) => {
+        void router.push(
+          `/${encodeURIComponent(groupIdStr)}/task-lists/${encodeURIComponent(taskGroupId)}`,
+        );
+      }
+    : undefined;
 
   const {
     deleteModal,

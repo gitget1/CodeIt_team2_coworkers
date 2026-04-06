@@ -37,8 +37,8 @@ export function TaskCardShell({ collapsed, children, onClick }: TaskCardShellPro
         'max-[767px]:w-[343px] min-[768px]:w-[620px] lg:w-[270px]',
         onClick && 'cursor-pointer',
         collapsed
-          ? 'h-[54px] gap-0 pl-[20px] pr-[12px] pt-[16px] pb-0'
-          : 'min-h-[151px] gap-[10px] pl-[20px] pr-[16px] pt-[16px] pb-[24px]',
+          ? 'h-[54px] gap-0 px-5 pt-4 pb-0'
+          : 'min-h-[151px] gap-[10px] px-5 pt-4 pb-6',
       )}
     >
       {children}

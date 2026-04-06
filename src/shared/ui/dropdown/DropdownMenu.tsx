@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { useDropdown } from './Dropdown';
 
@@ -9,7 +10,7 @@ const alignStyles: Record<MenuAlign, string> = {
   right: 'right-0',
 };
 
-interface Props {
+interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'align'> {
   children: React.ReactNode;
   className?: string;
   align?: MenuAlign;
@@ -24,7 +25,6 @@ export default function DropdownMenu({ children, className, align = 'right', ...
     <div
       id={menuId}
       ref={menuRef}
-      role="menu"
       className={cn(
         'absolute mt-2 rounded-2xl border border-gray-200 bg-white shadow-md',
         alignStyles[align],

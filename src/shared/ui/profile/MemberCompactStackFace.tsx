@@ -20,7 +20,7 @@ export function MemberCompactStackFace({ imageSrc, zIndex, overlap }: Props) {
 
   return (
     <div
-      className={cn(MEMBER_COMPACT_STACK_AVATAR, overlap && '-ml-2 md:-ml-2.5')}
+      className={cn(MEMBER_COMPACT_STACK_AVATAR, overlap && '-ml-1.5 md:-ml-2')}
       style={{ zIndex }}
       aria-hidden
     >
