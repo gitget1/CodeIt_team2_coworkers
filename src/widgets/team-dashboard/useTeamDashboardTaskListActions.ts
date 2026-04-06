@@ -50,31 +50,33 @@ export function useTeamDashboardTaskListActions({
   const { mutateAsync: deleteTaskList } = useDeleteTaskListMutation({ groupId });
 
   const handlePersistTaskListOrderFromBoard = useCallback(
-    (payload: TaskListOrderPersistPayload): Promise<void> => {
+    async (payload: TaskListOrderPersistPayload): Promise<void> => {
       const { nextBoard, movedTaskListId } = payload;
       const prev = queryClient.getQueryData<GroupDetail>(detailQueryKey);
-      if (!prev) return Promise.resolve();
+      if (!prev) return;
 
       const orderedIds = flattenTaskBoardTaskListIds(nextBoard);
-      if (orderedIds.length === 0) return Promise.resolve();
+      if (orderedIds.length === 0) return;
 
       const displayIndex = orderedIds.indexOf(movedTaskListId);
-      if (displayIndex < 0) return Promise.resolve();
+      if (displayIndex < 0) return;
 
       const optimistic = applyOrderedTaskListIdsToGroupDetail(prev, orderedIds);
-      if (!optimistic) return Promise.resolve();
+      if (!optimistic) return;
+
+      await queryClient.cancelQueries({ queryKey: detailQueryKey });
       queryClient.setQueryData(detailQueryKey, optimistic);
 
       const taskListIdNum = toNumberId(movedTaskListId);
-      if (taskListIdNum === null) return Promise.resolve();
+      if (taskListIdNum === null) return;
 
-      return (async () => {
-        const result = await updateTaskListOrder({ groupId, taskListId: taskListIdNum }, { displayIndex });
-        if (!result.ok) {
-          toast.error(result.error.message);
-          await queryClient.invalidateQueries({ queryKey: detailQueryKey });
-        }
-      })();
+      const result = await updateTaskListOrder({ groupId, taskListId: taskListIdNum }, { displayIndex });
+      if (!result.ok) {
+        toast.error(result.error.message);
+        await queryClient.invalidateQueries({ queryKey: detailQueryKey });
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: detailQueryKey });
     },
     [detailQueryKey, groupId, queryClient],
   );
