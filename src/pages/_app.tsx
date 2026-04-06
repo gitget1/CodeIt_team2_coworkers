@@ -45,15 +45,25 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    <main
-      className={`${pretendard.variable} ${pretendard.className} text-txt-primary bg-background-primary font-sans antialiased`}
-    >
-      <QueryProvider>
-        <HydrationBoundary state={pageProps?.dehydratedState}>
-          {getLayout(<Component {...pageProps} />)}
-          <Toaster />
-        </HydrationBoundary>
-      </QueryProvider>
-    </main>
+    <>
+      <style jsx global>
+        {`
+          :root {
+            --font-pretendard: ${pretendard.style.fontFamily};
+          }
+          body {
+            font-family: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+          }
+        `}
+      </style>
+      <main className="text-txt-primary bg-background-primary antialiased">
+        <QueryProvider>
+          <HydrationBoundary state={pageProps?.dehydratedState}>
+            {getLayout(<Component {...pageProps} />)}
+            <Toaster />
+          </HydrationBoundary>
+        </QueryProvider>
+      </main>
+    </>
   );
 }
