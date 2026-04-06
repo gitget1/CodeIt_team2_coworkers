@@ -1,5 +1,7 @@
-import { Modal } from '@/shared/ui/modal';
+import { ICON_SIZE } from '@/shared/constants/icon';
 import { cn } from '@/shared/lib/cn';
+import { Modal } from '@/shared/ui/modal';
+import { IconArrowLeft } from '@/shared/ui/icons/IconArrowLeft';
 import type { MemberCardItem, MemberCardModalMode } from './memberCard.types';
 import { MemberCardModalMember } from './MemberCardModalMember';
 import { MemberCardModalMembersList } from './MemberCardModalMembersList';
@@ -52,8 +54,18 @@ export function MemberCardModal({
                 {selectedMember ? `${selectedMember.name} 멤버 정보` : '멤버 정보'}
               </Modal.Title>
             </Modal.Header>
+            {onBackToList ? (
+              <button
+                type="button"
+                onClick={onBackToList}
+                aria-label="전체 멤버"
+                className="absolute top-3 left-4 z-[60] cursor-pointer rounded-md p-1 text-brand-primary transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              >
+                <IconArrowLeft size={ICON_SIZE.md} aria-hidden className="text-brand-primary" />
+              </button>
+            ) : null}
             <Modal.Body className="!overflow-visible px-8 pb-8 pt-14">
-              <MemberCardModalMember member={selectedMember} onBackToList={onBackToList} />
+              <MemberCardModalMember member={selectedMember} />
             </Modal.Body>
           </>
         ) : (

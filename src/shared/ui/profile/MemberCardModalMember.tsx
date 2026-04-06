@@ -6,11 +6,9 @@ import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard';
 
 type Props = {
   member: MemberCardItem | null;
-  /** 전체 멤버 목록에서 들어온 경우 — 상단에 목록으로 돌아가기 */
-  onBackToList?: () => void;
 };
 
-export function MemberCardModalMember({ member, onBackToList }: Props) {
+export function MemberCardModalMember({ member }: Props) {
   const [imgError, setImgError] = useState(false);
   const { copyText } = useCopyToClipboard();
 
@@ -29,15 +27,6 @@ export function MemberCardModalMember({ member, onBackToList }: Props) {
 
   return (
     <div className="flex w-full flex-col items-center gap-6 text-center">
-      {onBackToList ? (
-        <button
-          type="button"
-          onClick={onBackToList}
-          className="self-start text-sm font-medium text-brand-primary hover:underline"
-        >
-          ← 전체 멤버
-        </button>
-      ) : null}
       <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-background-tertiary">
         {showImage ? (
           <img
