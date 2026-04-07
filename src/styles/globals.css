@@ -1,26 +1,126 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-pretendard), ui-sans-serif, system-ui, sans-serif;
+
+  /* 모바일·일부 컴포넌트용. App 고정 사이드 레일은 Tailwind `md`(768px). */
+  --breakpoint-mobile: 768px;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Font Sizes (Size / Line-height) */
+  --text-xs: 12px;
+  --text-xs--line-height: 14px;
+
+  --text-sm: 13px;
+  --text-sm--line-height: 16px;
+
+  --text-md: 14px;
+  --text-md--line-height: 17px;
+
+  --text-lg: 16px;
+  --text-lg--line-height: 19px;
+
+  --text-2lg: 18px;
+  --text-2lg--line-height: 21px;
+
+  --text-xl: 20px;
+  --text-xl--line-height: 24px;
+
+  --text-2xl: 24px;
+  --text-2xl--line-height: 28px;
+
+  --text-3xl: 32px;
+  --text-3xl--line-height: 38px;
+
+  --text-4xl: 40px;
+  --text-4xl--line-height: 48px;
+
+  /* =========================================
+          Color Palette
+   ========================================= */
+
+  /* Brand */
+  --color-brand-primary: #5189fa;
+  --color-brand-secondary: #eef3ff;
+  --color-brand-tertiary: #315296;
+
+  /* Point Colors */
+  --color-point-purple: #a855f7;
+  --color-point-cyan: #06b6d4;
+  --color-point-pink: #ec4899;
+  --color-point-rose: #f43f5e;
+  --color-point-orange: #f97316;
+  --color-point-yellow: #eab308;
+
+  /* Backgrounds */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f1f5f9;
+  --color-background-tertiary: #e2e8f0;
+  --color-background-inverse: #000000;
+
+  /* Interactions */
+  --color-interaction-inactive: #94a3b8;
+  --color-interaction-hover: #416ec8;
+  --color-interaction-pressed: #3b63b5;
+
+  /* Borders */
+  --color-border-primary: rgba(248, 250, 252, 0.5);
+
+  /* Text */
+  --color-txt-primary: #1e293b;
+  --color-txt-secondary: #334155;
+  --color-txt-tertiary: #0f172a;
+  --color-txt-default: #64748b;
+  --color-txt-inverse: #ffffff;
+  --color-txt-disabled: #94a3b8;
+
+  /* Status */
+  --color-status-danger: #fc4b4b;
+
+  /* Icons */
+  --color-icon-primary: #64748b;
+  --color-icon-inverse: #f8fafc;
+  --color-icon-brand: #74a1fb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 아이콘 마운트 시 한 번 재생 (React state 대신 CSS animation 사용) */
+@keyframes icon-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-icon-enter {
+  animation: icon-enter 200ms ease-out both;
+}
+
+/* AppLayout: 태블릿·모바일(<lg)에서 드로어 레이어 표시 — Tailwind lg 와 동일 */
+.layout-app-drawer-layer {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .layout-app-drawer-layer {
+    display: block;
+  }
+}
+
+/*스크롤바를 숨기는 클래스 정의 */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

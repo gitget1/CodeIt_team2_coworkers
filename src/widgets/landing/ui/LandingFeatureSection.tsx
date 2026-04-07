@@ -1,0 +1,114 @@
+import { cn } from '@/shared/lib/cn';
+import Image from 'next/image';
+import { LandingFeature } from './LandingContainer';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '../constants/animation';
+
+interface LandingFeatureSectionProps {
+  feature: LandingFeature;
+  className?: string;
+}
+
+export const LandingFeatureSection = ({ feature, className }: LandingFeatureSectionProps) => {
+  const { title, description, imageAlt, icon, images, theme, isLargeIcon, imageAlignBottom } =
+    feature;
+  const isPrimary = theme === 'primary';
+
+  const sectionClasses = cn(
+    'group w-full overflow-hidden px-6 lg:py-0',
+    isPrimary ? 'bg-brand-primary text-white' : 'text-txt-primary bg-slate-50',
+    imageAlignBottom ? 'pt-24 pb-0' : 'py-24',
+    className,
+  );
+
+  const containerClasses = cn(
+    'mx-auto flex w-full max-w-360 flex-col justify-center gap-12 lg:min-h-200 lg:items-center lg:gap-18 xl:max-w-400',
+    'group-even:lg:flex-row lg:flex-row-reverse',
+  );
+
+  const textWrapperClasses = cn(
+    'flex w-full max-w-100 shrink-0 flex-col items-start text-left md:ml-8 xl:max-w-112.5',
+    !isPrimary && 'lg:mt-40 lg:ml-15 lg:self-start',
+  );
+
+  const iconClasses = cn(
+    'relative',
+    isLargeIcon ? 'h-7 w-7 md:h-10 md:w-10 lg:h-12 lg:w-12' : 'h-7 w-7 md:h-10 md:w-10',
+  );
+
+  const imageWrapperClasses = cn(
+    'relative flex flex-1',
+    imageAlignBottom
+      ? 'w-[calc(100%_+_1.5rem)] -mr-6 justify-end self-end lg:m-0 lg:w-full'
+      : 'w-full justify-center lg:justify-end',
+  );
+
+  return (
+    <section className={sectionClasses}>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        className={containerClasses}
+      >
+        <motion.div variants={fadeInUp} className={textWrapperClasses}>
+          <div className={iconClasses}>
+            <Image
+              src={icon}
+              alt={`${imageAlt} 아이콘`}
+              fill
+              sizes="48px"
+              className="object-contain"
+            />
+          </div>
+          <h2
+            className={cn(
+              'mb-4 text-lg leading-normal font-bold whitespace-pre-line md:text-2xl lg:text-3xl',
+              isPrimary ? 'text-txt-inverse' : 'text-brand-primary',
+            )}
+          >
+            {title}
+          </h2>
+          <p
+            className={cn(
+              'text-[12px] leading-relaxed whitespace-pre-line md:text-[14px] lg:text-lg',
+              isPrimary ? 'text-blue-100' : 'text-slate-400',
+            )}
+          >
+            {description}
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeInUp} className={imageWrapperClasses}>
+          <Image
+            src={images.mobile}
+            alt={`${imageAlt} 모바일 예시`}
+            width={1200}
+            height={800}
+            sizes="(max-width: 768px) 400px, 800px"
+            className="block h-auto w-full rounded-xl md:hidden"
+            loading="lazy"
+          />
+          <Image
+            src={images.tablet}
+            alt={`${imageAlt} 태블릿 예시`}
+            width={1600}
+            height={1200}
+            sizes="100vw"
+            className="hidden h-auto w-full rounded-xl md:block lg:hidden"
+            loading="lazy"
+          />
+          <Image
+            src={images.desktop}
+            alt={`${imageAlt} PC 예시`}
+            width={1000}
+            height={800}
+            className="hidden h-auto w-full lg:block"
+            loading="lazy"
+          />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+};
